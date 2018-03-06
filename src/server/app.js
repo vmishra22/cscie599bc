@@ -10,6 +10,7 @@ mongoose.Promise = require('bluebird');
 import config from './config/environment';
 import http from 'http';
 import seedDatabaseIfNeeded from './config/seed';
+import Web3 from 'web3';
 
 // Connect to MongoDB
 mongoose.connect(config.mongo.uri, config.mongo.options);
@@ -23,6 +24,10 @@ var app = express();
 var server = http.createServer(app);
 require('./config/express').default(app);
 require('./routes').default(app);
+
+// Create Ethereum connection
+var web3 = new Web3(new Web3.providers.HttpProvider(config.web3Url));
+app.set('web3', web3);
 
 // Start server
 function startServer() {
