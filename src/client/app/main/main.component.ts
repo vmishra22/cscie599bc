@@ -11,7 +11,6 @@ export class MainController {
   /*@ngInject*/
   constructor($http) {
     this.$http = $http;
-
   }
 
   $onInit() {

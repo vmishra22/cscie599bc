@@ -8,8 +8,7 @@ import ipfs from './ipfs';
 import mongo from './mongo';
 import routing from './samples.routes'
 
-export default angular.module('recLettersApp.account', [
-
+export default angular.module('recLettersApp.samples', [
     uiRouter,
     eth,
     ipfs,
