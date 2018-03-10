@@ -40,6 +40,7 @@
     "passport": "~0.3.0",
     "passport-local": "^1.0.0",
     "serve-favicon": "^2.3.0",
+    "sleep": "^5.1.1",
     "solc": "^0.4.20",
     "sprint-js": "~0.1.0",
     "web3": "^1.0.0-beta.30"

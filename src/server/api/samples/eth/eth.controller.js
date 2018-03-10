@@ -6,6 +6,7 @@
 'use strict';
 
 import solc from 'solc'
+import sleep from 'sleep'
 
 export function getAccounts(req, res) {
   var web3 = req.app.get('web3');
@@ -13,7 +14,12 @@ export function getAccounts(req, res) {
     .then(result => res.status(200).json(result));
 }
 
-
+export function getContractInfo(req, res) {
+  var web3 = req.app.get('web3');
+  const tranHash = "0x2e1da46a1b8583f92d958d63707a53ba620a68a92c38d7715e0b963ad46848a6";
+  web3.eth.getTransactionReceipt(tranHash).then(console.log);
+  return res.status(200).json("")
+}
 
 export function runSample(req, res) {
   var web3 = req.app.get('web3');
@@ -53,40 +59,38 @@ export function runSample(req, res) {
   const bytecode = output.contracts[':greeter'].bytecode;
   const abi = JSON.parse(output.contracts[':greeter'].interface);
 
-  // let source = fs.readFileSync('nameContract.sol', 'utf8');
-  // let compiledContract = solc.compile(source, 1);
-  // let abi = compiledContract.contracts['nameContract'].interface;
-  // let bytecode = compiledContract.contracts['nameContract'].bytecode;
-  // let gasEstimate = web3.eth.estimateGas({data: bytecode});
-  // let MyContract = web3.eth.contract(JSON.parse(abi));
-
   // Contract object
   let contract = new web3.eth.Contract(abi);
-  return res.status(200).json(contract);
 
-// Deploy contract instance
-  // const contractInstance = contract.new({
-  //     data: '0x' + bytecode,
-  //     from: web3.eth.coinbase,
-  //     gas: 90000*2
-  // }, (err, res) => {
-  //     if (err) {
-  //         console.log(err);
-  //         return;
-  //     }
+  return web3.eth.getAccounts().then(accounts => {
+    // Deploy contract instance
+    return contract.deploy({
+      data: '0x' + bytecode,
+      arguments: ["Hello World"]
+    })
+    .send({
+        from: accounts[0],
+        gas: 1000000, // Must be below gas limit of 3141592 and above instrinsic gas usage
+    })
+    .on('transactionHash', function(transactionHash) {
+      console.log('successfully got the transaction hash: ' + transactionHash)
 
-  //     // Log the tx, you can explore status with eth.getTransaction()
-  //     console.log("The transaction went through: " + res.transactionHash);
+      // Sticking this in to get the contract reciept, might be bug w/ api or just
+      // how I'm calling
+      sleep.sleep(30);
 
-  //     // If we have an address property, the contract was deployed
-  //     if (res.address) {
-  //         console.log('Contract address: ' + res.address);
-  //         // Let's test the deployed contract
-  //         testContract(res.address);
-
-  //         return res.status(200).json(res);
-  //     }
-  // });
+      return web3.eth.getTransactionReceipt(transactionHash)
+        .then(r => res.status(200).json(r))
+        .catch(e => res.status(500).json(e));
+    })
+    .catch(err => {
+      //Swallowing this error: Error: Failed to check for transaction receipt: {}
+      //Seems to be a web3 or geth bug
+      if(!err.toString().includes("Failed to check for transaction receipt")) {
+        console.log(err);
+      }
+    })
+  });
 }
 
 export function index(req, res) {
