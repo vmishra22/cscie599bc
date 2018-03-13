@@ -70,26 +70,31 @@ export function runSample(req, res) {
     })
     .send({
         from: accounts[0],
-        gas: 1000000, // Must be below gas limit of 3141592 and above instrinsic gas usage
+        gas: 500000, // Must be below gas limit of 3141592 and above instrinsic gas usage
     })
     .on('transactionHash', function(transactionHash) {
       console.log('successfully got the transaction hash: ' + transactionHash)
 
-      // Sticking this in to get the contract reciept, might be bug w/ api or just
-      // how I'm calling
-      sleep.sleep(30);
-
-      return web3.eth.getTransactionReceipt(transactionHash)
+      // Retrying every second to get the contract receipt,
+      // workaround for bug in the API
+      const retry = () => web3.eth.getTransactionReceipt(transactionHash)
         .then(r => res.status(200).json(r))
-        .catch(e => res.status(500).json(e));
+        .catch(e => {
+          console.log("trying to get contract recepit again...")
+          sleep.sleep(1);
+          return retry();
+        });
+
+      return retry();
     })
     .catch(err => {
-      //Swallowing this error: Error: Failed to check for transaction receipt: {}
-      //Seems to be a web3 or geth bug
+      // Swallowing this error: Error: Failed to check for transaction receipt: {}
+      // Seems to be a web3 or geth bug: 
+      // https://ethereum.stackexchange.com/questions/42245/web3js-contract-deploy-never-get-receipt
       if(!err.toString().includes("Failed to check for transaction receipt")) {
         console.log(err);
       }
-    })
+    });
   });
 }
 
