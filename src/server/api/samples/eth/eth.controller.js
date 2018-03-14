@@ -64,40 +64,51 @@ export function runSample(req, res) {
   let contract = new web3.eth.Contract(abi);
 
   return web3.eth.getAccounts().then(accounts => {
-    // Deploy contract instance
-    return contract.deploy({
+
+    const deployContract = contract.deploy({
       data: '0x' + bytecode,
       arguments: ["Hello World"]
     })
     .send({
         from: accounts[0],
         gas: 500000, // Must be below gas limit of 3141592 and above instrinsic gas usage
-    })
+    });
+
+    const transactionReceipt = deployContract
     .on('transactionHash', function(transactionHash) {
       console.log('successfully got the transaction hash: ' + transactionHash)
 
       // Retrying every second to get the contract receipt,
       // workaround for bug in the API
       const retry = () => web3.eth.getTransactionReceipt(transactionHash)
-        .then(r => res.status(200).json(r))
+        .then(r => r)
         .catch(e => {
-          console.log("trying to get contract recepit again...")
-          sleep.sleep(1);
+          console.log("Couldn't get contract receipt, trying again...");
+          sleep.sleep(30);
           return retry();
         });
 
       return retry();
-    }).on('receipt',  (receipt) => {
-        console.log(receipt.contractAddress);
-      })
-    .catch(err => {
-      // Swallowing this error: Error: Failed to check for transaction receipt: {}
-      // Seems to be a web3 or geth bug:
-      // https://ethereum.stackexchange.com/questions/42245/web3js-contract-deploy-never-get-receipt
-      if(!err.toString().includes("Failed to check for transaction receipt")) {
-        console.log(err);
-      }
     });
+
+    return transactionReceipt.then(receipt => {
+      console.log("The contract's address is: " + receipt._address);
+
+      var contractInstance = new web3.eth.Contract(abi, receipt._address);
+      if(contractInstance) {
+        console.log("Successfully got the contract instance.")
+      }
+
+      return res.status(200).json(contractInstance);
+    })
+    .catch(err => {
+        // Swallowing this error: Error: Failed to check for transaction receipt: {}
+        // Seems to be a web3 or geth bug:
+        // https://ethereum.stackexchange.com/questions/42245/web3js-contract-deploy-never-get-receipt
+        if(!err.toString().includes("Failed to check for transaction receipt")) {
+          console.log(err);
+        }
+      });
   });
 }
 
