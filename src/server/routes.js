@@ -15,6 +15,7 @@ export default function(app) {
   app.use('/auth', require('./auth').default);
 
   app.use('/api/samples/eth', require('./api/samples/eth'));
+  app.use('/api/samples/ipfs', require('./api/samples/ipfs'));
 
   // All undefined asset or api routes should return a 404
   app.route('/:url(api|auth|components|app|bower_components|assets)/*')

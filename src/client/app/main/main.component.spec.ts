@@ -13,6 +13,10 @@ describe('Component: MainComponent', function() {
   var state;
   var $httpBackend;
 
+  function inject(param: (_$httpBackend_, $http, $componentController, $rootScope, $state) => void) {
+    
+  }
+
   // Initialize the controller and a mock scope
   beforeEach(inject(function(
     _$httpBackend_,

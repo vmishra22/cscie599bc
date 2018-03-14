@@ -13,5 +13,5 @@ module.exports = {
   // Seed database on startup
   seedDB: true,
 
-  web3Url: 'http://localhost:8545'
+  web3Url: 'http://localhost:7545'
 };
