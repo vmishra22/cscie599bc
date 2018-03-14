@@ -22,7 +22,7 @@ mongoose.connection.on('error', function(err) {
 // Setup server
 var app = express();
 var server = http.createServer(app);
-server.timeout = 1200000
+server.timeout = 1200000;
 require('./config/express').default(app);
 require('./routes').default(app);
 
