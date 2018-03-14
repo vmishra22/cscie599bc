@@ -6,7 +6,7 @@ const uiRouter = require('angular-ui-router');
 import eth from './eth';
 import ipfs from './ipfs';
 import mongo from './mongo';
-import routing from './samples.routes'
+import routing from './samples.routes';
 
 export default angular.module('recLettersApp.samples', [
     uiRouter,
