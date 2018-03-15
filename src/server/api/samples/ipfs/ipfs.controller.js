@@ -25,21 +25,20 @@ export function connectIpfs(req, res) {
 }
 
 export function storeContent(req, res) {
-  var ipfs = ipfsAPI({host: 'localhost', port: '5001', protocol: 'http'})
+  var ipfs = ipfsAPI({host: 'localhost', port: '5001', protocol: 'http'});
 
-  var url = Buffer.from("value to store", 'utf8');
+  var url = Buffer.from('value to store', 'utf8');
   ipfs.add(url, function(err, result) {
-    if (err) {
-      console.error("Content submission error:", err);
+    if(err) {
+      console.error('Content submission error:', err);
       return false;
-    } else if (result && result[0] && result[0].hash) {
-
-      console.log("Content successfully stored. IPFS address:", result[0].hash);
+    } else if(result && result[0] && result[0].hash) {
+      console.log('Content successfully stored. IPFS address:', result[0].hash);
     } else {
-      console.log(result)
-      console.log(result[0])
-      console.log(result[0].Hash)
-      console.error("Unresolved content submission error");
+      console.log(result);
+      console.log(result[0]);
+      console.log(result[0].Hash);
+      console.error('Unresolved content submission error');
       return null;
     }
   });

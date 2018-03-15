@@ -5,8 +5,6 @@ var controller = require('./ipfs.controller');
 
 var router = express.Router();
 
-
-
 router.get('/connectIpfs', controller.connectIpfs);
 router.get('/storeContent', controller.storeContent);
 

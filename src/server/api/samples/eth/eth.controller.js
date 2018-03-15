@@ -9,6 +9,8 @@ import solc from 'solc';
 import sleep from 'sleep';
 import fs from 'fs';
 
+var ipfsAPI = require('ipfs-api');
+
 export function getAccounts(req, res) {
   var web3 = req.app.get('web3');
   return web3.eth.getAccounts()
@@ -253,7 +255,35 @@ export function createAndDeployLetterContract(req, res) {
     .then(contractInstance => {
       //Lets do something useful with contract Instance:
         //1. Add the file to IPFS
-        
+        //TODO: Eventually the path URl for pdf file and json file would be probably from somewhere else.
+      var letterPdfBuffer = fs.readFileSync('LetterContract/PdfRecoletter1.pdf');
+      var letterjsonBuffer = fs.readFileSync('LetterContract/jsonRecoletter1.json');
+      var ipfs = ipfsAPI('localhost', '5001', {protocol: 'http'});
+      var filePaths = [
+        {
+          path: 'LetterContract/PdfRecoletter1.pdf', // The file path
+          content: letterPdfBuffer
+        },
+        {
+          path: 'LetterContract/jsonRecoletter1.json',
+          content: letterjsonBuffer
+        }
+      ];
+
+      ipfs.files.add(filePaths, (err, filesAdded) => {
+        if(err || !res || filesAdded.length !== 2) return console.error('ipfs add error', err, res);
+        const pdfFile = filesAdded[0];
+        const jsonFile = filesAdded[1];
+        //Create the letter using the contract method createLetter(). 
+        //TODO: To figure out how to get student, recommender and school id to this point.
+        contractInstance.createLetter("Sample Reco Letter", 10, 10, 10, pdfFile.hash, jsonFile.hash);
+
+        //Listen to the new letter event
+        var event = contractInstance.NewLetter(function(error, result) {
+          if(error || !result) return console.error('Error while creating new letter in blockchain', error, result);
+          console.log('Letter Index id in blockchain', result.letterId);
+        });
+      });
     });
     });
  // return contract.methods.greet().call().then(console.log)
