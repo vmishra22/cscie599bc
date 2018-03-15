@@ -10,6 +10,8 @@
 
 
 import ipfsAPI from 'ipfs-api'
+import fs from 'fs';
+
 
 export function connectIpfs(req, res) {
   // or using options
@@ -27,7 +29,19 @@ export function connectIpfs(req, res) {
 export function storeContent(req, res) {
   var ipfs = ipfsAPI({host: 'localhost', port: '5001', protocol: 'http'});
 
-  var url = Buffer.from('value to store', 'utf8');
+
+  var filePaths = [
+    {
+      path: 'LetterContract/PdfRecoletter1.pdf', // The file path
+     // content: letterPdfBuffer
+    },
+    {
+      path: 'LetterContract/jsonRecoletter1.json',
+     // content: letterjsonBuffer
+    }
+  ];
+
+  var url = Buffer.from(fs.readFileSync('LetterContract/jsonRecoLetter1.json', 'utf8'), 'utf8');
   ipfs.add(url, function(err, result) {
     if(err) {
       console.error('Content submission error:', err);
