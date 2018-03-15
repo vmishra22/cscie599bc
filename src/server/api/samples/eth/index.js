@@ -11,7 +11,7 @@ router.get('/fullSample', controller.runSample);
 router.get('/', controller.index);
 router.get('/runAnotherSample', controller.runAnotherSample);
 router.get('/runContract', controller.runContract);
-router.get('/runLetterContract', controller.runLetterContract);
+router.get('/createAndDeployLetterContract', controller.createAndDeployLetterContract);
 router.get('/callStorageContract', controller.callStorageContract);
 
 

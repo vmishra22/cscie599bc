@@ -5,9 +5,9 @@
 
 'use strict';
 
-import solc from 'solc'
-import sleep from 'sleep'
-import fs from 'fs'
+import solc from 'solc';
+import sleep from 'sleep';
+import fs from 'fs';
 
 export function getAccounts(req, res) {
   var web3 = req.app.get('web3');
@@ -17,9 +17,9 @@ export function getAccounts(req, res) {
 
 export function getContractInfo(req, res) {
   var web3 = req.app.get('web3');
-  const tranHash = "0x2e1da46a1b8583f92d958d63707a53ba620a68a92c38d7715e0b963ad46848a6";
+  const tranHash = '0x2e1da46a1b8583f92d958d63707a53ba620a68a92c38d7715e0b963ad46848a6';
   web3.eth.getTransactionReceipt(tranHash).then(console.log);
-  return res.status(200).json("")
+  return res.status(200).json('');
 }
 
 export function runSample(req, res) {
@@ -193,71 +193,69 @@ export function runContract(req, res) {
   // Contract object
   let contract = new web3.eth.Contract(abi, '0x8ACEe021a27779d8E98B9650722676B850b25E11');
 
-  return contract.methods.greet().call().then(console.log)
+  return contract.methods.greet().call()
+          .then(console.log);
 }
 
-
-
-
-
-export function runLetterContract(req, res) {
+/*
+  Function to load and compile contracts related to recommendation letter system. 
+*/
+export function createAndDeployLetterContract(req, res) {
   var web3 = req.app.get('web3');
 
-  //TODO: Read smart contract data, compile smart contract, upload smart contract to block chain,
-  // query for contract, update state in contract
+  //Load the Rec-Letter contract(This contract follows ERC721)
+  var letterContractBuffer = fs.readFileSync('LetterContract/letterownership.sol', 'utf8');
 
-  //From here: https://www.ethereum.org/greeter
-  //Will move this to a file or unit test or something...
-  var newContractString = fs.readFileSync('LetterContract/NotSoSimpleStorage.sol', 'utf8');
+  //Compile this contract
+  const output = solc.compile(letterContractBuffer, 1);
+  console.log(output);
 
+  //Retrieve 'abi' and 'bytecode' from the compiled contract
+  const bytecode = output.contracts[':LetterOwnership'].bytecode;
+  const abi = JSON.parse(output.contracts[':LetterOwnership'].interface);
 
-  const output = solc.compile(newContractString, 1);
-  //const bytecode = output.contracts[':greeter'].bytecode;
-  console.log(output)
-  const bytecode = output.contracts[':NotSoSimpleStorage'].bytecode;
-  const abi = JSON.parse(output.contracts[':NotSoSimpleStorage'].interface);
-
-  //const abi = JSON.parse(output)
-
-  // Contract object
+  // Create a Contract object from 'abi'
   let contract = new web3.eth.Contract(abi);
 
-  return web3.eth.getAccounts().then(accounts => {
-    // Deploy contract instance
-    return contract.deploy({
-      data: '0x' + bytecode,
-      arguments: ["get ipfs"]
+  //Vinay: The account mechanism is here just for testing purpose, usually the contract address
+  // is of the person who initiated letter submission process
+  return web3.eth.getAccounts()
+    .then(accounts => {
+      // Deploy contract instance
+      return contract.deploy({
+        data: '0x${bytecode}'
+      })
+    .send({
+      from: accounts[0],
+      gas: 500000, // Must be below gas limit of 3141592 and above instrinsic gas usage
     })
-      .send({
-        from: accounts[0],
-        gas: 500000, // Must be below gas limit of 3141592 and above instrinsic gas usage
-      })
-      .on('transactionHash', function(transactionHash) {
-        console.log('successfully got the transaction hash: ' + transactionHash)
+    .on('error', error => {
+      console.log('Error on deploy: ', error);
+    })
+    .on('transactionHash', function(transactionHash) {
+      console.log('successfully got the transaction hash: ' + transactionHash)
 
-        // Retrying every second to get the contract receipt,
-        // workaround for bug in the API
-        const retry = () => web3.eth.getTransactionReceipt(transactionHash)
-          .then(r => res.status(200).json(r))
-          .catch(e => {
-            console.log("trying to get contract recepit again...")
-            sleep.sleep(1);
-            return retry();
-          });
+      // Retrying every second to get the contract receipt,
+      // workaround for bug in the API
+      const retry = () => web3.eth.getTransactionReceipt(transactionHash)
+        .then(r => res.status(200).json(r))
+        .catch(e => {
+          console.log('trying to get contract recepit again...');
+          sleep.sleep(1);
+          return retry();
+        });
 
-        return retry();
-      }).on('receipt',  (receipt) => {
-        console.log("receipt contract address", receipt.contractAddress);
-      })
-      .catch(err => {
-        // Swallowing this error: Error: Failed to check for transaction receipt: {}
-        // Seems to be a web3 or geth bug:
-        // https://ethereum.stackexchange.com/questions/42245/web3js-contract-deploy-never-get-receipt
-        if(!err.toString().includes("Failed to check for transaction receipt")) {
-          console.log(err);
-        }
-      });
-  });
+      return retry();
+    })
+    .on('receipt', receipt => {
+      console.log('receipt contract address', receipt.contractAddress);
+    })
+    .then(contractInstance => {
+      //Lets do something useful with contract Instance:
+        //1. Add the file to IPFS
+        
+    });
+    });
  // return contract.methods.greet().call().then(console.log)
 }
 
@@ -282,8 +280,9 @@ export function callStorageContract(req, res) {
 
   // Contract object
   let contract = new web3.eth.Contract(abi, '0x059e17cEb15EF8470B7184B858D356317518aAB3');
-  console.log(contract)
-  return contract.methods.get().call().then(console.log)
+  console.log(contract);
+  return contract.methods.get().call()
+          .then(console.log);
 }
 
 export function index(req, res) {
