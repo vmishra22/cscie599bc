@@ -356,7 +356,7 @@ export function createAndDeployLetterContract(req, res) {
       //Listen to the new letter event
       //var newLetterEvent = contractInstance.events.NewLetter();
       contractInstance.events.NewLetter(function(error, result) {
-        if(error || !result) {
+        if(error) {
           return console.error('Error while creating new letter in blockchain', error, result);
         }
         console.log('Letter Index id in blockchain', result.letterId);
