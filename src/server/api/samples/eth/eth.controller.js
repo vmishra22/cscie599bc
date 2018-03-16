@@ -216,17 +216,19 @@ export function createAndDeployLetterContract(req, res) {
     'safemath.sol': fs.readFileSync('LetterContract/safemath.sol', 'utf8'),
     'erc721.sol': fs.readFileSync('LetterContract/erc721.sol', 'utf8')
 
-  };
+  }; 
   //Compile this contract
   const output = solc.compile({sources: input}, 1);
-  for (var contractName in output.contracts)
-    console.log(contractName + ': ' + output.contracts[contractName])
+  for(var contractName in output.contracts) {
+    console.log(contractName + ': ' + output.contracts[contractName]);
+  }
   //Retrieve 'abi' and 'bytecode' from the compiled contract
 
-  const bytecode = output.contracts[contractName].bytecode;
-  const abi = JSON.parse(output.contracts[contractName].interface);
-
-
+  const bytecode = output.contracts['letterownership.sol:LetterOwnership'].bytecode;
+  const abi = JSON.parse(output.contracts['letterownership.sol:LetterOwnership'].interface);
+  // const gasEstimate = web3.eth.estimateGas({data: bytecode});
+  // console.log('gasEstimate: ', gasEstimate);
+  
   // Create a Contract object from 'abi'
   let contract = new web3.eth.Contract(abi);
 
@@ -244,7 +246,7 @@ export function createAndDeployLetterContract(req, res) {
       })
     .send({
       from: accounts[0],
-      gas: 500000, // Must be below gas limit of 3141592 and above instrinsic gas usage
+      gas: 3000000, // Must be below gas limit of 3141592 and above instrinsic gas usage
     })
     .on('error', error => {
       console.log('Error on deploy: ', error);
@@ -269,16 +271,16 @@ export function createAndDeployLetterContract(req, res) {
     })
     .then(contractInstance => {
       //Lets do something useful with contract Instance:
-        //1. Add the file to IPFS
-        //TODO: Eventually the path URl for pdf file and json file would be probably from somewhere else.
+      //1. Add the file to IPFS
+      //TODO: Eventually the path URl for pdf file and json file would be probably from somewhere else.
       var letterPdfBuffer = fs.readFileSync('LetterContract/PdfRecoletter1.pdf');
       var letterjsonBuffer = fs.readFileSync('LetterContract/jsonRecoletter1.json');
 
-      var ipfsHost    = 'localhost',
+      var ipfsHost = 'localhost',
         ipfsAPIPort = '5001',
         ipfsWebPort = '8080',
-        web3Host    = 'localhost',
-        web3Port    = '8000';
+        web3Host = 'localhost',
+        web3Port = '8000';
 
       // IPFS
       var ipfs = IpfsAPI(ipfsHost, ipfsAPIPort)
@@ -302,6 +304,9 @@ export function createAndDeployLetterContract(req, res) {
           content: letterjsonBuffer
         }
       ];
+
+      var pdfFileHash = null;
+      var jsonFileHash = null;
       var url = Buffer.from(fs.readFileSync('LetterContract/jsonRecoLetter1.json', 'utf8'), 'utf8');
       ipfs.add(url, function(err, result) {
         if(err) {
@@ -309,6 +314,7 @@ export function createAndDeployLetterContract(req, res) {
           return false;
         } else if(result && result[0] && result[0].hash) {
           console.log('Content successfully stored. IPFS address:', result[0].hash);
+          jsonFileHash = result[0].hash;
         } else {
           console.log(result);
           console.log(result[0]);
@@ -327,14 +333,14 @@ export function createAndDeployLetterContract(req, res) {
 
         //Create the letter using the contract method createLetter().
         //TODO: To figure out how to get student, recommender and school id to this point.
-       contractInstance.createLetter("Sample Reco Letter", 10, 10, 10, pdfFile.hash, jsonFile.hash);
+      contractInstance.createLetter("Sample Reco Letter", 10, 10, 10, pdfFileHash, jsonFileHash);
 
         //Listen to the new letter event
-       var event = contractInstance.NewLetter(function(error, result) {
-       if(error || !result) return console.error('Error while creating new letter in blockchain', error, result);
-        console.log('Letter Index id in blockchain', result.letterId);
-       });
-      });
+    var event = contractInstance.NewLetter(function(error, result) {
+    if(error || !result) return console.error('Error while creating new letter in blockchain', error, result);
+      console.log('Letter Index id in blockchain', result.letterId);
+    });
+    });
     });
  // return contract.methods.greet().call().then(console.log)
 }
