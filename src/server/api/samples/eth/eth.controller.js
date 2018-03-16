@@ -155,7 +155,7 @@ export function runAnotherSample(req, res) {
           web3.eth.getTransactionReceipt(transactionHash)
           .then(r => res.status(200).json(r))
           .catch(e => {
-            console.log("trying to get contract recepit again...")
+            console.log('trying to get contract recepit again...');
             sleep.sleep(1);
             return retry();
           });
@@ -209,14 +209,13 @@ export function createAndDeployLetterContract(req, res) {
   //Load the Rec-Letter contract(This contract follows ERC721)
  // var letterContractBuffer = fs.readFileSync('LetterContract/letterownership.sol', 'utf8');
   var input = {
-    'letterownership.sol': fs.readFileSync('LetterContract/letterownership.sol', 'utf8'),
-    'letterfactory.sol': fs.readFileSync('LetterContract/letterfactory.sol', 'utf8'),
-    'letterhelper.sol': fs.readFileSync('LetterContract/letterhelper.sol', 'utf8'),
     'ownable.sol': fs.readFileSync('LetterContract/ownable.sol', 'utf8'),
     'safemath.sol': fs.readFileSync('LetterContract/safemath.sol', 'utf8'),
-    'erc721.sol': fs.readFileSync('LetterContract/erc721.sol', 'utf8')
-
-  }; 
+    'erc721.sol': fs.readFileSync('LetterContract/erc721.sol', 'utf8'),
+    'letterfactory.sol': fs.readFileSync('LetterContract/letterfactory.sol', 'utf8'),
+    'letterhelper.sol': fs.readFileSync('LetterContract/letterhelper.sol', 'utf8'),
+    'letterownership.sol': fs.readFileSync('LetterContract/letterownership.sol', 'utf8')
+  };
   //Compile this contract
   const output = solc.compile({sources: input}, 1);
   for(var contractName in output.contracts) {
@@ -307,7 +306,7 @@ export function createAndDeployLetterContract(req, res) {
 
       var pdfFileHash = null;
       var jsonFileHash = null;
-      var url = Buffer.from(fs.readFileSync('LetterContract/jsonRecoLetter1.json', 'utf8'), 'utf8');
+      var url = Buffer.from(fs.readFileSync('LetterContract/jsonRecoLetter1.json', 'utf8'), 'utf8'); 
       ipfs.add(url, function(err, result) {
         if(err) {
           console.error('Content submission error:', err);
@@ -317,10 +316,10 @@ export function createAndDeployLetterContract(req, res) {
           jsonFileHash = result[0].hash;
         } else {
           console.log(result);
-          console.log(result[0]);
+          console.log(result[0]); 
           console.log(result[0].Hash);
           console.error('Unresolved content submission error');
-          return null;
+          return null; 
         }
       });
 
@@ -328,12 +327,16 @@ export function createAndDeployLetterContract(req, res) {
       //   if(err || !res || filesAdded.length !== 2) return console.error('ipfs add error', err, res);
       //   const pdfFile = filesAdded[0];
       //   const jsonFile = filesAdded[1];
-      //   console.log(pdfFile)
+      //   console.log(pdfFile) 
       //   console.log(jsonFile)
 
         //Create the letter using the contract method createLetter().
         //TODO: To figure out how to get student, recommender and school id to this point.
-      contractInstance.createLetter("Sample Reco Letter", 10, 10, 10, pdfFileHash, jsonFileHash);
+      console.log('contractInstance: ', contractInstance);
+      contractInstance.createLetter('Sample Reco Letter', 10, 10, 10, pdfFileHash, jsonFileHash,
+         function(error, result) {
+           console.log('result: ' + result + ', error: ' + error);
+         });
 
         //Listen to the new letter event
     var event = contractInstance.NewLetter(function(error, result) {
