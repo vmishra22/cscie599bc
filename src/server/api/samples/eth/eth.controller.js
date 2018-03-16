@@ -288,80 +288,81 @@ export function createAndDeployLetterContract(req, res) {
       //Lets do something useful with contract Instance:
       //1. Add the file to IPFS
       //TODO: Eventually the path URl for pdf file and json file would be probably from somewhere else.
-      var letterPdfBuffer = fs.readFileSync('LetterContract/PdfRecoletter1.pdf');
-      var letterjsonBuffer = fs.readFileSync('LetterContract/jsonRecoletter1.json');
+      var letterPdfBuffer = fs.readFileSync('LetterContract/PdfRecoletter1.pdf', 'utf8');
+      var letterjsonBuffer = fs.readFileSync('LetterContract/jsonRecoletter1.json', 'utf8');
 
-      var ipfsHost = 'localhost',
-        ipfsAPIPort = '5001',
-        ipfsWebPort = '8080',
-        web3Host = 'localhost',
-        web3Port = '8000';
+      var ipfsHost = 'localhost';
+      var ipfsAPIPort = '5001';
+      // var  ipfsWebPort = '8080';
+      // var  web3Host = 'localhost';
+      // var  web3Port = '8000';
 
-      // IPFS
-      var ipfs = IpfsAPI(ipfsHost, ipfsAPIPort)
+      // IPFS connection setup
+      var ipfs = IpfsAPI(ipfsHost, ipfsAPIPort);
       ipfs.swarm.peers(function(err, response) {
-        if (err) {
+        if(err) {
           console.error(err);
         } else {
-          console.log("IPFS - connected to " + response.length + " peers");
+          console.log('IPFS - connected to ' + response.length + ' peers');
         }
       });
 
-
-
-      var filePaths = [
-        {
-          path: 'LetterContract/PdfRecoletter1.pdf', // The file path
-          content: letterPdfBuffer
-        },
-        {
-          path: 'LetterContract/jsonRecoletter1.json',
-          content: letterjsonBuffer
-        }
-      ];
-
+      //Hash of IPFS files in bytes32 format to pass to contract method
       var pdfFileHash = null;
       var jsonFileHash = null;
-      var url = Buffer.from(fs.readFileSync('LetterContract/jsonRecoLetter1.json', 'utf8'), 'utf8'); 
-      ipfs.add(url, function(err, result) {
+
+      //Add JSON file in IPFS
+      var url1 = Buffer.from(letterjsonBuffer, 'utf8');
+      ipfs.add(url1, function(err, result) {
         if(err) {
           console.error('Content submission error:', err);
           return false;
         } else if(result && result[0] && result[0].hash) {
-          console.log('Content successfully stored. IPFS address:', result[0].hash);
+          console.log('JSON content successfully stored. IPFS address:', result[0].hash);
           jsonFileHash = ipfsHashToBytes32(result[0].hash);
-          pdfFileHash = jsonFileHash;
         } else {
           console.log(result);
-          console.log(result[0]); 
+          console.log(result[0]);
           console.log(result[0].Hash);
           console.error('Unresolved content submission error');
           return null;
         }
       });
 
-      // ipfs.files.add(filePaths, (err, filesAdded) => {
-      //   if(err || !res || filesAdded.length !== 2) return console.error('ipfs add error', err, res);
-      //   const pdfFile = filesAdded[0];
-      //   const jsonFile = filesAdded[1];
-      //   console.log(pdfFile)
-      //   console.log(jsonFile)
+      //Add pdf file in IPFS
+      var url2 = Buffer.from(letterPdfBuffer, 'utf8'); 
+      ipfs.add(url2, function(err, result) {
+        if(err) {
+          console.error('Content submission error:', err);
+          return false;
+        } else if(result && result[0] && result[0].hash) {
+          console.log('PDF content successfully stored. IPFS address:', result[0].hash);
+          pdfFileHash = ipfsHashToBytes32(result[0].hash);
+        } else {
+          console.log(result);
+          console.log(result[0]);
+          console.log(result[0].Hash);
+          console.error('Unresolved content submission error');
+          return null;
+        }
+      });
 
         //Create the letter using the contract method createLetter().
         //TODO: To figure out how to get student, recommender and school id to this point.
-      var name = 'Sample Reco Letter';
-     // console.log('contractInstance: ', contractInstance);
-      contractInstance.methods.createLetter(name, 10, 10, 10, pdfFileHash, jsonFileHash);
+      var letterName = 'Sample Reco Letter';
+      // console.log('contractInstance: ', contractInstance);
+      contractInstance.methods.createLetter(letterName, 10, 10, 10, pdfFileHash, jsonFileHash);
 
-        //Listen to the new letter event
-    //var newLetterEvent = contractInstance.events.NewLetter();
-    contractInstance.events.NewLetter(function(error, result) {
-    if(error || !result) return console.error('Error while creating new letter in blockchain', error, result);
+      //Listen to the new letter event
+      //var newLetterEvent = contractInstance.events.NewLetter();
+      contractInstance.events.NewLetter(function(error, result) {
+        if(error || !result) {
+          return console.error('Error while creating new letter in blockchain', error, result);
+        }
         console.log('Letter Index id in blockchain', result.letterId);
+      });
     });
     });
-    });
- // return contract.methods.greet().call().then(console.log)
 }
 
 
