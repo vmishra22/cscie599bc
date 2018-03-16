@@ -9,7 +9,7 @@ import solc from 'solc';
 import sleep from 'sleep';
 import fs from 'fs';
 
-
+var bs58 = require('bs58');
 var IpfsAPI = require('ipfs-api');
 
 export function getAccounts(req, res) {
@@ -200,6 +200,22 @@ export function runContract(req, res) {
           .then(console.log);
 }
 
+function ipfsHashToBytes32(ipfsHash) {
+  var h = bs58.decode(ipfsHash).toString('hex')
+    .replace(/^1220/, '');
+  if(h.length != 64) {
+    console.log('invalid ipfs format', ipfsHash, h);
+    return null;
+  }
+  return '0x' + h;
+}
+
+function bytes32ToIPFSHash(hashHex) {
+  //console.log('bytes32ToIPFSHash starts with hash_buffer', hash_hex.replace(/^0x/, ''));
+  var buf = new Buffer(hashHex.replace(/^0x/, '1220'), 'hex');
+  return bs58.encode(buf);
+}
+
 /*
   Function to load and compile contracts related to recommendation letter system.
 */
@@ -313,13 +329,14 @@ export function createAndDeployLetterContract(req, res) {
           return false;
         } else if(result && result[0] && result[0].hash) {
           console.log('Content successfully stored. IPFS address:', result[0].hash);
-          jsonFileHash = result[0].hash;
+          jsonFileHash = ipfsHashToBytes32(result[0].hash);
+          pdfFileHash = jsonFileHash;
         } else {
           console.log(result);
           console.log(result[0]); 
           console.log(result[0].Hash);
           console.error('Unresolved content submission error');
-          return null; 
+          return null;
         }
       });
 
@@ -327,21 +344,20 @@ export function createAndDeployLetterContract(req, res) {
       //   if(err || !res || filesAdded.length !== 2) return console.error('ipfs add error', err, res);
       //   const pdfFile = filesAdded[0];
       //   const jsonFile = filesAdded[1];
-      //   console.log(pdfFile) 
+      //   console.log(pdfFile)
       //   console.log(jsonFile)
 
         //Create the letter using the contract method createLetter().
         //TODO: To figure out how to get student, recommender and school id to this point.
-      console.log('contractInstance: ', contractInstance);
-      contractInstance.createLetter('Sample Reco Letter', 10, 10, 10, pdfFileHash, jsonFileHash,
-         function(error, result) {
-           console.log('result: ' + result + ', error: ' + error);
-         });
+      var name = 'Sample Reco Letter';
+     // console.log('contractInstance: ', contractInstance);
+      contractInstance.methods.createLetter(name, 10, 10, 10, pdfFileHash, jsonFileHash);
 
         //Listen to the new letter event
-    var event = contractInstance.NewLetter(function(error, result) {
+    //var newLetterEvent = contractInstance.events.NewLetter();
+    contractInstance.events.NewLetter(function(error, result) {
     if(error || !result) return console.error('Error while creating new letter in blockchain', error, result);
-      console.log('Letter Index id in blockchain', result.letterId);
+        console.log('Letter Index id in blockchain', result.letterId);
     });
     });
     });
