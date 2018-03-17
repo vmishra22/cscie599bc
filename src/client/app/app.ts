@@ -24,6 +24,7 @@ import footer from '../components/footer/footer.component';
 import main from './main/main.component';
 import constants from './app.constants';
 import util from '../components/util/util.module';
+import recletters from './recletters';
 
 import './app.scss';
 
@@ -31,22 +32,19 @@ angular.module('recLettersApp', [
   ngCookies,
   ngResource,
   ngSanitize,
-
-
   uiRouter,
   uiBootstrap,
-
   _Auth,
   account,
   admin,
   samples,
   'validation.match',
-    navbar,
+  navbar,
   footer,
   main,
   constants,
-
-  util
+  util,
+  recletters
 ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {

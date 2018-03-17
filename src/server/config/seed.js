@@ -8,6 +8,8 @@ import Thing from '../api/thing/thing.model';
 import User from '../api/user/user.model';
 import config from './environment/';
 
+import CandidateQuestion from '../model/candidatequestions';
+
 export default function seedDatabaseIfNeeded() {
   if(config.seedDB) {
     Thing.find({}).remove()
@@ -62,5 +64,40 @@ export default function seedDatabaseIfNeeded() {
         .then(() => console.log('finished populating users'))
         .catch(err => console.log('error populating users', err));
       });
+
+    CandidateQuestion.find({}).remove()
+    .then(() => {
+      CandidateQuestion.create({
+        questionText: 'Analytical ability of the applicant?',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
+      }, 
+      {
+        questionText: 'In what capacity have you known the applicant?',
+        responseChoices: [
+          'Large Class / Lecture',
+          'Small Class / Seminar/ Lab',
+          'Independent Study Student',
+          'Advisee',
+          'Other'
+        ]
+      },
+      {
+        questionText: 'How well do you know the applicant?',
+        responseChoices: [
+          'See on a regular basis',
+          'At one time',
+          'Knew him/her only through in-class contact',
+          'Only through records'
+        ]
+      })
+      .then(() => console.log('finished populating candidate questions'))
+      .catch(err => console.log('error populating candidate questions', err));
+    });
   }
 }

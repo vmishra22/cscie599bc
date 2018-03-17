@@ -8,6 +8,10 @@ export class NavbarComponent {
     'state': 'main'
   },
   {
+    'title': 'Create Rec Letter',
+    'state': 'create'
+  },
+  {
     'title': 'Mongo Sample',
     'state': 'mongo'
   },
