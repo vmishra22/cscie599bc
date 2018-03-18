@@ -6,12 +6,36 @@
 'use strict';
 
 import CandidateQuestion from '../../model/candidatequestions';
+import ProgramCandidateQuestion from '../../model/program_candidatequestions';
 
 export function getCandidateQuestions(req, res) {
   console.log('Entering getCandidateQuestions()..');
-  CandidateQuestion.find(function(err, candidateQuestion){
-    res.json(candidateQuestion);
-  }); 
+  if(req.query.schoolId && req.query.programName)
+  {
+    console.log(req.query.schoolId);
+    console.log(req.query.programName);
+    console.log(req.query.schoolId);
+    ProgramCandidateQuestion.find({schoolId: req.query.schoolId, programName: req.query.programName}, 
+      function(err, programCandidateQuestion){
+      res.json(programCandidateQuestion);
+    }); 
+
+  }
+  else if(req.query.schoolId)
+  {
+    console.log(req.query.schoolId);
+    ProgramCandidateQuestion.find({schoolId: req.query.schoolId}, 
+      function(err, programCandidateQuestion){
+      res.json(programCandidateQuestion);
+    }); 
+
+  }
+  else
+  {
+    CandidateQuestion.find(function(err, candidateQuestion){
+      res.json(candidateQuestion);
+    }); 
+  }
 }
 
 export function createCandidateQuestion(req, res) {
