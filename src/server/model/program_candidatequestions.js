@@ -14,4 +14,4 @@ var ProgramCandidateQuestionSchema = mongoose.Schema({
     ]
 });
 
-var CandidateQuestion = module.exports = mongoose.model('ProgramCandidateQuestion', ProgramCandidateQuestionSchema);
+var ProgramCandidateQuestion = module.exports = mongoose.model('ProgramCandidateQuestion', ProgramCandidateQuestionSchema);

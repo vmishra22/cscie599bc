@@ -30,10 +30,16 @@ export function getRecLetter(req, res) {
 
 export function createRecLetter(req, res) {
   console.log('Entering createRecLetter()..');
-  console.log(req.body.recLetterContents);
-  console.log(req.body.candidateQuestions);
+  console.log(req.body);
+
+  var loggedInRecommenderId = ''; //get logged in user id
 
   let newRecLetter = new RecLetter({
+    studentId: req.body.studentId,
+    recommenderId: loggedInRecommenderId,
+    schoolId: req.body.schoolId,
+    programName: req.body.programName,
+    submissionDate: new Date(),
     recLetterContents: req.body.recLetterContents,
     candidateQuestions: req.body.candidateQuestions
   });
