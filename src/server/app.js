@@ -28,8 +28,13 @@ require('./routes').default(app);
 
 // Create Ethereum connection
 //Vinay: HttpProvider is deprecated now needs to use websocket or IPC to enable subscription events.
-var web3 = new Web3(new Web3.providers.HttpProvider(config.web3Url));
+var web3Provider;
+
+web3Provider = new Web3.providers.HttpProvider(config.web3Url);
+
+var web3 = new Web3(web3Provider);
 app.set('web3', web3);
+app.set('web3Provider', web3Provider);
 
 // Start server
 function startServer() {

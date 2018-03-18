@@ -245,124 +245,137 @@ export function createAndDeployLetterContract(req, res) {
   // console.log('gasEstimate: ', gasEstimate);
   
   // Create a Contract object from 'abi'
-  let contract = new web3.eth.Contract(abi);
-
+  var contract = web3.eth.contract(abi);
+ // let gasEstimate = web3.eth.estimateGas({data: bytecode});
 
   // Ying: for contract deployment process, it only needs to happen once on the blockchain
   // The contract address will be unique universally, the account who called to the function in the contract address is the person
   // who initiated letter submission process
 
+  return new Promise(function(resolve, reject) {
 
-  return web3.eth.getAccounts()
-    .then(accounts => {
-      // Deploy contract instance
-      return contract.deploy({
-        data: '0x' + bytecode
-      })
-    .send({
-      from: accounts[0],
-      gas: 3000000, // Must be below gas limit of 3141592 and above instrinsic gas usage
-    })
-    .on('error', error => {
-      console.log('Error on deploy: ', error);
-    })
-    .on('transactionHash', function(transactionHash) {
-      console.log('successfully got the transaction hash: ' + transactionHash)
+  //Get the accounts
+  var accounts = web3.eth.accounts;
 
-      // Retrying every second to get the contract receipt,
-      // workaround for bug in the API
-      const retry = () => web3.eth.getTransactionReceipt(transactionHash)
-        .then(r => res.status(200).json(r))
-        .catch(e => {
-          console.log('trying to get contract recepit again...');
-          sleep.sleep(1);
-          return retry();
-        });
+  var contractInstance = contract.new(1, {
+    from: accounts[0],
+    data: '0x' + bytecode,
+    gas: 3000000
+  }, function(err, myContract){
+    if(!err) {
+       // NOTE: The callback will fire twice!
+       // Once the contract has the transactionHash property set and once its deployed on an address.
 
-      return retry();
-    })
-    .on('receipt', receipt => {
-      console.log('receipt contract address', receipt.contractAddress);
-    })
-    .then(contractInstance => {
-      //Lets do something useful with contract Instance:
-      //1. Add the file to IPFS
-      //TODO: Eventually the path URl for pdf file and json file would be probably from somewhere else.
-      var letterPdfBuffer = fs.readFileSync('LetterContract/PdfRecoletter1.pdf', 'utf8');
-      var letterjsonBuffer = fs.readFileSync('LetterContract/jsonRecoletter1.json', 'utf8');
-
-      var ipfsHost = 'localhost';
-      var ipfsAPIPort = '5001';
-      // var  ipfsWebPort = '8080';
-      // var  web3Host = 'localhost';
-      // var  web3Port = '8000';
-
-      // IPFS connection setup
-      var ipfs = IpfsAPI(ipfsHost, ipfsAPIPort);
-      ipfs.swarm.peers(function(err, response) {
-        if(err) {
-          console.error(err);
+       // e.g. check tx hash on the first call (transaction send)
+       if(!myContract.address) {
+           console.log(myContract.transactionHash); // The hash of the transaction, which deploys the contract
+       
+       // check address on the second call (contract deployed)
         } else {
-          console.log('IPFS - connected to ' + response.length + ' peers');
-        }
-      });
+          console.log('Contract Address', myContract.address); // the contract address
+          if(myContract.address){
+           //Lets do something useful with contract Instance:
+           //1. Add the file to IPFS
+           //TODO: Eventually the path URl for pdf file and json file would be probably from somewhere else.
+           var letterPdfBuffer = fs.readFileSync('LetterContract/PdfRecoletter1.pdf', 'utf8');
+           var letterjsonBuffer = fs.readFileSync('LetterContract/jsonRecoletter1.json', 'utf8');
+       
+           var ipfsHost = 'localhost';
+           var ipfsAPIPort = '5001';
+           // var  ipfsWebPort = '8080';
+           // var  web3Host = 'localhost';
+           // var  web3Port = '8000';
+       
+           // IPFS connection setup
+           var ipfs = IpfsAPI(ipfsHost, ipfsAPIPort);
+           ipfs.swarm.peers(function(err, response) {
+             if(err) {
+               console.error(err);
+             } else {
+               console.log('IPFS - connected to ' + response.length + ' peers');
+             }
+           });
+       
+           //Hash of IPFS files in bytes32 format to pass to contract method
+           var pdfFileHash = null;
+           var jsonFileHash = null;
+       
+           //Add JSON file in IPFS
+           var url1 = Buffer.from(letterjsonBuffer, 'utf8');
+           ipfs.add(url1, function(err, result) {
+             if(err) {
+               console.error('Content submission error:', err);
+               return false;
+             } else if(result && result[0] && result[0].hash) {
+               console.log('JSON content successfully stored. IPFS address:', result[0].hash);
+               jsonFileHash = ipfsHashToBytes32(result[0].hash);
+             } else {
+               console.log(result);
+               console.log(result[0]);
+               console.log(result[0].Hash);
+               console.error('Unresolved content submission error');
+               return null;
+             }
+           });
+       
+           //Add pdf file in IPFS
+           var url2 = Buffer.from(letterPdfBuffer, 'utf8'); 
+           ipfs.add(url2, function(err, result) {
+             if(err) {
+               console.error('Content submission error:', err);
+               return false;
+             } else if(result && result[0] && result[0].hash) {
+               console.log('PDF content successfully stored. IPFS address:', result[0].hash);
+               pdfFileHash = ipfsHashToBytes32(result[0].hash);
 
-      //Hash of IPFS files in bytes32 format to pass to contract method
-      var pdfFileHash = null;
-      var jsonFileHash = null;
+               var block = web3.eth.getBlock('latest').number;
+               var event = myContract.NewLetter({}, {fromBlock: 0, toBlock: 'latest'});
+              event.watch(function(error, result){
+              if (error) {
+                  console.log ("Error="+ error);
+                }
+              if (result) {
+                if(result.blockNumber > block){
+                  console.log ("event address=" + result.address);
+                  console.log ("event block Number=" + result.blockNumber);
+                  console.log(result);
+                }
+                }
+                });
 
-      //Add JSON file in IPFS
-      var url1 = Buffer.from(letterjsonBuffer, 'utf8');
-      ipfs.add(url1, function(err, result) {
-        if(err) {
-          console.error('Content submission error:', err);
-          return false;
-        } else if(result && result[0] && result[0].hash) {
-          console.log('JSON content successfully stored. IPFS address:', result[0].hash);
-          jsonFileHash = ipfsHashToBytes32(result[0].hash);
-        } else {
-          console.log(result);
-          console.log(result[0]);
-          console.log(result[0].Hash);
-          console.error('Unresolved content submission error');
-          return null;
-        }
-      });
+               var letterName = 'Sample Reco Letter';
+               myContract.createLetter(letterName, 10, 10, 10, pdfFileHash, jsonFileHash, {from: accounts[1], gas: 3000000},
+                    function(error, rest){
+                    if (!error) {
+                        console.log(rest);
+                    } else {
+                        console.log(error);  
+                    }
+                 });
+           
+               //Listen to the new letter event
+               //var newLetterEvent = contractInstance.events.NewLetter();
+              // event.stopWatching();
+               
 
-      //Add pdf file in IPFS
-      var url2 = Buffer.from(letterPdfBuffer, 'utf8'); 
-      ipfs.add(url2, function(err, result) {
-        if(err) {
-          console.error('Content submission error:', err);
-          return false;
-        } else if(result && result[0] && result[0].hash) {
-          console.log('PDF content successfully stored. IPFS address:', result[0].hash);
-          pdfFileHash = ipfsHashToBytes32(result[0].hash);
-        } else {
-          console.log(result);
-          console.log(result[0]);
-          console.log(result[0].Hash);
-          console.error('Unresolved content submission error');
-          return null;
-        }
-      });
+             } else {
+               console.log(result);
+               console.log(result[0]);
+               console.log(result[0].Hash);
+               console.error('Unresolved content submission error');
+               return null;
+             }
+           });
+       
+             //Create the letter using the contract method createLetter().
+             //TODO: To figure out how to get student, recommender and school id to this point.
+          
+         }
+      }
+    }
+  });
 
-        //Create the letter using the contract method createLetter().
-        //TODO: To figure out how to get student, recommender and school id to this point.
-      var letterName = 'Sample Reco Letter';
-      // console.log('contractInstance: ', contractInstance);
-      contractInstance.methods.createLetter(letterName, 10, 10, 10, pdfFileHash, jsonFileHash);
-
-      //Listen to the new letter event
-      //var newLetterEvent = contractInstance.events.NewLetter();
-      contractInstance.events.NewLetter(function(error, result) {
-        if(error) {
-          return console.error('Error while creating new letter in blockchain', error, result);
-        }
-        console.log('Letter Index id in blockchain', result.letterId);
-      });
-    });
-    });
+});
 }
 
 
