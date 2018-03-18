@@ -8,6 +8,7 @@ import { RecLetter } from '../../classes/recletter';
 export default class CreateRecLetterController {
 
   $http;
+  $location;
   filesToUpload: Array<File>;
   candidateQuestions: CandidateQuestion[];
   questionResponses: QuestionResponse[] = [];
@@ -15,8 +16,9 @@ export default class CreateRecLetterController {
  
 
   /*@ngInject*/
-  constructor($http) {
+  constructor($http, $location) {
     this.$http = $http;
+    this.$location = $location;
   }
 
   $onInit() {
@@ -69,24 +71,22 @@ export default class CreateRecLetterController {
         };
 
         this.postRecLetter(newRecLetter);
+
       };
+
+      this.$location.path('/recletters/list');
 }
   
 
-  getRecLetters() {
-    console.log("Entering getRecLetters()..");
-    return this.$http.get('http://localhost:3000/api/recletters');
-  }
-
   postRecLetter(newRecLetter) {
     console.log("Entering submitRecLetter()..");
-    this.$http.post('http://localhost:3000/api/recletters', newRecLetter)
+    this.$http.post('http://localhost:3000/api/RecommendationLetter', newRecLetter)
       .then(function(response){});
   }
 
   getCandidateQuestions($scope) {
     console.log("Entering getCandidateQuestions()..");
-    this.$http.get('http://localhost:3000/api/candidatequestions')
+    this.$http.get('http://localhost:3000/api/CandidateQuestions')
       .then(function(response) {
         $scope.candidateQuestions = response.data;
       });

@@ -14,6 +14,20 @@ export function getRecLetters(req, res) {
   }); 
 }
 
+export function getRecLetter(req, res) {
+  console.log('Entering getRecLetter()..');
+  RecLetter.find({_id: req.params.id}, function(err, result){
+    if(err)
+    {
+        res.json(err);
+    }
+    else
+    {
+        res.json(result);
+    }
+  });
+}
+
 export function createRecLetter(req, res) {
   console.log('Entering createRecLetter()..');
   console.log(req.body.recLetterContents);

@@ -5,9 +5,10 @@ var controller = require('./recletter.controller');
 
 var router = express.Router();
 
-router.get('/', controller.getRecLetters);
-router.post('/', controller.createRecLetter);
-router.delete('/delete/:id', controller.deleteRecLetter);
+router.get('/RecommendationLetters', controller.getRecLetters);
+router.get('/RecommendationLetter/:id', controller.getRecLetter);
+router.post('/RecommendationLetter', controller.createRecLetter);
+router.delete('/RecommendationLetter/:id', controller.deleteRecLetter);
 
 
 module.exports = router;
