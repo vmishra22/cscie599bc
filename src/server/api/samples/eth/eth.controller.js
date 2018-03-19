@@ -225,15 +225,15 @@ export function createAndDeployLetterContract(req, res) {
   //Load the Rec-Letter contract(This contract follows ERC721)
   //Sequence of files in input object is important based upon of dependencies.
   var input = {
-    'ownable.sol': fs.readFileSync('LetterContract/ownable.sol', 'utf8'),
-    'safemath.sol': fs.readFileSync('LetterContract/safemath.sol', 'utf8'),
-    'erc721.sol': fs.readFileSync('LetterContract/erc721.sol', 'utf8'),
-    'letterfactory.sol': fs.readFileSync('LetterContract/letterfactory.sol', 'utf8'),
-    'letterhelper.sol': fs.readFileSync('LetterContract/letterhelper.sol', 'utf8'),
-    'letterownership.sol': fs.readFileSync('LetterContract/letterownership.sol', 'utf8')
+    'ownable.sol': fs.readFileSync('LetterContract/contracts/ownable.sol', 'utf8'),
+    'safemath.sol': fs.readFileSync('LetterContract/contracts/safemath.sol', 'utf8'),
+    'erc721.sol': fs.readFileSync('LetterContract/contracts/erc721.sol', 'utf8'),
+    'letterfactory.sol': fs.readFileSync('LetterContract/contracts/letterfactory.sol', 'utf8'),
+    'letterhelper.sol': fs.readFileSync('LetterContract/contracts/letterhelper.sol', 'utf8'),
+    'letterownership.sol': fs.readFileSync('LetterContract/contracts/letterownership.sol', 'utf8')
   };
   //Compile this contract
-  const output = solc.compile({ sources: input }, 1); 
+  const output = solc.compile({ sources: input }, 1);
 
   //Retrieve 'abi' and 'bytecode' from the compiled contract
   const bytecode = output.contracts['letterownership.sol:LetterOwnership'].bytecode;

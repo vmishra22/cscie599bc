@@ -1,0 +1,40 @@
+.main-header {
+  font-size: 5rem;
+  line-height: 1.2;
+}
+
+.main-sub-header {
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.circle-btn {
+  font-weight: 700;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 300px;
+  padding: 2rem 3rem;
+}
+
+.red-btn {
+  background-color: #f05f40;
+  border-color: #f05f40;
+  color: #fff;
+}
+
+.red-btn.active, .red-btn:focus, .red-btn:hover {
+  color: #fff;
+  background-color: #ee4b28!important;
+}
+
+.white-btn {
+  color: #212529;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
+}
+
+.white-btn.active, .white-btn:focus, .white-btn:hover {
+  color: #212529;
+  background-color: #dae0e5;
+  border-color: #d3d9df;
+}
