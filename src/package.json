@@ -45,6 +45,7 @@
     "sleep": "^5.1.1",
     "solc": "^0.4.21",
     "sprint-js": "~0.1.0",
+    "truffle-contract": "^3.0.4",
     "web3": "^0.19.1",
     "webpack-cli": "^2.0.12"
   },
