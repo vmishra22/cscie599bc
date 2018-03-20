@@ -20,6 +20,14 @@ var UserSchema = new Schema({
     type: String,
     required: true
   },
+  addressLine1: String,
+  addressLine2: String,
+  city: String,
+  state: String,
+  zip: String,
+  recommenderTitle: String,
+  schoolContactName: String,
+  schoolContactNumber: String,
   provider: String,
   salt: String
 });
@@ -88,6 +96,54 @@ UserSchema
 var validatePresenceOf = function(value) {
   return value && value.length;
 };
+
+
+// Validate name
+UserSchema
+  .path('name')
+  .validate(function(name) {
+    return name.length;
+  }, 'Name cannot be blank');
+ 
+// Validate Address Line 1
+UserSchema
+  .path('addressLine1')
+  .validate(function(addressLine1) {
+    return addressLine1.length;
+  }, 'Address Line 1 cannot be blank');
+ 
+// Validate City
+UserSchema
+  .path('city')
+  .validate(function(city) {
+    return city.length;
+  }, 'City cannot be blank');
+ 
+// Validate State
+UserSchema
+  .path('state')
+  .validate(function(state) {
+    return state.length;
+  }, 'State cannot be blank'); 
+ 
+// Validate Zip
+UserSchema
+  .path('zip')
+  .validate(function(zip) {
+    return zip.length;
+  },  'Zip cannot be blank'); 
+ 
+// Validate School Contact Name
+UserSchema
+  .path('schoolContactName')
+  .validate(function(schoolContactName) {
+    if(this.role == 'SCHOOL') {
+      return schoolContactName.length;
+    }
+    else {
+      return true;
+   }
+  },  'School Contact Name cannot be blank'); 
 
 /**
  * Pre-save hook
