@@ -6,6 +6,10 @@
 'use strict'
 
 import RecLetter from '../../model/recletters';
+import fs from 'fs';
+
+var bs58 = require('bs58');
+var IpfsAPI = require('ipfs-api');
 
 const Web3 = require('web3');
 
@@ -25,26 +29,25 @@ export function getRecLetters(req, res) {
 
   // create letter in smart contract
   // TODO: this is for demontration purpose, will move this to createRecLetter()
-  letterOwnershipContract.deployed().then(function(instance) {
-    var web3 = req.app.get('web3');
-    letterOwnership = instance;
-    var accounts = web3.eth.accounts;
-    var letterName = 'Sample Reco Letter';
-    var pdfFileHash = null;
-    var jsonFileHash = null;
-    
-    return letterOwnership.createLetter(letterName, 10, 10, 10, pdfFileHash, jsonFileHash, {
-      from: accounts[0],
-      gas: 3000000
-    });
-  })
-  .then(function(res1) {
-    console.log(res1);
-  })
-  .catch(function(e) {
-    console.log(e);
-  });
+  
 }
+
+function ipfsHashToBytes32(ipfsHash) {
+  var h = bs58.decode(ipfsHash).toString('hex')
+    .replace(/^1220/, '');
+  if(h.length != 64) {
+    console.log('invalid ipfs format', ipfsHash, h);
+    return null;
+  }
+  return '0x' + h;
+}
+
+function bytes32ToIPFSHash(hashHex) {
+  //console.log('bytes32ToIPFSHash starts with hash_buffer', hash_hex.replace(/^0x/, ''));
+  var buf = new Buffer(hashHex.replace(/^0x/, '1220'), 'hex');
+  return bs58.encode(buf);
+}
+
 
 export function getRecLetter (req, res) {
   console.log('Entering getRecLetter()..')
@@ -72,17 +75,81 @@ export function createRecLetter(req, res) {
     submissionDate: new Date(),
     recLetterContents: req.body.recLetterContents,
     candidateQuestions: req.body.candidateQuestions
-  })
+  });
 
-  newRecLetter.save(function (err, recLetter) {
-    if (err) {
-      res.json(err)
-    }
-    else {
-      res.json(recLetter)
-    }
-  })
+  letterOwnershipContract.deployed().then(function(instance) {
+    var web3 = req.app.get('web3');
+    letterOwnership = instance;
+    var accounts = web3.eth.accounts;
+    var letterName = 'Sample Reco Letter';
+    var letterPdfBuffer = newRecLetter.recLetterContents;
+    var letterjsonBuffer = newRecLetter.candidateQuestions;
 
+    var ipfsHost = 'localhost';
+    var ipfsAPIPort = '5001';
+    // IPFS connection setup
+    var ipfs = IpfsAPI(ipfsHost, ipfsAPIPort);
+    ipfs.swarm.peers(function(err, response) {
+      if(err) {
+        console.error(err);
+      } else {
+        console.log('IPFS - connected to ' + response.length + ' peers');
+      }
+    });
+
+    //Hash of IPFS files in bytes32 format to pass to contract method
+    var pdfFileHash = null;
+    var jsonFileHash = null;
+
+    //Add JSON file in IPFS
+    var url1 = Buffer.from(letterjsonBuffer, 'utf8');
+    ipfs.add(url1, function(err, result) {
+      if(err) {
+        console.error('Content submission error:', err);
+      } else if(result && result[0] && result[0].hash) {
+        console.log('JSON content successfully stored. IPFS address:', result[0].hash);
+        jsonFileHash = ipfsHashToBytes32(result[0].hash);
+
+        //Add pdf file in IPFS
+        var url2 = Buffer.from(letterPdfBuffer, 'utf8');
+        ipfs.add(url2, function(err, res1) {
+          if(err) {
+            console.error('Content submission error:', err);
+          } else if(res1 && res1[0] && res1[0].hash) {
+            console.log('PDF content successfully stored. IPFS address:', res1[0].hash);
+            pdfFileHash = ipfsHashToBytes32(res1[0].hash);
+
+            letterOwnership.createLetter(letterName, 10, 10, 10, pdfFileHash, jsonFileHash, {
+              from: accounts[1],
+              gas: 3000000
+            }).then(function(createLetterResult) {
+              console.log(createLetterResult);
+            });
+          }
+        });
+      } else {
+        console.log(result);
+        console.log(result[0]);
+        console.log(result[0].Hash);
+        console.error('Unresolved content submission error');
+      }
+    });
+  })
+  .then(function(res1) {
+    console.log(res1);
+  })
+  .catch(function(e) {
+    console.log(e);
+  });
+
+  // newRecLetter.save(function (err, recLetter) {
+  //   if (err) {
+  //     res.json(err)
+  //   }
+  //   else {
+  //     res.json(recLetter)
+  //   }
+  // })
 }
 
 export function deleteRecLetter (req, res) {
