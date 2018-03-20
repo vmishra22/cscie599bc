@@ -3,9 +3,13 @@ public
 .tmp
 .sass-cache
 .idea
+.vscode
 client/bower_components
 client/app.html
 dist
 /server/config/local.env.js
+/server/config/local.env.sample.js
 npm-debug.log
 coverage
+data
+docker

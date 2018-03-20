@@ -1,28 +1,40 @@
-.thing-form {
-  margin: 20px 0;
+.main-header {
+  font-size: 5rem;
+  line-height: 1.2;
 }
 
-#banner {
-  border-bottom: none;
-  margin-top: -20px;
+.main-sub-header {
+  font-size: 2rem;
+  margin-bottom: 30px;
 }
 
-#banner h1 {
-  font-size: 60px;
-  line-height: 1;
-  letter-spacing: -1px;
+.circle-btn {
+  font-weight: 700;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 300px;
+  padding: 2rem 3rem;
 }
 
-.hero-unit {
-  position: relative;
-  padding: 30px 15px;
-  color: #F5F5F5;
-  text-align: center;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-  background: #4393B9;
+.red-btn {
+  background-color: #f05f40;
+  border-color: #f05f40;
+  color: #fff;
 }
 
-.navbar-text {
-  margin-left: 15px;
+.red-btn.active, .red-btn:focus, .red-btn:hover {
+  color: #fff;
+  background-color: #ee4b28!important;
 }
 
+.white-btn {
+  color: #212529;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
+}
+
+.white-btn.active, .white-btn:focus, .white-btn:hover {
+  color: #212529;
+  background-color: #dae0e5;
+  border-color: #d3d9df;
+}

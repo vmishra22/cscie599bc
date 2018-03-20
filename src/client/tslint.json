@@ -1,6 +1,5 @@
 {
   "rules": {
-    "class-name": true,
     "curly": true,
     "eofline": true,
     "forin": true,
@@ -30,7 +29,6 @@
     "no-unused-expression": true,
     "no-unused-variable": true,
     "no-unreachable": true,
-    "no-use-before-declare": true,
     "one-line": [true,
       "check-open-brace",
       "check-catch",
@@ -49,13 +47,6 @@
       "property-declaration": "nospace",
       "variable-declaration": "nospace"
     }],
-    "variable-name": false,
-    "whitespace": [true,
-      "check-branch",
-      "check-decl",
-      "check-operator",
-      "check-separator",
-      "check-type"
-    ]
+    "variable-name": false
   }
 }
