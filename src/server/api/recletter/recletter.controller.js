@@ -26,10 +26,6 @@ export function getRecLetters(req, res) {
   RecLetter.find(function(err, recLetters) {
     res.json(recLetters);
   });
-
-  // create letter in smart contract
-  // TODO: this is for demontration purpose, will move this to createRecLetter()
-  
 }
 
 function ipfsHashToBytes32(ipfsHash) {
@@ -63,27 +59,27 @@ export function getRecLetter (req, res) {
 
 export function createRecLetter(req, res) {
   console.log('Entering createRecLetter()..');
-  console.log(req.body);
+  //console.log(req.body);
 
   var loggedInRecommenderId = '' //get logged in user id
+  //These Ids need to be passed to contract, currently they are undefined
+  var studentId = parseInt(req.body.studentId);
+  var recommenderId = parseInt(loggedInRecommenderId);
+  var schoolId =  parseInt(req.body.schoolId);
+  console.log(req.body.studentId + "  " +loggedInRecommenderId + "  " +  req.body.schoolId);
 
-  let newRecLetter = new RecLetter({
-    studentId: req.body.studentId,
-    recommenderId: loggedInRecommenderId,
-    schoolId: req.body.schoolId,
-    programName: req.body.programName,
-    submissionDate: new Date(),
-    recLetterContents: req.body.recLetterContents,
-    candidateQuestions: req.body.candidateQuestions
-  });
+  //This is the new letter Id thats created in the blockchain. MongoDB needs to hold this ID to make the subsequent operation
+  //on this letter for viewing, deleting etc. 
+  var newLetterId = null;
 
+  //Deploy the contract using truffle api.
   letterOwnershipContract.deployed().then(function(instance) {
     var web3 = req.app.get('web3');
     letterOwnership = instance;
     var accounts = web3.eth.accounts;
     var letterName = 'Sample Reco Letter';
-    var letterPdfBuffer = newRecLetter.recLetterContents;
-    var letterjsonBuffer = newRecLetter.candidateQuestions;
+    var letterPdfBuffer = req.body.recLetterContents;
+    var letterjsonBuffer = req.body.candidateQuestions;
 
     var ipfsHost = 'localhost';
     var ipfsAPIPort = '5001';
@@ -123,9 +119,28 @@ export function createRecLetter(req, res) {
               from: accounts[1],
               gas: 3000000
             }).then(function(createLetterResult) {
-              console.log(createLetterResult);
+              //Get the letterId
+              newLetterId = createLetterResult.logs[0].args['letterId']['c'][0];
+              
+              let newRecLetter = new RecLetter({
+                letterId: newLetterId,
+                studentId: req.body.studentId,
+                recommenderId: loggedInRecommenderId,
+                schoolId: req.body.schoolId,
+                programName: req.body.programName,
+                submissionDate: new Date(),
+                recLetterContents: null,
+                candidateQuestions: null
+              });
+              newRecLetter.save(function(err, recLetter) {
+                if(err) {
+                  res.json(err);
+                } else {
+                  console.log('Rec Letter data saved in mongoose');
+                }
+              });
             });
-          }
+          }//else block of pdf ipfs save
         });
       } else {
         console.log(result);

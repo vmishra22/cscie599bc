@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
 var RecLetterSchema = mongoose.Schema({
+    letterId: String,
     studentId: String,
     recommenderId: String,
     schoolId: String,
