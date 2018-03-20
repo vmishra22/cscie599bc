@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var ProgramCandidateQuestionSchema = mongoose.Schema({
     schoolId: String,
     programName: String,
-    questionText:{
+    questionText: {
         type: String,
         require: true
     },

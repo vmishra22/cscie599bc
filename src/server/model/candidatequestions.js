@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var CandidateQuestionSchema = mongoose.Schema({
-    questionText:{
+    questionText: {
         type: String,
         require: true
     },

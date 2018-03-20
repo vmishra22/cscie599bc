@@ -6,7 +6,7 @@ var RecLetterSchema = mongoose.Schema({
     schoolId: String,
     programName: String,
     submissionDate: Date,
-    recLetterContents:{
+    recLetterContents: {
         //type: Buffer,
         type: String,
         require: true

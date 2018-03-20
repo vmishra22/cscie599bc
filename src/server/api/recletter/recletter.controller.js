@@ -7,15 +7,15 @@
 
 import RecLetter from '../../model/recletters';
 
-const web3 = require('web3');
+const Web3 = require('web3');
 
-const provider = new web3.providers.HttpProvider('http://localhost:7545');
+const provider = new Web3.providers.HttpProvider('http://localhost:7545');
 const contract = require('truffle-contract');
-import letterFactoryArtifact from '../../../LetterContract/build/contracts/LetterFactory.json';
+import letterOwnershipArtifact from '../../../LetterContract/build/contracts/LetterOwnership.json';
 
-var letterFactoryContract = contract(letterFactoryArtifact);
-letterFactoryContract.setProvider(provider);
-var letterFactory;
+var letterOwnershipContract = contract(letterOwnershipArtifact);
+letterOwnershipContract.setProvider(provider);
+var letterOwnership;
 
 export function getRecLetters(req, res) {
   console.log('Entering getRecLetters()..');
@@ -25,19 +25,21 @@ export function getRecLetters(req, res) {
 
   // create letter in smart contract
   // TODO: this is for demontration purpose, will move this to createRecLetter()
-  letterFactoryContract.deployed().then(function(instance) {
-    letterFactory = instance;
+  letterOwnershipContract.deployed().then(function(instance) {
+    var web3 = req.app.get('web3');
+    letterOwnership = instance;
     var accounts = web3.eth.accounts;
     var letterName = 'Sample Reco Letter';
     var pdfFileHash = null;
     var jsonFileHash = null;
-    return letterFactory.createLetter(letterName, 10, 10, 10, pdfFileHash, jsonFileHash, {
-      from: accounts[1],
+    
+    return letterOwnership.createLetter(letterName, 10, 10, 10, pdfFileHash, jsonFileHash, {
+      from: accounts[0],
       gas: 3000000
     });
   })
-  .then(function(res) {
-    console.log(res);
+  .then(function(res1) {
+    console.log(res1);
   })
   .catch(function(e) {
     console.log(e);
@@ -56,9 +58,9 @@ export function getRecLetter (req, res) {
   })
 }
 
-export function createRecLetter (req, res) {
-  console.log('Entering createRecLetter()..')
-  console.log(req.body)
+export function createRecLetter(req, res) {
+  console.log('Entering createRecLetter()..');
+  console.log(req.body);
 
   var loggedInRecommenderId = '' //get logged in user id
 
