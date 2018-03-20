@@ -8,7 +8,7 @@ module.exports = {
     }
   },
   rpc: {
-        host: "localhost",
+        host: 'localhost',
         gas: 4712388,
         port: 7545
     },
@@ -18,4 +18,4 @@ module.exports = {
             runs: 200
         }
     },
-}
+};
