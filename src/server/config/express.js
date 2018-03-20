@@ -25,18 +25,18 @@ export default function(app) {
   var env = app.get('env');
 
   if(env === 'development' || env === 'test') {
-    app.use(express.static(path.join(config.root, '.tmp')));
+    app.use(express.static(path.join(config.server.root, '.tmp')));
   }
 
   if(env === 'production') {
-    app.use(favicon(path.join(config.root, 'client', 'favicon.ico')));
+    app.use(favicon(path.join(config.server.root, 'client', 'favicon.ico')));
   }
 
-  app.set('appPath', path.join(config.root, 'client'));
+  app.set('appPath', path.join(config.server.root, 'client'));
   app.use(express.static(app.get('appPath')));
   app.use(morgan('dev'));
 
-  app.set('views', `${config.root}/server/views`);
+  app.set('views', `${config.server.root}/server/views`);
   app.engine('html', require('ejs').renderFile);
   app.set('view engine', 'html');
   app.use(compression());
@@ -94,7 +94,7 @@ export default function(app) {
     browserSync.init({
       open: false,
       logFileChanges: false,
-      proxy: `localhost:${config.port}`,
+      proxy: `localhost:${config.server.port}`,
       ws: true,
       middleware: [
         webpackDevMiddleware(compiler, {

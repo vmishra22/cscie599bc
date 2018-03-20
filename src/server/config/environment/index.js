@@ -16,39 +16,51 @@ import _ from 'lodash';
 var all = {
   env: process.env.NODE_ENV,
 
-  // Root path of server
-  root: path.normalize(`${__dirname}/../../..`),
+  
+  server: {
+    // Root path of server
+    root: path.normalize(`${__dirname}/../../..`),
 
-  // Browser-sync port
-  browserSyncPort: process.env.BROWSER_SYNC_PORT || 3000,
+    // Browser-sync port
+    browserSyncPort: process.env.BROWSER_SYNC_PORT || 3000,
 
-  // Server port
-  port: process.env.PORT || 9000,
+    // Server port
+    port: process.env.PORT || 9000,
 
-  // Server IP
-  ip: process.env.IP || '0.0.0.0',
-
-  // Should we populate the DB with sample data?
-  seedDB: false,
-
-  // Secret for session, you will want to change this and make it an environment variable
-  secrets: {
-    session: 'rec-letters-secret'
+    // Server IP
+    ip: process.env.IP || '0.0.0.0',
+    
+    // Secret for session, you will want to change this and make it an environment variable
+    secrets: {
+      session: process.env.SESSION_SECRET || 'session-secret'
+    },
   },
-
-  // MongoDB connection options
+  
+  // MongoDB
   mongo: {
+    url: process.env.MONGODB_URL || 'http://localhost:27017',
     options: {
       db: {
         safe: true
       }
     }
-  }
+  },
+
+  // Ethereum
+  ethereum: {
+    url: process.env.ETHEREUM_NODE_URL || 'http://localhost:8545'
+  },
+
+  // IPFS
+  ipfs: {
+    url: process.env.IPFS_NODE_URL || 'http://localhost:5001'
+  },
+
+  // User roles for auth service
+  userRoles: ['guest', 'student', 'school', 'recommender', 'admin']
+
 };
 
 // Export the config object based on the NODE_ENV
 // ==============================================
-module.exports = _.merge(
-  all,
-  require('./shared'),
-  require(`./${process.env.NODE_ENV}.js`) || {});
+exports = module.exports = _.merge(all,require(`./${process.env.NODE_ENV}.js`) || {});

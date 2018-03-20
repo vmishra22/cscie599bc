@@ -1,1 +1,0 @@
-{"abi":[{"constant":false,"inputs":[{"name":"data","type":"uint256"}],"name":"set","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}],"contractAddress":"0x1aef6c99de7cdf8f250848cb1a5a19f2b2dde30f"}

@@ -10,10 +10,10 @@ mongoose.Promise = require('bluebird');
 import config from './config/environment';
 import http from 'http';
 import seedDatabaseIfNeeded from './config/seed';
-import Web3 from 'web3';
+import GethNodeAPI from './api/eth';
 
 // Connect to MongoDB
-mongoose.connect(config.mongo.uri, {useMongoClient: true});
+mongoose.connect(config.mongo.url, {useMongoClient: true});
 mongoose.connection.on('error', function(err) {
   console.error(`MongoDB connection error: ${err}`);
   process.exit(-1); // eslint-disable-line no-process-exit
@@ -29,13 +29,13 @@ app.use(express.urlencoded());
 app.use(express.json());   
 
 // Create Ethereum connection
-var web3 = new Web3(new Web3.providers.HttpProvider(config.web3Url));
+var web3 = new Web3(new Web3.providers.HttpProvider(config.ethereum.url));
 app.set('web3', web3);
 
 // Start server
 function startServer() {
-  app.angularFullstack = server.listen(config.port, config.ip, function() {
-    console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
+  app.angularFullstack = server.listen(config.server.port, config.server.ip, function() {
+    console.log('Express server listening on %d, in %s mode', config.server.port, app.get('env'));
   });
 }
 

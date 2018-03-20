@@ -1,0 +1,14 @@
+FROM node:9.8.0-alpine as builder
+RUN apk update && \
+    apk add ca-certificates wget && \                                                                                                                                                                                                      
+    update-ca-certificates    
+RUN apk add --no-cache make gcc g++ python git bash
+RUN wget https://github.com/trufflesuite/ganache-cli/archive/v6.1.0.zip && \
+    unzip v6.1.0.zip && \
+    cd ganache-cli-6.1.0
+RUN npm update && npm install 
+
+#FROM node:9.8.0-alpine 
+#COPY --from=builder ./* ./*
+#EXPOSE 8545
+#ENTRYPOINT ["node", "./build/cli.node.js"]
