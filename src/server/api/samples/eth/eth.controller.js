@@ -28,7 +28,7 @@ export function getContractInfo(req, res) {
 export function runSample(req, res) {
   var web3 = req.app.get('web3');
 
-  //TODO: Read smart contract data, compile smart contract, upload smart contract to block chain,
+  // Read smart contract data, compile smart contract, upload smart contract to block chain,
   // query for contract, update state in contract
 
   //From here: https://www.ethereum.org/greeter
