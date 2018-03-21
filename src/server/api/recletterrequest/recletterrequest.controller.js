@@ -56,8 +56,11 @@ export function createRecLetterRequest(req, res) {
   var loggedInStudentId = ''; //get logged in user id
   let newRecLetterRequest = new RecLetterRequest({
     studentId: loggedInStudentId,
+    studentName: req.body.studentName,
     recommenderId: req.body.recommenderId,
+    recommenderName: req.body.recommenderName,
     schoolId: req.body.schoolId,
+    schoolName: req.body.schoolName,
     programName: req.body.programName,
     requestDate: (new Date())
   });
