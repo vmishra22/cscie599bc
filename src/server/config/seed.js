@@ -76,7 +76,7 @@ export default function seedDatabaseIfNeeded() {
           'Upper 10%',
           'No basis for judgment'
         ]
-      }, 
+      },
       {
         questionText: 'In what capacity have you known the applicant?',
         responseChoices: [
