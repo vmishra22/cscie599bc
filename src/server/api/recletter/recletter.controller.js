@@ -19,12 +19,39 @@ import letterOwnershipArtifact from '../../../LetterContract/build/contracts/Let
 
 var letterOwnershipContract = contract(letterOwnershipArtifact);
 letterOwnershipContract.setProvider(provider);
-var letterOwnership;
+var letterOwnershipInstance;
 
+//Returns a list of submitted recommendation letters where ‘student’ field is the selected student’s ID and ‘school.ID’ field matches the currently logged in ID 
 export function getRecLetters(req, res) {
   console.log('Entering getRecLetters()..');
-  RecLetter.find(function(err, recLetters) {
-    res.json(recLetters);
+
+  var studentId = parseInt(req.body.studentId);
+  var schoolId =  parseInt(req.body.schoolId);
+
+  letterOwnershipContract.deployed().then(function(instance) {
+    letterOwnershipInstance = instance;
+    letterOwnershipInstance.getLettersByStudentAndSchoolId(10, 10)
+    .then(function(lettersIdArray) {
+      for(var letterIdValue of lettersIdArray) {
+        console.log('letterId: ', letterIdValue);
+        //Find this letterId in mongoose and return to app UI
+        RecLetter.find({ 'letterId': letterIdValue}, function(err, result) {
+          if(err) {
+            console.log(err);
+            //res.json(err);
+          } else {
+            console.log(result);
+            res.json(result);
+          }
+        });
+      }
+    });
+  })
+  .then(function(res1) {
+    console.log(res1);
+  })
+  .catch(function(e) {
+    console.log(e);
   });
 }
 
@@ -44,7 +71,7 @@ function bytes32ToIPFSHash(hashHex) {
   return bs58.encode(buf);
 }
 
-
+//Get the recommendation letter 
 export function getRecLetter (req, res) {
   console.log('Entering getRecLetter()..')
   RecLetter.find({_id: req.params.id}, function (err, result) {
@@ -54,7 +81,7 @@ export function getRecLetter (req, res) {
     else {
       res.json(result)
     }
-  })
+  });
 }
 
 export function createRecLetter(req, res) {
@@ -72,10 +99,11 @@ export function createRecLetter(req, res) {
   //on this letter for viewing, deleting etc. 
   var newLetterId = null;
 
+  console.log('letterOwnershipContract: ', letterOwnershipContract);
   //Deploy the contract using truffle api.
   letterOwnershipContract.deployed().then(function(instance) {
     var web3 = req.app.get('web3');
-    letterOwnership = instance;
+    letterOwnershipInstance = instance;
     var accounts = web3.eth.accounts;
     var letterName = 'Sample Reco Letter';
     var letterPdfBuffer = req.body.recLetterContents;
@@ -115,7 +143,7 @@ export function createRecLetter(req, res) {
             console.log('PDF content successfully stored. IPFS address:', res1[0].hash);
             pdfFileHash = ipfsHashToBytes32(res1[0].hash);
 
-            letterOwnership.createLetter(letterName, 10, 10, 10, pdfFileHash, jsonFileHash, {
+            letterOwnershipInstance.createLetter(letterName, 10, 10, 10, pdfFileHash, jsonFileHash, {
               from: accounts[1],
               gas: 3000000
             }).then(function(createLetterResult) {

@@ -38,4 +38,16 @@ contract LetterHelper is LetterFactory {
     return result;
   }
 
+  function getLettersByStudentAndSchoolId(uint _studentId, uint _ProgramId) external view returns(uint[]) {
+    uint[] memory result = new uint[]( letters.length);
+    uint counter = 0;
+    for (uint i = 0; i < letters.length; i++) {
+      if (letters[i].studentId == _studentId && letters[i].schoolProgramId == _ProgramId ) {
+        result[counter] = i;
+        counter++;
+      }
+    }
+    return result;
+  }
+
 }
