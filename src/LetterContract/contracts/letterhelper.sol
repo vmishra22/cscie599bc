@@ -50,4 +50,11 @@ contract LetterHelper is LetterFactory {
     return result;
   }
 
+  function getLetterIPFSLinksByLetterId(uint _letterId) external view returns(bytes32[]) {
+    bytes32[] memory result = new bytes32[](2);
+    result[0] = letters[_letterId].pdfFileHash;
+    result[1] = letters[_letterId].jsonFileHash;
+    return result;
+  }
+
 }

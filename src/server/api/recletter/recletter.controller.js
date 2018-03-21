@@ -25,12 +25,13 @@ var letterOwnershipInstance;
 export function getRecLetters(req, res) {
   console.log('Entering getRecLetters()..');
 
-  var studentId = parseInt(req.body.studentId);
-  var schoolId =  parseInt(req.body.schoolId);
+  var studentId = parseInt(req.body.studentId, 10);
+  var schoolId = parseInt(req.body.schoolId, 10);
 
   letterOwnershipContract.deployed().then(function(instance) {
     letterOwnershipInstance = instance;
-    letterOwnershipInstance.getLettersByStudentAndSchoolId(10, 10)
+    
+    letterOwnershipInstance.getLettersByStudentAndSchoolId(10, 10) //TODO: Put studentId and schoolId here
     .then(function(lettersIdArray) {
       for(var letterIdValue of lettersIdArray) {
         console.log('letterId: ', letterIdValue);
@@ -55,6 +56,36 @@ export function getRecLetters(req, res) {
   });
 }
 
+//Get the recommendation letter by providing the letter id corresponding to blockchain  
+// export function getRecLetterById(req, res) {
+//   console.log('Entering getRecLetter()..');
+
+//   var letterId = parseInt(req.body.letterId, 10);
+//   letterOwnershipContract.deployed().then(function(instance) {
+//     letterOwnershipInstance = instance;
+//     console.log('letterOwnershipInstance', letterOwnershipInstance);
+//     letterOwnershipInstance.getLetterIPFSLinksByLetterId(0) //TODO: Put letterId here
+//     .then(function(letterLinksArray) {
+//       var pdfFileIPFSHash = bytes32ToIPFSHash(letterLinksArray[0]);
+//       var jsonFileIPFSHash = bytes32ToIPFSHash(letterLinksArray[1]);
+//     });
+//   })
+//   .then(function(res1) {
+//     console.log(res1);
+//   })
+//   .catch(function(e) {
+//     console.log(e);
+//   });
+
+  RecLetter.find({_id: req.params.id}, function(err, result) {
+    if(err) {
+      res.json(err);
+    } else {
+      res.json(result);
+    }
+  });
+}
+
 function ipfsHashToBytes32(ipfsHash) {
   var h = bs58.decode(ipfsHash).toString('hex')
     .replace(/^1220/, '');
@@ -71,18 +102,7 @@ function bytes32ToIPFSHash(hashHex) {
   return bs58.encode(buf);
 }
 
-//Get the recommendation letter 
-export function getRecLetter (req, res) {
-  console.log('Entering getRecLetter()..')
-  RecLetter.find({_id: req.params.id}, function (err, result) {
-    if (err) {
-      res.json(err)
-    }
-    else {
-      res.json(result)
-    }
-  });
-}
+
 
 export function createRecLetter(req, res) {
   console.log('Entering createRecLetter()..');
@@ -98,8 +118,6 @@ export function createRecLetter(req, res) {
   //This is the new letter Id thats created in the blockchain. MongoDB needs to hold this ID to make the subsequent operation
   //on this letter for viewing, deleting etc. 
   var newLetterId = null;
-
-  console.log('letterOwnershipContract: ', letterOwnershipContract);
   //Deploy the contract using truffle api.
   letterOwnershipContract.deployed().then(function(instance) {
     var web3 = req.app.get('web3');
