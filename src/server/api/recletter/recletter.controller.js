@@ -9,10 +9,13 @@ import RecLetter from '../../model/recletters'
 import letterOwnershipArtifact from '../../../LetterContract/build/contracts/LetterOwnership.json'
 
 
-
-const provider = new Web3.providers.HttpProvider('http://localhost:7545')
-var letterOwnershipContract = contract(letterOwnershipArtifact)
-letterOwnershipContract.setProvider(provider)
+var bs58 = require('bs58');
+var IpfsAPI = require('ipfs-api');
+const contract = require('truffle-contract');
+const Web3 = require('web3');
+const provider = new Web3.providers.HttpProvider('http://localhost:7545');
+var letterOwnershipContract = contract(letterOwnershipArtifact);
+letterOwnershipContract.setProvider(provider);
 
 /**
  * Returns a list of submitted recommendation letters where ‘student’ field is
