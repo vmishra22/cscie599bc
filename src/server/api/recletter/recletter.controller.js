@@ -57,7 +57,7 @@ export function getRecLetters(req, res) {
 }
 
 //Get the recommendation letter by providing the letter id corresponding to blockchain  
-// export function getRecLetterById(req, res) {
+ export function getRecLetterById(req, res) {
 //   console.log('Entering getRecLetter()..');
 
 //   var letterId = parseInt(req.body.letterId, 10);
@@ -84,7 +84,7 @@ export function getRecLetters(req, res) {
 //       res.json(result);
 //     }
 //   });
-// }
+ }
 
 function ipfsHashToBytes32(ipfsHash) {
   var h = bs58.decode(ipfsHash).toString('hex')
