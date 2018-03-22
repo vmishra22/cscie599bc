@@ -77,14 +77,14 @@ export function getRecLetters(req, res) {
 //     console.log(e);
 //   });
 
-  RecLetter.find({_id: req.params.id}, function(err, result) {
-    if(err) {
-      res.json(err);
-    } else {
-      res.json(result);
-    }
-  });
-}
+//   RecLetter.find({_id: req.params.id}, function(err, result) {
+//     if(err) {
+//       res.json(err);
+//     } else {
+//       res.json(result);
+//     }
+//   });
+// }
 
 function ipfsHashToBytes32(ipfsHash) {
   var h = bs58.decode(ipfsHash).toString('hex')
