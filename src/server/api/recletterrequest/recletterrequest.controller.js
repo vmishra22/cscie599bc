@@ -11,6 +11,7 @@ import RecLetterRequest from '../../model/recletterrequests';
 import letterOwnershipArtifact from '../../../LetterContract/build/contracts/LetterOwnership.json';
 const Web3 = require('web3');
 const provider = new Web3.providers.HttpProvider('http://localhost:7545');
+const contract = require('truffle-contract');
 const letterOwnershipContract = contract(letterOwnershipArtifact);
 letterOwnershipContract.setProvider(provider);
 
@@ -62,18 +63,18 @@ export function createRecLetterRequest(req, res) {
   var newLetterRequestId = null;
   letterOwnershipContract.deployed()
   .then(function(instance) {
+    console.log(instance);
     var web3 = req.app.get('web3');
     var accounts = web3.eth.accounts;
     //TODO: call creatRequest() like this later,
    // instance.createRequest(loggedInStudentId, req.body.recommenderId, req.body.schoolId, 0,
-    instance.createRequest(loggedInStudentId, req.body.recommenderId, req.body.schoolId, 0, {
+    instance.createRequest(10, 10, 10, 0, {
       from: accounts[1],
       gas: 3000000
     }).then(function(createRequestResult) {
       //Get the requestId
       console.log(createRequestResult);
       newLetterRequestId = createRequestResult.logs[0].args['requestId']['c'][0];
-
       //Use this newLetterRequestId to save with new Request in MongoDB
       
       let newRecLetterRequest = new RecLetterRequest({
@@ -100,7 +101,9 @@ export function createRecLetterRequest(req, res) {
         }
       });
   });
-});
+})
+.then(console.log)
+.catch(console.err);
 }
 
 export function deleteRecLetterRequest(req, res) {
