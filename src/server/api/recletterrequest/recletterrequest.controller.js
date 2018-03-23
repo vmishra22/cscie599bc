@@ -6,14 +6,8 @@
 'use strict';
 
 import RecLetterRequest from '../../model/recletterrequests';
+import {letterOwnershipContract} from '../web3helper'
 
-//Setting up the contract artifact, to be moved to web3.helper.js later
-import letterOwnershipArtifact from '../../../LetterContract/build/contracts/LetterOwnership.json';
-const Web3 = require('web3');
-const provider = new Web3.providers.HttpProvider('http://localhost:7545');
-const contract = require('truffle-contract');
-const letterOwnershipContract = contract(letterOwnershipArtifact);
-letterOwnershipContract.setProvider(provider);
 
 export function getRecLetterRequests(req, res) {
   console.log('Entering getRecLetterRequests()..');
@@ -25,13 +19,13 @@ export function getRecLetterRequests(req, res) {
   if(loggedInUserRole == 'STUDENT' && loggedInUserName == req.query.studentId){
     RecLetterRequest.find({studentId: req.query.studentId}, function(err, recLetterRequests){
       res.json(recLetterRequests);
-    }); 
+    });
   }
   else if(loggedInUserRole == 'RECOMMENDER' && LoggedInUserName == req.query.recommenderId)
   {
     RecLetterRequest.find({recommenderId: req.query.recommenderId}, function(err, recLetterRequests){
       res.json(recLetterRequests);
-    }); 
+    });
   }
   else
   {
@@ -76,7 +70,7 @@ export function createRecLetterRequest(req, res) {
       console.log(createRequestResult);
       newLetterRequestId = createRequestResult.logs[0].args['requestId']['c'][0];
       //Use this newLetterRequestId to save with new Request in MongoDB
-      
+
       let newRecLetterRequest = new RecLetterRequest({
         requestId: newLetterRequestId,
         studentId: loggedInStudentId,
