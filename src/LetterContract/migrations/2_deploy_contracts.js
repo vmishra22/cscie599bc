@@ -4,6 +4,7 @@ var erc721 = artifacts.require("erc721");
 var letterownership = artifacts.require("letterownership");
 var letterfactory = artifacts.require("letterfactory");
 var letterhelper = artifacts.require("letterhelper");
+var letterrequest = artifacts.require("letterrequest");
 
 
 module.exports = function(deployer) {
@@ -13,6 +14,7 @@ module.exports = function(deployer) {
   deployer.deploy(letterownership);
   deployer.deploy(letterfactory);
   deployer.deploy(letterhelper);
+  deployer.deploy(letterrequest);
 };
 
 
