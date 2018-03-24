@@ -22,9 +22,21 @@ export default function routes($stateProvider) {
           $state.go(referrer);
         }
       })
-      .state('signup', {
-        url: '/signup',
-        template: require('./signup/signup.html'),
+      .state('student-signup', {
+        url: '/student-signup',
+        template: require('./signup/student-signup.html'),
+        controller: 'SignupController',
+        controllerAs: 'vm'
+      })
+      .state('recommender-signup', {
+        url: '/recommender-signup',
+        template: require('./signup/recommender-signup.html'),
+        controller: 'SignupController',
+        controllerAs: 'vm'
+      })
+      .state('school-signup', {
+        url: '/school-signup',
+        template: require('./signup/school-signup.html'),
         controller: 'SignupController',
         controllerAs: 'vm'
       })

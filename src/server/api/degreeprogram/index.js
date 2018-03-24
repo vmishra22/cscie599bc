@@ -4,6 +4,8 @@ let express = require('express');
 let controller = require('./degreeprogram.controller');
 let router = express.Router();
 
+import * as auth from '../../auth/auth.service';
+
 /**
  * This REST service will return a list of degree programs. A degree program also includes
  * a list of candidate questions to be answered by a recommender when writing a recommendation
@@ -26,7 +28,7 @@ let router = express.Router();
  * }
  *
  */
-router.get('/DegreePrograms', controller.getDegreePrograms);
+router.get('/DegreePrograms', auth.isAuthenticated(), controller.getDegreePrograms);
 
 /**
  * This REST service will create a new degree program, along with a list of candidate
@@ -44,12 +46,12 @@ router.get('/DegreePrograms', controller.getDegreePrograms);
  *   ]
  * }
  */
-router.post('/DegreeProgram', controller.createDegreeProgram);
+router.post('/DegreeProgram', auth.isAuthenticated(), controller.createDegreeProgram);
 
 /**
  * This REST service will delete a degree program from the database
  * The input is the database Id
  */
-router.delete('/DegreeProgram/:id', controller.deleteDegreeProgram);
+router.delete('/DegreeProgram/:id', auth.isAuthenticated(), controller.deleteDegreeProgram);
 
 module.exports = router;

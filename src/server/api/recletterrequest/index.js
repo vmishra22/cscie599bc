@@ -5,6 +5,8 @@ let controller = require('./recletterrequest.controller');
 
 let router = express.Router();
 
+import * as auth from '../../auth/auth.service';
+
 /**
  * This REST service will return a list of recommendation letter requests. It can only be called
  * within the context of a logged-in 'STUDENT' or 'RECOMMENDER' role. For a student, it will
@@ -32,7 +34,7 @@ let router = express.Router();
  * letter request is 'COMPLETE'
  *
  */
-router.get('/RecommendationLetterRequests', controller.getRecLetterRequests);
+router.get('/RecommendationLetterRequests', auth.isAuthenticated(), controller.getRecLetterRequests);
 
 /**
  * This REST service will return a recommendation letter based on its database Id. It can only be
@@ -57,7 +59,7 @@ router.get('/RecommendationLetterRequests', controller.getRecLetterRequests);
  * already been written corresponding to this request and thus the status of this recommendation
  * letter request is 'COMPLETE'
  */
-router.get('/RecommendationLetterRequest/:id', controller.getRecLetterRequest);
+router.get('/RecommendationLetterRequest/:id', auth.isAuthenticated(), controller.getRecLetterRequest);
 
 
 /**
@@ -76,14 +78,14 @@ router.get('/RecommendationLetterRequest/:id', controller.getRecLetterRequest);
  *   "requestDate": "xxx"
  * }
  */
-router.post('/RecommendationLetterRequest', controller.createRecLetterRequest);
+router.post('/RecommendationLetterRequest', auth.isAuthenticated(), controller.createRecLetterRequest);
 
 /**
  * This REST service will delete a recommendation letter request from the database
  * The input is the database Id. It can only be called within the context of a
  * logged-in 'STUDENT'.
  */
-router.delete('/RecommendationLetterRequest/:id', controller.deleteRecLetterRequest);
+router.delete('/RecommendationLetterRequest/:id', auth.isAuthenticated(), controller.deleteRecLetterRequest);
 
 
 module.exports = router;

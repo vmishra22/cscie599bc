@@ -6,36 +6,8 @@ export class NavbarComponent {
   menu = [{
     'title': 'Home',
     'state': 'main'
-  },
-  {
-    'title': 'Create Rec Letter',
-    'state': 'create'
-  },
-  {
-    'title': 'Mongo Sample',
-    'state': 'mongo'
-  },
-  {
-    'title': 'IPFS Sample',
-    'state': 'ipfs'
-  },
-  {
-    'title': 'Ethereum Sample',
-    'state': 'eth'
-  },
-  {
-    'title': 'Widgets',
-    'state': 'widgets'
-  },
-  {
-    'title': 'Tables',
-    'state': 'tables'
-  },
-  {
-    'title': 'Forms',
-    'state': 'forms'
   }
-];
+ ];
   isLoggedIn: Function;
   isAdmin: Function;
   getCurrentUser: Function;

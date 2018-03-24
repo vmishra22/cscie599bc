@@ -20,6 +20,10 @@ export default class SettingsController {
   /*@ngInject*/
   constructor(Auth) {
     this.Auth = Auth;
+
+    Auth.getCurrentUser()
+    .then((user) => { console.log(user);
+    });
   }
 
   changePassword(form) {

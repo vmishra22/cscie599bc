@@ -6,9 +6,12 @@
 'use strict';
 
 import CandidateQuestion from '../../model/candidatequestions';
+import * as auth from '../../auth/auth.service';
 
 export function getCandidateQuestions(req, res) {
   console.log('Entering getCandidateQuestions()..');
+  console.log('user = '+req.user);
+ 
   CandidateQuestion.find(function(err, candidateQuestion){
     res.json(candidateQuestion);
   }); 

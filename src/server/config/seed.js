@@ -51,6 +51,7 @@ export default function seedDatabaseIfNeeded() {
       .then(() => {
         User.create({
           provider: 'local',
+          role: 'student',
           name: 'Test User',
           email: 'test@example.com',
           password: 'test'

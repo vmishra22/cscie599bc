@@ -14,7 +14,7 @@ var UserSchema = new Schema({
   },
   role: {
     type: String,
-    default: 'user'
+    required: true
   },
   password: {
     type: String,
@@ -25,7 +25,7 @@ var UserSchema = new Schema({
   city: String,
   state: String,
   zip: String,
-  recommenderTitle: String,
+  recommenderPositionTitle: String,
   schoolContactName: String,
   schoolContactNumber: String,
   provider: String,

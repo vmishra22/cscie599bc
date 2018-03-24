@@ -3,6 +3,8 @@
 let express = require('express');
 let controller = require('./candidatequestion.controller');
 
+import * as auth from '../../auth/auth.service';
+
 let router = express.Router();
 
 /**
@@ -17,7 +19,7 @@ let router = express.Router();
  * }
  *
  */
-router.get('/CandidateQuestions', controller.getCandidateQuestions);
+router.get('/CandidateQuestions', auth.isAuthenticated(), controller.getCandidateQuestions);
 
 /**
  * This REST service will add a candidate question to the master list of questions.
@@ -31,12 +33,12 @@ router.get('/CandidateQuestions', controller.getCandidateQuestions);
  * }
  *
  */
-router.post('/CandidateQuestion', controller.createCandidateQuestion);
+router.post('/CandidateQuestion', auth.isAuthenticated(), controller.createCandidateQuestion);
 
 /**
  * This REST service will delete a candidate questions from the database
  * The input is the database Id
  */
-router.delete('/CandidateQuestion/:id', controller.deleteCandidateQuestion);
+router.delete('/CandidateQuestion/:id', auth.isAuthenticated(), controller.deleteCandidateQuestion);
 
 module.exports = router;
