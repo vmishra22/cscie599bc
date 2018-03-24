@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 
 var RecLetterRequestSchema = mongoose.Schema({
     requestId: String,
+    letterStatus: String,
     studentId: String,
     studentName: String,
     recommenderId: String,

@@ -5,6 +5,7 @@
 
 'use strict';
 
+import RecLetterRequest from '../../model/recletterrequests';
 import RecLetter from '../../model/recletters';
 import { ipfs, letterOwnershipContract, ipfsHashToBytes32, bytes32ToIPFSHash } from '../web3helper';
 
@@ -19,10 +20,10 @@ export function getRecLetters (req, res) {
 
   let studentId = parseInt(req.body.studentId, 10);
   let schoolId = parseInt(req.body.schoolId, 10);
-  letterOwnershipContract.deployed().then(function (instance) {
+  letterOwnershipContract.deployed().then(function(instance) {
     instance.getLettersByStudentAndSchoolId(10, 10) //TODO: Put studentId and schoolId here
-      .then(function (lettersIdArray) {
-        res.json(lettersIdArray)
+      .then(function(lettersIdArray) {
+        res.json(lettersIdArray);
       });
   });
 }
@@ -50,13 +51,13 @@ export function getRecLetter (req, res) {
  * @param req
  * @param res
  */
-export function createRecLetter (req, res) {
+export function createRecLetter(req, res) {
   console.log('Entering createRecLetter()..');
   let loggedInRecommenderId = ''; //get logged in user id
   //These Ids need to be passed to contract, currently they are undefined
-  let studentId = parseInt(req.body.studentId);
-  let recommenderId = parseInt(loggedInRecommenderId);
-  let schoolId = parseInt(req.body.schoolId);
+  let studentId = parseInt(req.body.studentId, 10);
+  let recommenderId = parseInt(loggedInRecommenderId, 10);
+  let schoolId = parseInt(req.body.schoolId, 10);
   console.log('Student Id:' + req.body.studentId);
   console.log('loggedInRecommenderId:' + loggedInRecommenderId);
   console.log('schoolId:' + req.body.schoolId);
@@ -64,7 +65,7 @@ export function createRecLetter (req, res) {
   //This is the new letter Id that's created in the blockchain. MongoDB needs to hold this ID to make the subsequent operation
   //on this letter for viewing, deleting etc.
   let newLetterId = null;
-  letterOwnershipContract.deployed().then(function (instance) {
+  letterOwnershipContract.deployed().then(function(instance) {
     let web3 = req.app.get('web3');
     let accounts = web3.eth.accounts;
     let letterName = 'Sample Reco Letter';
@@ -77,26 +78,26 @@ export function createRecLetter (req, res) {
 
     //Add JSON file in IPFS
     let url1 = Buffer.from(letterjsonBuffer, 'utf8');
-    ipfs.add(url1, function (err, result) {
-      if (err) {
+    ipfs.add(url1, function(err, result) {
+      if(err) {
         console.error('Content submission error:', err);
-      } else if (result && result[0] && result[0].hash) {
+      } else if(result && result[0] && result[0].hash) {
         console.log('JSON content successfully stored. IPFS address:', result[0].hash);
         jsonFileHash = ipfsHashToBytes32(result[0].hash);
 
         //Add pdf file in IPFS
         var url2 = Buffer.from(letterPdfBuffer, 'utf8');
-        ipfs.add(url2, function (err, res1) {
-          if (err) {
+        ipfs.add(url2, function(err, res1) {
+          if(err) {
             console.error('Content submission error:', err);
-          } else if (res1 && res1[0] && res1[0].hash) {
+          } else if(res1 && res1[0] && res1[0].hash) {
             console.log('PDF content successfully stored. IPFS address:', res1[0].hash);
             pdfFileHash = ipfsHashToBytes32(res1[0].hash);
 
             instance.createLetter(letterName, 10, 10, 10, pdfFileHash, jsonFileHash, {
               from: accounts[1],
               gas: 3000000
-            }).then(function (createLetterResult) {
+            }).then(function(createLetterResult) {
               //Get the letterId
               newLetterId = createLetterResult.logs[0].args['letterId']['c'][0];
 
@@ -110,12 +111,34 @@ export function createRecLetter (req, res) {
                 recLetterContents: null,
                 candidateQuestions: null
               });
-              newRecLetter.save(function (err, recLetter) {
-                if (err) {
+              newRecLetter.save(function(err, recLetter) {
+                if(err) {
                   res.json(err);
                 } else {
                   res.json(recLetter);
                   console.log('Rec Letter data saved in mongoose');
+
+                  //Change the corresponding letter request as completed:
+                  // console.log(instance);
+                  // instance.changeRequestStatus(newLetterId, 1, {
+                  //   from: accounts[0],
+                  //   gas: 3000000
+                  // }).then(function(reqStatusResult) {
+                  //   console.log('reqStatusResult', reqStatusResult);
+                  //   RecLetterRequest.find({requestId: newLetterId}, function(err, recLetterRequests) {
+                  //     if(err) {
+                  //       console.log('Error', err);
+                  //       //res.json(err);
+                  //     } else {
+                  //       recLetterRequests.forEach(element => {
+                  //         element.letterStatus = 'Created';
+                  //       });
+                  //     }
+                  //   });
+                  // })
+                  // .catch(function(error) {
+                  //   console.log('Error in call:', error);
+                  // });
                 }
               });
             });
