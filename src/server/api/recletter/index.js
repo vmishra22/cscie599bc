@@ -1,9 +1,9 @@
 'use strict';
 
-var express = require('express');
-var controller = require('./recletter.controller');
+let express = require('express');
+let controller = require('./recletter.controller');
 
-var router = express.Router();
+let router = express.Router();
 
 router.get('/RecommendationLetters', controller.getRecLetters);
 router.get('/RecommendationLetter/:id', controller.getRecLetter);
