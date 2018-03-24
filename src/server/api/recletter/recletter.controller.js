@@ -6,7 +6,8 @@
 'use strict'
 
 import RecLetter from '../../model/recletters'
-import {bs58, IpfsAPI, letterOwnershipContract} from '../web3helper'
+import {ipfs, letterOwnershipContract, ipfsHashToBytes32, bytes32ToIPFSHash} from '../web3helper'
+
 
 /**
  * Returns a list of submitted recommendation letters where ‘student’ field is
@@ -26,10 +27,7 @@ export function getRecLetters(req, res) {
           console.log('letterId: ', letterIdValue);
         }
       })
-      .catch(console.err);
   })
-  .then(console.log)
-  .catch(console.err);
 }
 
 /**
@@ -45,10 +43,9 @@ export function getRecLetter (req, res) {
       .then(function (ipfsbyte32) {
         let pdfFileIPFSHash = bytes32ToIPFSHash(ipfsbyte32[0])
         let jsonFileIPFSHash = bytes32ToIPFSHash(ipfsbyte32[1])
-        res.json('pdfFileIPFSHash: ' + pdfFileIPFSHash + '\n' + ' jsonFileIPFSHash: ' + jsonFileIPFSHash)
-      }).catch(console.err)
-  }).then(console.log)
-    .catch(console.err)
+        res.json('pdfFileIPFSHash: ' + pdfFileIPFSHash  + ' jsonFileIPFSHash: ' + jsonFileIPFSHash)
+      })
+  })
 }
 
 /**
@@ -63,7 +60,9 @@ export function createRecLetter(req, res) {
   let studentId = parseInt(req.body.studentId);
   let recommenderId = parseInt(loggedInRecommenderId);
   let schoolId = parseInt(req.body.schoolId);
-  console.log(req.body.studentId + '  ' + loggedInRecommenderId + '  ' + req.body.schoolId);
+  console.log("Student Id:" + req.body.studentId)
+  console.log("loggedInRecommenderId:" + loggedInRecommenderId)
+  console.log("schoolId:" + req.body.schoolId);
 
   //This is the new letter Id that's created in the blockchain. MongoDB needs to hold this ID to make the subsequent operation
   //on this letter for viewing, deleting etc.
@@ -75,17 +74,7 @@ export function createRecLetter(req, res) {
     var letterPdfBuffer = req.body.recLetterContents;
     var letterjsonBuffer = req.body.candidateQuestions;
 
-    var ipfsHost = 'localhost';
-    var ipfsAPIPort = '5001';
-    // IPFS connection setup
-    var ipfs = IpfsAPI(ipfsHost, ipfsAPIPort);
-    ipfs.swarm.peers((err, response) => {
-      if(err) {
-        console.error(err);
-      } else {
-        console.log('IPFS - connected to ' + response.length + ' peers');
-      }
-    });
+
     //Hash of IPFS files in bytes32 format to pass to contract method
     var pdfFileHash = null;
     var jsonFileHash = null;
@@ -129,6 +118,7 @@ export function createRecLetter(req, res) {
                 if(err) {
                   res.json(err);
                 } else {
+                  res.json(recLetter)
                   console.log('Rec Letter data saved in mongoose');
                 }
               })
@@ -141,35 +131,8 @@ export function createRecLetter(req, res) {
         console.log(result[0].Hash);
         console.error('Unresolved content submission error');
       }
-    }).catch(console.err);
+    })
   })
-  .then(console.log)
-    .catch(console.err);
-
-  // newRecLetter.save(function (err, recLetter) {
-  //   if (err) {
-  //     res.json(err)
-  //   }
-  //   else {
-  //     res.json(recLetter)
-  //   }
-  // })
-}
-
-function ipfsHashToBytes32 (ipfsHash) {
-  let h = bs58.decode(ipfsHash).toString('hex')
-    .replace(/^1220/, '')
-  if (h.length != 64) {
-    console.log('invalid ipfs format', ipfsHash, h)
-    return null
-  }
-  return '0x' + h
-}
-
-function bytes32ToIPFSHash (hashHex) {
-  //console.log('bytes32ToIPFSHash starts with hash_buffer', hash_hex.replace(/^0x/, ''));
-  let buf = new Buffer(hashHex.replace(/^0x/, '1220'), 'hex')
-  return bs58.encode(buf)
 }
 
 export function deleteRecLetter (req, res) {
@@ -183,5 +146,7 @@ export function deleteRecLetter (req, res) {
     }
   })
 }
+
+
 
 
