@@ -22,6 +22,18 @@ export class NavbarComponent {
   {
     'title': 'Ethereum Sample',
     'state': 'eth'
+  },
+  {
+    'title': 'Widgets',
+    'state': 'widgets'
+  },
+  {
+    'title': 'Tables',
+    'state': 'tables'
+  },
+  {
+    'title': 'Forms',
+    'state': 'forms'
   }
 ];
   isLoggedIn: Function;

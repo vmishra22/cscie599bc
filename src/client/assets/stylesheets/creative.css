@@ -64,8 +64,9 @@ aside {
   padding: 0;
 }
 .navbar-default {
-  background-color: white;
+  background-color: #EDEDED !important;
   border-color: rgba(34, 34, 34, 0.05);
+  border-bottom: 1px solid #D9DEE4 !important;
   font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
   -webkit-transition: all 0.35s;
   -moz-transition: all 0.35s;
@@ -422,7 +423,7 @@ body {
   webkit-tap-highlight-color: #222222;
 }
 
-.red {
+.red-br {
   background-color: #F05F40 !important;
 }
 
