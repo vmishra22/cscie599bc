@@ -13,7 +13,7 @@ export default class CreateRecLetterController {
   candidateQuestions: CandidateQuestion[];
   questionResponses: QuestionResponse[] = [];
   fileInput: any;
- 
+  errorText: string;
 
   /*@ngInject*/
   constructor($http, $location) {
@@ -23,11 +23,11 @@ export default class CreateRecLetterController {
 
   $onInit() {
     this.getCandidateQuestions(this);
+    this.errorText = null;
    }
 
- 
-
-  fileSelectionEvent(fileInput: any) {
+  
+   fileSelectionEvent(fileInput: any) {
     console.log("Entering fileSelectionEvent()..");
     this.fileInput = fileInput;
   } 
@@ -60,28 +60,32 @@ export default class CreateRecLetterController {
   submitRecLetter() {
     console.log("Entering submitRecLetter()..");
 
+    this.errorText = null;
+
+    if(!this.fileInput) {
+      this.errorText = "No file selected."
+      return;
+    }
+
     this.filesToUpload = this.fileInput.target.files;
     let reader = new FileReader();
     reader.readAsDataURL(this.filesToUpload[0]);
       reader.onload = () => {
 
-        var newRecLetter = {
+        let newRecLetter = {
           recLetterContents: reader.result,
           candidateQuestions: this.questionResponses
         };
 
-        this.postRecLetter(newRecLetter);
+        const redirect = response => this.$location.path('/recletters/list');
+        const diplayError = error => { 
+          console.log(error); 
+          this.errorText = "An error occurred: " + JSON.stringify(error.data.error);
+        };
 
+        this.$http.post('http://localhost:3000/api/RecommendationLetter', newRecLetter)
+          .then(redirect, diplayError);
       };
-
-      this.$location.path('/recletters/list');
-}
-  
-
-  postRecLetter(newRecLetter) {
-    console.log("Entering submitRecLetter()..");
-    this.$http.post('http://localhost:3000/api/RecommendationLetter', newRecLetter)
-      .then(function(response){});
   }
 
   getCandidateQuestions($scope) {
