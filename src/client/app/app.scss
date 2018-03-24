@@ -3,6 +3,7 @@ $icon-font-path: '/assets/fonts/bootstrap/';
 $fa-font-path: '/assets/fonts/font-awesome/';
 @import '~font-awesome/scss/font-awesome';
 @import '../assets/stylesheets/base';
+@import '../assets/stylesheets/custom.css';
 @import '../assets/stylesheets/creative.css';
 
 /**
@@ -23,5 +24,6 @@ $fa-font-path: '/assets/fonts/font-awesome/';
 @import 'recletters/create/createrecletter';
 @import '../components/footer/footer';
 @import '../components/modal/modal';
+@import '../components/navbar/navbar';
 /* endinject */
 
