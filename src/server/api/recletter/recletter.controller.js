@@ -22,9 +22,7 @@ export function getRecLetters (req, res) {
   letterOwnershipContract.deployed().then(function (instance) {
     instance.getLettersByStudentAndSchoolId(10, 10) //TODO: Put studentId and schoolId here
       .then(function (lettersIdArray) {
-        for (var letterIdValue of lettersIdArray) {
-          console.log('letterId: ', letterIdValue);
-        }
+        res.json(lettersIdArray)
       });
   });
 }
@@ -87,7 +85,7 @@ export function createRecLetter (req, res) {
         jsonFileHash = ipfsHashToBytes32(result[0].hash);
 
         //Add pdf file in IPFS
-        let url2 = Buffer.from(letterPdfBuffer, 'utf8');
+        var url2 = Buffer.from(letterPdfBuffer, 'utf8');
         ipfs.add(url2, function (err, res1) {
           if (err) {
             console.error('Content submission error:', err);
