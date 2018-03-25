@@ -9,7 +9,7 @@ import * as auth from '../../auth/auth.service';
 
 /**
  * This REST service will return a list of recommendation letter requests. It can only be called
- * within the context of a logged-in 'STUDENT' or 'RECOMMENDER' role. For a student, it will
+ * within the context of a logged-in 'student' or 'recommender' role. For a student, it will
  * return all the recommendation requests by the student. For a recommender, it will return all
  * the recommendation requests that need to be completed by the recommender
  *
@@ -38,7 +38,7 @@ router.get('/RecommendationLetterRequests', auth.isAuthenticated(), controller.g
 
 /**
  * This REST service will return a recommendation letter based on its database Id. It can only be
- * called within the context of a logged-in 'STUDENT' or 'RECOMMENDER' role
+ * called within the context of a logged-in 'student' or 'recommender' role
  *
  * It returns the following JSON object:
  * {
@@ -64,7 +64,7 @@ router.get('/RecommendationLetterRequest/:id', auth.isAuthenticated(), controlle
 
 /**
  * This REST service will create a new recommendation letter request. It can only be
- * called within the context of a logged-in 'STUDENT'.
+ * called within the context of a logged-in 'student' role.
  *
  * The input is the following JSON object that needs to be sent in the POST payload:
  * {
@@ -83,7 +83,7 @@ router.post('/RecommendationLetterRequest', auth.isAuthenticated(), controller.c
 /**
  * This REST service will delete a recommendation letter request from the database
  * The input is the database Id. It can only be called within the context of a
- * logged-in 'STUDENT'.
+ * logged-in 'admin' role.
  */
 router.delete('/RecommendationLetterRequest/:id', auth.isAuthenticated(), controller.deleteRecLetterRequest);
 

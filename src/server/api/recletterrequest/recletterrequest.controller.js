@@ -12,13 +12,20 @@ export function getRecLetterRequests(req, res) {
   console.log('Entering getRecLetterRequests()..');
   console.log(req.query);
 
-  let loggedInUserName = ''; //get the logged in user name
-  let loggedInUserRole = 'RECOMMENDER'; //get the logged in user role
+  if(!req.user) {
+    res.status(403).render();
+  }
 
+  let loggedInUserId = req.user._id; //get the logged in user name
+  let loggedInUserRole = req.user.role; //get the logged in user role
+
+  //hardcoding the ID just for testing
+  loggedInUserId = 10;
+  
   //if(loggedInUserRole === 'STUDENT' && loggedInUserName === req.query.studentId) {
-  if(loggedInUserRole === 'STUDENT') {
+  if(loggedInUserRole === 'student') {
     letterOwnershipContract.deployed().then(function(instance) {
-      instance.getLetterRequestsByStudentId(10) //TODO: Put req.query.studentId here
+      instance.getLetterRequestsByStudentId(loggedInUserId) 
         .then(function(requestsIdArray) {
           requestsIdArray.forEach(element => {
             let value = element.c[0];
@@ -33,9 +40,9 @@ export function getRecLetterRequests(req, res) {
         });
     });
  // } else if(loggedInUserRole === 'RECOMMENDER' && loggedInUserName === req.query.recommenderId) {
-} else if(loggedInUserRole === 'RECOMMENDER') {
+} else if(loggedInUserRole === 'recommender') {
     letterOwnershipContract.deployed().then(function(instance) {
-      instance.getLetterRequestsByRecommenderId(10) //TODO: Put req.query.recommenderId here
+      instance.getLetterRequestsByRecommenderId(loggedInUserId) 
         .then(function(requestsIdArray) {
           requestsIdArray.forEach(element => {
             let value = element.c[0];
@@ -51,16 +58,36 @@ export function getRecLetterRequests(req, res) {
         });
     });
   }
+  else {
+    res.status(403).render();
+  }
+
 }
 
 export function getRecLetterRequest(req, res) {
   console.log('Entering getRecLetterRequest()..');
+
+  if(!req.user) {
+    res.status(403).render();
+  }
+
+  let loggedInUserId = req.user._id; //get the logged in user name
+  let loggedInUserRole = req.user.role; //get the logged in user role
+
   RecLetterRequest.find({_id: req.params.id}, function (err, result) {
     if (err) {
       res.json(err);
     }
     else {
-      res.json(result);
+      if(loggedInUserRole === 'student' && loggedInUserId != result.studentId) {
+        res.status(403).render();
+      }
+      else if (loggedInUserRole === 'recommender' && loggedInUserId != result.recommenderId) {
+        res.status(403).render();
+      }
+      else {
+        res.json(result);
+      }
     }
   });
 }
@@ -68,14 +95,29 @@ export function getRecLetterRequest(req, res) {
 export function createRecLetterRequest(req, res) {
   console.log('Entering createRecLetterRequest()..');
   console.log(req.body);
-  let loggedInStudentId = ''; //get logged in user id
+
+  if(!req.user) {
+    res.status(403).render();
+  }
+
+  if(!req.body) {
+    res.status(400).render();
+  }
+
+  let loggedInUserId = req.user._id; //get the logged in user name
+  let loggedInUserRole = req.user.role; //get the logged in user role
+
+  if(loggedInUserRole != 'student' || loggedInUserId != req.body.studentId) {
+    res.status(403).render();
+  }
+  
   let newLetterRequestId = null;
   letterOwnershipContract.deployed()
     .then(function(instance) {
       let web3 = req.app.get('web3');
       let accounts = web3.eth.accounts;
       //TODO: call creatRequest() like this later,
-      // instance.createRequest(loggedInStudentId, req.body.recommenderId, req.body.schoolId, 0,
+      // instance.createRequest(loggedInUserId, req.body.recommenderId, req.body.schoolId, 0,
       instance.createRequest(10, 10, 10, 0, {
         from: accounts[1],
         gas: 3000000
@@ -90,7 +132,7 @@ export function createRecLetterRequest(req, res) {
         let newRecLetterRequest = new RecLetterRequest({
           requestId: newLetterRequestId,
           letterStatus: newLetterStatus,
-          studentId: loggedInStudentId,
+          studentId: loggedInUserId,
           studentName: req.body.studentName,
           recommenderId: req.body.recommenderId,
           recommenderName: req.body.recommenderName,
@@ -113,8 +155,20 @@ export function createRecLetterRequest(req, res) {
     });
 }
 
+
 export function deleteRecLetterRequest (req, res) {
   console.log('Entering deleteRecLetterRequest...id=' + req.param.id);
+
+  if(!req.user) {
+    res.status(403).render();
+  }
+
+  let loggedInUserRole = req.user.role; //get the logged in user role
+
+  if(loggedInUserRole != 'admin') {
+    res.status(403).render();
+  }
+
   RecLetterRequest.remove({_id: req.params.id}, function (err, result) {
     if (err) {
       res.json(err);
