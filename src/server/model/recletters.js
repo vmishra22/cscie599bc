@@ -5,19 +5,10 @@ var RecLetterSchema = mongoose.Schema({
     studentId: String,
     recommenderId: String,
     schoolId: String,
+    studentName: String,
+    recommenderName: String,
     programName: String,
-    submissionDate: Date,
-    recLetterContents: {
-        //type: Buffer,
-        type: String,
-        require: true
-    },
-    candidateQuestions: [
-        {
-            questionText: String,
-            questionResponse: String
-        }
-    ]
+    submissionDate: Date
 });
 
 var RecLetter = module.exports = mongoose.model('RecLetter', RecLetterSchema);

@@ -33,12 +33,12 @@ export function getRecLetters (req, res) {
  * @param req
  * @param res
  */
-export function getRecLetter (req, res) {
+export function getRecLetter(req, res) {
   console.log('Entering getRecLetter()..');
-  let letterId = parseInt(req.params.id);
-  letterOwnershipContract.deployed().then(function (instance) {
+  let letterId = parseInt(req.params.id, 10);
+  letterOwnershipContract.deployed().then(function(instance) {
     instance.getLetterIPFSLinksByLetterId(letterId)
-      .then(function (ipfsbyte32) {
+      .then(function(ipfsbyte32) {
         let pdfFileIPFSHash = bytes32ToIPFSHash(ipfsbyte32[0]);
         let jsonFileIPFSHash = bytes32ToIPFSHash(ipfsbyte32[1]);
         res.json('pdfFileIPFSHash: ' + pdfFileIPFSHash + ' jsonFileIPFSHash: ' + jsonFileIPFSHash);
@@ -106,10 +106,10 @@ export function createRecLetter(req, res) {
                 studentId: req.body.studentId,
                 recommenderId: loggedInRecommenderId,
                 schoolId: req.body.schoolId,
+                studentName: req.body.studentName,
+                recommenderName: req.body.recommenderName,
                 programName: req.body.programName,
-                submissionDate: new Date(),
-                recLetterContents: null,
-                candidateQuestions: null
+                submissionDate: new Date()
               });
               newRecLetter.save(function(err, recLetter) {
                 if(err) {
@@ -120,25 +120,25 @@ export function createRecLetter(req, res) {
 
                   //Change the corresponding letter request as completed:
                   // console.log(instance);
-                  // instance.changeRequestStatus(newLetterId, 1, {
-                  //   from: accounts[0],
-                  //   gas: 3000000
-                  // }).then(function(reqStatusResult) {
-                  //   console.log('reqStatusResult', reqStatusResult);
-                  //   RecLetterRequest.find({requestId: newLetterId}, function(err, recLetterRequests) {
-                  //     if(err) {
-                  //       console.log('Error', err);
-                  //       //res.json(err);
-                  //     } else {
-                  //       recLetterRequests.forEach(element => {
-                  //         element.letterStatus = 'Created';
-                  //       });
-                  //     }
-                  //   });
-                  // })
-                  // .catch(function(error) {
-                  //   console.log('Error in call:', error);
-                  // });
+                  instance.changeRequestStatus(newLetterId, 1, {
+                    from: accounts[0],
+                    gas: 3000000
+                  }).then(function(reqStatusResult) {
+                    console.log('reqStatusResult', reqStatusResult);
+                    RecLetterRequest.find({requestId: newLetterId}, function(err, recLetterRequests) {
+                      if(err) {
+                        console.log('Error', err);
+                        //res.json(err);
+                      } else {
+                        recLetterRequests.forEach(element => {
+                          element.letterStatus = 'Created';
+                        });
+                      }
+                    });
+                  })
+                  .catch(function(error) {
+                    console.log('Error in call:', error);
+                  });
                 }
               });
             });
