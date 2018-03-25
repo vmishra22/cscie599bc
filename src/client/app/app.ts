@@ -26,6 +26,7 @@ import constants from './app.constants';
 import util from '../components/util/util.module';
 import recletters from './recletters';
 import stylesheets from './stylesheets';
+import dashboards from './dashboards';
 
 import './app.scss';
 
@@ -46,7 +47,8 @@ angular.module('recLettersApp', [
   constants,
   util,
   recletters,
-  stylesheets
+  stylesheets,
+  dashboards
 ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {
