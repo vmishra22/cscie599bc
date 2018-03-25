@@ -1,4 +1,4 @@
-<div class="container">
+<div class="main-container">
     <div class="row">
       <div class="col-sm-12">
         <br><br><br>
@@ -6,7 +6,7 @@
         <p>Please upload the recommendation letter file in Adobe PDF format. Please also provide answers to the candidate questionnaire</p>
       </div>
       <div class="col-sm-12">
-          <form ng-submit="vm.submitRecLetter()">
+          <form ng-submit="vm.submitRecLetter()" class="question-form">
             <input type="file" ng-click="vm.fileSelectionEvent($event)"  placeholder="Upload file..." />
             <br>
             <br>
@@ -15,13 +15,13 @@
             <br>
             <table>
             <tr ng-repeat="candidateQuestion in vm.candidateQuestions">
-              <td>{{ candidateQuestion.questionText }}</td>
+              <td class="question-cell">{{ candidateQuestion.questionText }}</td>
                <td>
                 <table>
                     <tr><br></tr>
                   <tr ng-repeat="responseChoice in candidateQuestion.responseChoices">
                     <td>
-                      <input type="radio" name="{{candidateQuestion.questionText}}" value={{responseChoice}} ng-click="vm.radioButtonQuestionResponseEvent($event)" /> {{responseChoice}} <br>
+                      <input type="radio" name="{{candidateQuestion.questionText}}" value={{responseChoice}} ng-click="vm.radioButtonQuestionResponseEvent($event)" class="flat"/> {{responseChoice}} <br>
                     </td>  
                   </tr>
                 </table>
