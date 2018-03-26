@@ -47,6 +47,7 @@
     "solc": "^0.4.21",
     "sprint-js": "~0.1.0",
     "truffle-contract": "^3.0.4",
+    "uport-connect": "^0.7.1",
     "web3": "^0.19.1",
     "webpack-cli": "^2.0.12"
   },

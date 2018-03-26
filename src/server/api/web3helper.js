@@ -1,5 +1,7 @@
 import letterOwnershipArtifact from '../../LetterContract/build/contracts/LetterOwnership.json';
 
+import { Connect, SimpleSigner } from 'uport-connect';
+
 const bs58 = require('bs58');
 const contract = require('truffle-contract');
 const Web3 = require('web3');
@@ -34,4 +36,13 @@ function bytes32ToIPFSHash(hashHex) {
   return encodedBuffer;
 }
 
-export { bs58, IpfsAPI, ipfs, contract, Web3, provider, letterOwnershipContract, ipfsHashToBytes32, bytes32ToIPFSHash };
+
+const uport = new Connect('uPort Demo', {
+  clientId: '2oeXufHGDpU51bfKBsZDdu7Je9weJ3r7sVG',
+  signer: SimpleSigner('c818c2665a8023102e430ef3b442f1915ed8dc3abcaffbc51c5394f03fc609e2')
+});
+
+const uportWeb3 = uport.getWeb3();
+
+
+export { bs58, IpfsAPI, ipfs, contract, Web3, provider, letterOwnershipContract, ipfsHashToBytes32, bytes32ToIPFSHash, uportWeb3, uport};
