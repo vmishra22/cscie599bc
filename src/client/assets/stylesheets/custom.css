@@ -240,7 +240,8 @@ body .container.body .right_col {
 @media (max-width: 1200px) {
   .x_title h2 {
     width: 62%;
-    font-size: 17px
+    font-size: 17px;
+    padding-bottom: 1px;
   }
   .tile,
   .graph {
@@ -772,7 +773,8 @@ h2 {
   display: block;
   text-overflow: ellipsis;
   overflow: hidden;
-  white-space: nowrap
+  white-space: nowrap;
+  padding-bottom: 1px;
 }
 .x_title h2 small {
   margin-left: 10px
