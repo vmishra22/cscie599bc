@@ -21,6 +21,7 @@ export default function(app) {
   app.use('/api', require('./api/recletter'));
   app.use('/api', require('./api/candidatequestion'));
   app.use('/api', require('./api/recletterrequest'));
+  app.use('/api', require('./api/degreeprogram'));
 
   // All undefined asset or api routes should return a 404
   app.route('/:url(api|auth|components|app|bower_components|assets)/*')

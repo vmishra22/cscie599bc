@@ -5,14 +5,14 @@ const angular = require('angular');
 interface User {
   name: string;
   email: string;
-  addressLine1: string,
-  addressLine2: string,
-  city: string,
-  state: string,
-  zip: string,
-  recommenderPositionTitle: string,
-  schoolContactName: string,
-  schoolContactNumber: string,
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  state: string;
+  zip: string;
+  recommenderPositionTitle: string;
+  schoolContactName: string;
+  schoolContactNumber: string;
   password: string;
 }
 

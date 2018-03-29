@@ -23,10 +23,13 @@ import navbar from '../components/navbar/navbar.component';
 import footer from '../components/footer/footer.component';
 import main from './main/main.component';
 import constants from './app.constants';
+import shareddataservice from './app.shareddataservice';
 import util from '../components/util/util.module';
 import recletters from './recletters';
+import degreeprograms from './degreeprograms';
 import stylesheets from './stylesheets';
 import dashboards from './dashboards';
+
 
 import './app.scss';
 
@@ -45,8 +48,10 @@ angular.module('recLettersApp', [
   footer,
   main,
   constants,
+  shareddataservice,
   util,
   recletters,
+  degreeprograms,
   stylesheets,
   dashboards
 ])

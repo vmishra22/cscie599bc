@@ -36,6 +36,7 @@ export function createDegreeProgram(req, res) {
 
   let newDegreeProgram = new DegreeProgram({
     schoolId: req.body.schoolId,
+    schoolName: req.body.schoolName,
     programName: req.body.programName,
     candidateQuestions: req.body.candidateQuestions
   });

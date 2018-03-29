@@ -9,6 +9,7 @@ import User from '../api/user/user.model';
 import config from './environment/';
 
 import CandidateQuestion from '../model/candidatequestions';
+import DegreeProgram from '../model/degreeprograms';
 
 export default function seedDatabaseIfNeeded() {
   if(config.seedDB) {
@@ -47,7 +48,7 @@ export default function seedDatabaseIfNeeded() {
       .then(() => console.log('finished populating things'))
       .catch(err => console.log('error populating things', err));
 
-    User.find({}).remove()
+      User.remove({email: 'test@example.com'})
       .then(() => {
         User.create({
           provider: 'local',
@@ -55,7 +56,13 @@ export default function seedDatabaseIfNeeded() {
           name: 'Test User',
           email: 'test@example.com',
           password: 'test'
-        }, {
+        })
+        .catch(err => console.log('error populating users', err));
+      });
+
+      User.remove({email: 'admin@example.com'})
+      .then(() => {
+        User.create({
           provider: 'local',
           role: 'admin',
           name: 'Admin',
@@ -65,7 +72,7 @@ export default function seedDatabaseIfNeeded() {
         .then(() => console.log('finished populating users'))
         .catch(err => console.log('error populating users', err));
       });
-
+      
     CandidateQuestion.find({}).remove()
     .then(() => {
       CandidateQuestion.create({
@@ -100,5 +107,8 @@ export default function seedDatabaseIfNeeded() {
       .then(() => console.log('finished populating candidate questions'))
       .catch(err => console.log('error populating candidate questions', err));
     });
+
+    DegreeProgram.find({}).remove()
+    .then(() => {});
   }
 }

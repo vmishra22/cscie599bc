@@ -18,7 +18,7 @@
               <td class="question-cell">{{ candidateQuestion.questionText }}</td>
                <td>
                 <table>
-                    <tr><br></tr>
+                  <tr><br></tr>
                   <tr ng-repeat="responseChoice in candidateQuestion.responseChoices">
                     <td>
                       <input type="radio" name="{{candidateQuestion.questionText}}" value={{responseChoice}} ng-click="vm.radioButtonQuestionResponseEvent($event)" class="flat"/> {{responseChoice}} <br>
