@@ -21,7 +21,7 @@ contract LetterHelper is LetterFactory, LetterRequest {
         letters[_letterId].name = _newName;
     }
 
-    function changeSchoolProgram(uint _letterId, uint _newProgramId) 
+    function changeSchoolProgram(uint _letterId, string _newProgramId) 
                         external onlyOwnerOf(_letterId) {
         require(_letterId >= 0 && _letterId < letters.length);
         letters[_letterId].schoolProgramId = _newProgramId;
@@ -41,12 +41,11 @@ contract LetterHelper is LetterFactory, LetterRequest {
         return result;
     }
 
-    function getLettersByStudentAndSchoolId(uint _studentId, uint _ProgramId) external view returns(uint[]) {
-        require(_studentId >= 0 && _ProgramId >= 0);
+    function getLettersByStudentAndSchoolId(string _studentId, string _ProgramId) external view returns(uint[]) {
         uint[] memory result = new uint[]( letters.length);
         uint counter = 0;
         for (uint i = 0; i < letters.length; i++) {
-            if (letters[i].studentId == _studentId && letters[i].schoolProgramId == _ProgramId ) {
+            if (keccak256(letters[i].studentId) == keccak256(_studentId) && keccak256(letters[i].schoolProgramId) == keccak256(_ProgramId) ) {
                 result[counter] = i;
                 counter++;
             }
@@ -62,19 +61,28 @@ contract LetterHelper is LetterFactory, LetterRequest {
         return result;
     }
 
-    function changeRequestStatus(uint _requestId, uint _status) external{
-        require(_requestId >= 0 && _requestId < requests.length);
+    function changeRequestStatus(uint _letterId, uint _status) external{
+        require(_letterId >= 0 && _letterId < letters.length);
         require(_status == 0 || _status == 1);
-        if(_status == 0) requests[_requestId].status = State.Pending;
-        else requests[_requestId].status = State.Created;
+        //find the corresponding request of the letter:
+        string memory letterStudentId = letters[_letterId].studentId;
+        string memory letterRecommenderId = letters[_letterId].recommenderId;
+        string memory letterProgramId = letters[_letterId].schoolProgramId;
+        for (uint i = 0; i < requests.length; i++) {
+            if ( (keccak256(requests[i].studentId) == keccak256(letterStudentId)) && 
+            (keccak256(requests[i].recommenderId) == keccak256(letterRecommenderId)) &&
+            (keccak256(requests[i].schoolProgramId) == keccak256(letterProgramId))) {
+                if(_status == 0) requests[i].status = State.Pending;
+                else requests[i].status = State.Created;
+            }
+        }
     }
 
     function getLetterRequestsByStudentId(uint _studentId) external view returns(uint[]){
-        require(_studentId >= 0);
         uint[] memory result = new uint[]( requests.length);
         uint counter = 0;
         for (uint i = 0; i < requests.length; i++) {
-            if (requests[i].studentId == _studentId) {
+            if (keccak256(requests[i].studentId) == keccak256(_studentId)) {
                 result[counter] = i;
                 counter++;
             }
@@ -87,7 +95,7 @@ contract LetterHelper is LetterFactory, LetterRequest {
         uint[] memory result = new uint[]( requests.length);
         uint counter = 0;
         for (uint i = 0; i < requests.length; i++) {
-            if (requests[i].recommenderId == _recommenderId) {
+            if (keccak256(requests[i].recommenderId) == keccak256(_recommenderId)) {
                 result[counter] = i;
                 counter++;
             }

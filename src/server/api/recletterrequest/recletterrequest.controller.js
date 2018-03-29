@@ -25,7 +25,7 @@ export function getRecLetterRequests(req, res) {
   //if(loggedInUserRole === 'STUDENT' && loggedInUserName === req.query.studentId) {
   if(loggedInUserRole === 'student') {
     letterOwnershipContract.deployed().then(function(instance) {
-      instance.getLetterRequestsByStudentId(loggedInUserId) 
+      instance.getLetterRequestsByStudentId(loggedInUserId)
         .then(function(requestsIdArray) {
           requestsIdArray.forEach(element => {
             let value = element.c[0];
@@ -42,7 +42,7 @@ export function getRecLetterRequests(req, res) {
  // } else if(loggedInUserRole === 'RECOMMENDER' && loggedInUserName === req.query.recommenderId) {
 } else if(loggedInUserRole === 'recommender') {
     letterOwnershipContract.deployed().then(function(instance) {
-      instance.getLetterRequestsByRecommenderId(loggedInUserId) 
+      instance.getLetterRequestsByRecommenderId(loggedInUserId)
         .then(function(requestsIdArray) {
           requestsIdArray.forEach(element => {
             let value = element.c[0];
@@ -118,7 +118,7 @@ export function createRecLetterRequest(req, res) {
       let accounts = web3.eth.accounts;
       //TODO: call creatRequest() like this later,
       // instance.createRequest(loggedInUserId, req.body.recommenderId, req.body.schoolId, 0,
-      instance.createRequest(10, 10, 10, 0, {
+      instance.createRequest('10', '10', '10', 0, {
         from: accounts[1],
         gas: 3000000
       }).then(function(createRequestResult) {

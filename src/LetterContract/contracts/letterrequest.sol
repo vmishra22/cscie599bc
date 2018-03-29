@@ -6,13 +6,13 @@ import "./safemath.sol";
 contract LetterRequest {
     using SafeMath for uint256;
 
-    event NewRequest(uint requestId, uint studentId,  uint recommenderId, uint schoolProgramId, State status);
+    event NewRequest(uint requestId, string studentId,  string recommenderId, string schoolProgramId, State status);
     enum State { Pending, Created}
 
     struct Request{
-        uint studentId;   
-        uint recommenderId;
-        uint schoolProgramId; 
+        string studentId;   
+        string recommenderId;
+        string schoolProgramId; 
         State status;
     }
 
@@ -20,9 +20,9 @@ contract LetterRequest {
 
     function _createRequest
     (
-        uint _studentId,
-        uint _recommenderId,
-        uint _schoolProgramId, 
+        string _studentId,
+        string _recommenderId,
+        string _schoolProgramId, 
         State _status) internal 
     {
         uint requestId = requests.push(Request(_studentId, _recommenderId, _schoolProgramId, _status)) - 1;
@@ -31,9 +31,9 @@ contract LetterRequest {
 
     function createRequest
     ( 
-        uint _studentId, 
-        uint _recommenderId,
-        uint _schoolProgramId, 
+        string _studentId, 
+        string _recommenderId,
+        string _schoolProgramId, 
         State _status) public 
     {
         _createRequest(_studentId, _recommenderId, _schoolProgramId, _status);

@@ -21,7 +21,7 @@ export function getRecLetters (req, res) {
   let studentId = parseInt(req.body.studentId, 10);
   let schoolId = parseInt(req.body.schoolId, 10);
   letterOwnershipContract.deployed().then(function(instance) {
-    instance.getLettersByStudentAndSchoolId(10, 10) //TODO: Put studentId and schoolId here
+    instance.getLettersByStudentAndSchoolId('10', '10') //TODO: Put studentId and schoolId here
       .then(function(lettersIdArray) {
         res.json(lettersIdArray);
       });
@@ -94,7 +94,7 @@ export function createRecLetter(req, res) {
             console.log('PDF content successfully stored. IPFS address:', res1[0].hash);
             pdfFileHash = ipfsHashToBytes32(res1[0].hash);
 
-            instance.createLetter(letterName, 10, 10, 10, pdfFileHash, jsonFileHash, {
+            instance.createLetter(letterName, '10', '10', '10', pdfFileHash, jsonFileHash, {
               from: accounts[1],
               gas: 3000000
             }).then(function(createLetterResult) {

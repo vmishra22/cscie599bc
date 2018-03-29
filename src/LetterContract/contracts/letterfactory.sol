@@ -7,13 +7,13 @@ contract LetterFactory is Ownable {
 
     using SafeMath for uint256;
 
-    event NewLetter(uint letterId, uint studentId, uint recommenderId, uint schoolProgramId);
+    event NewLetter(uint letterId, string studentId, string recommenderId, string schoolProgramId);
 
     struct Letter {
         string name;
-        uint studentId;   //maybe a uportId or mongodbId?
-        uint recommenderId;   //maybe a uportId or mongodbId?
-        uint schoolProgramId;   //maybe a uportId or mongodbId?
+        string studentId;   //maybe a uportId or mongodbId?
+        string recommenderId;   //maybe a uportId or mongodbId?
+        string schoolProgramId;   //maybe a uportId or mongodbId?
         bytes32 pdfFileHash;   //Pdf file ipfs hash
         bytes32 jsonFileHash;  //File of the mandatory questions ipfs hash
     }
@@ -28,9 +28,9 @@ contract LetterFactory is Ownable {
     function _createLetter
     (
         string _name, 
-        uint _studentId, 
-        uint _recommenderId,
-        uint _schoolProgramId, 
+        string _studentId, 
+        string _recommenderId,
+        string _schoolProgramId, 
         bytes32 _pdfFileHash,  
         bytes32 _jsonFileHash) internal 
     {
@@ -43,9 +43,9 @@ contract LetterFactory is Ownable {
     function createLetter
     (
         string _name, 
-        uint _studentId, 
-        uint _recommenderId,
-        uint _schoolProgramId, 
+        string _studentId, 
+        string _recommenderId,
+        string _schoolProgramId, 
         bytes32 _pdfFileHash,  
         bytes32 _jsonFileHash) public 
     {
