@@ -76,16 +76,6 @@ export default function seedDatabaseIfNeeded() {
     CandidateQuestion.find({}).remove()
     .then(() => {
       CandidateQuestion.create({
-        questionText: 'Analytical ability of the applicant?',
-        responseChoices: [
-          'Upper 50%',
-          'Lower 50%',
-          'Upper 25%',
-          'Upper 10%',
-          'No basis for judgment'
-        ]
-      },
-      {
         questionText: 'In what capacity have you known the applicant?',
         responseChoices: [
           'Large Class / Lecture',
@@ -103,12 +93,142 @@ export default function seedDatabaseIfNeeded() {
           'Knew him/her only through in-class contact',
           'Only through records'
         ]
+      },
+      {
+        questionText: 'What is your overall ranking of this student compared to other students?',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
+      },
+      {
+        questionText: 'Analytical ability',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
+      },
+      {
+        questionText: 'Quantitative ability',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
+      },
+      {
+        questionText: 'Ability in oral expression',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
+      },
+      {
+        questionText: 'Analytical in written expression',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
+      },
+      {
+        questionText: 'Imagination and Creativity',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
+      },
+      {
+        questionText: 'Ability to work with others',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
+      },
+      {
+        questionText: 'Flexibility',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
+      },
+      {
+        questionText: 'Maturity',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
+      },
+      {
+        questionText: 'Confidence',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
+      },
+      {
+        questionText: 'Leadership',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
+      },
+      {
+        questionText: 'Motivation for proposed program of study',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
+      },
+      {
+        questionText: 'Background for proposed program of study',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
       })
       .then(() => console.log('finished populating candidate questions'))
       .catch(err => console.log('error populating candidate questions', err));
     });
 
-    DegreeProgram.find({}).remove()
-    .then(() => {});
+    // DegreeProgram.find({}).remove()
+    // .then(() => {});
   }
 }
