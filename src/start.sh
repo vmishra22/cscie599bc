@@ -7,7 +7,7 @@ truffle compile;
 # deploy contracts, make sure you connected to geth or ganache
 truffle migrate;
 # start ipfs
-ipfs daemon &
+#ipfs daemon &
 # start mongod
 mongod &
 # start web server

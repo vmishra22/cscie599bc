@@ -10,7 +10,12 @@ const letterOwnershipContract = contract(letterOwnershipArtifact);
 letterOwnershipContract.setProvider(provider);
 
 const IpfsAPI = require('ipfs-api');
-const ipfsHost = 'localhost';
+// Ying, You can setup a EC@ instance to run the ipfs node, this is the public ip of the ec2
+// ssh to the ec2 and run:
+// ipfs config Addresses.API /ip4/127.0.0.1/tcp/5001
+// change 127.0.0.1 to ec2's private ip address
+
+const ipfsHost = '52.14.10.169';
 const ipfsAPIPort = '5001';
 // IPFS connection setup
 const ipfs = IpfsAPI(ipfsHost, ipfsAPIPort);
