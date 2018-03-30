@@ -14,5 +14,11 @@ export default function routes($stateProvider) {
         template: require('./list/recletterslist.html'),
         controller: 'RecLettersListController',
         controllerAs: 'vm'
+      })
+      .state('view', {
+        url: '/recletters/view',
+        template: require('./view/viewrecletter.html'),
+        controller: 'ViewRecLetterController',
+        controllerAs: 'vm'
       });
 }
