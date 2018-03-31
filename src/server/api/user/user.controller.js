@@ -20,14 +20,38 @@ function handleError(res, statusCode) {
 
 /**
  * Get list of users
- * restriction: 'admin'
  */
 export function index(req, res) {
-  return User.find({}, '-salt -password').exec()
+  console.log(req.query);
+
+  if(req.query.userRole && req.query.userName) {
+    return User.find({role: req.query.userRole, name: { $regex: '.*' + req.query.userName + '.*' }}, '-salt -password').exec()
     .then(users => {
       res.status(200).json(users);
     })
     .catch(handleError(res));
+  }
+  else if (req.query.userRole) {
+    return User.find({role: req.query.userRole}, '-salt -password').exec()
+    .then(users => {
+      res.status(200).json(users);
+    })
+    .catch(handleError(res));
+  }
+  else if(req.query.userName) {
+    return User.find({name: { $regex: '.*' + req.query.userName + '.*' }}, '-salt -password').exec()
+    .then(users => {
+      res.status(200).json(users);
+    })
+    .catch(handleError(res));
+  }
+  else {
+    return User.find({}, '-salt -password').exec()
+    .then(users => {
+      res.status(200).json(users);
+    })
+    .catch(handleError(res));
+  }
 }
 
 /**
