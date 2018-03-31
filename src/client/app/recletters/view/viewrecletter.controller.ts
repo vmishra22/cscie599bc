@@ -2,8 +2,9 @@
 
 export default class ViewRecLetterController {
   $http;
-  text: String = "placeholer text...";
   $stateParams;
+  questionResponses;
+  pdfDataAsStr;
 
   /*@ngInject*/
   constructor($http, $stateParams) {
@@ -19,11 +20,14 @@ export default class ViewRecLetterController {
     const id = this.$stateParams.id;
 
     if(!id) {
-      this.text = "No id given..."
+      console.log("No id given, can't display recommendation.")
     }
     else {
       this.$http.get(`http://localhost:3000/api/RecommendationLetter/${id}`)
-        .then(resp => this.text = JSON.stringify(resp.data))
+        .then(resp => {
+          this.questionResponses = resp.data.questionsData;
+          this.pdfDataAsStr = resp.data.pdfDataAsStr;
+        });
     }
   }
 

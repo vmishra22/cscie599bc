@@ -40,19 +40,32 @@ export function getRecLetter(req, res) {
     instance.getLetterIPFSLinksByLetterId(letterId)
       .then(function(ipfsbyte32) {
         const pdfFileIPFSHash = bytes32ToIPFSHash(ipfsbyte32[0]);
-        const jsonFileIPFSHash = bytes32ToIPFSHash(ipfsbyte32[1]);
+        const questionsJsonHash = bytes32ToIPFSHash(ipfsbyte32[1]);
 
-        ipfs.get(jsonFileIPFSHash, (err, files) => {
-          if(err) {
-            console.log("Retrieving hash failed: " + JSON.stringify(err));
-          } else {
+        let pdfDataAsStr;
+        let questionsData;
+
+        ipfs.get(pdfFileIPFSHash)
+        .then((files) => {
+            console.log("Successfully retrieved pdf from IPFS.")
+            pdfDataAsStr = files[0].content.toString('utf8');
+            return ipfs.get(questionsJsonHash);
+        })
+        .then((files) => {
             console.log("Successfully retrieved questions from IPFS.")
-            const questions = JSON.parse(files[0].content.toString());
-            
-            return res.json('pdfFileIPFSHash: ' + pdfFileIPFSHash + ' questions: ' + JSON.stringify(questions));
-          }
+            questionsData = JSON.parse(files[0].content.toString());
+
+            if(pdfDataAsStr && questionsData) {
+              const result = {
+                'questionsData' : questionsData,
+                'pdfDataAsStr' : pdfDataAsStr
+              };
+
+              return res.json(result);
+            } else {
+              console.log("An error occurred. Either pdf data or questions data had issues.")
+            }
         });
-        
       });
   });
 }

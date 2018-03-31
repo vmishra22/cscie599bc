@@ -15,6 +15,9 @@ export default angular.module('recLettersApp.recletters', [
   view
   ])
   .config(routing)
+  .config(function($sceDelegateProvider) {
+    $sceDelegateProvider.resourceUrlWhitelist(['**']);
+  })
   .run(function($rootScope) {
     'ngInject';
     $rootScope.$on('$stateChangeStart', function(event, next, nextParams, current) {
