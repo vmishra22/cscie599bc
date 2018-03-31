@@ -77,14 +77,24 @@ export default class CreateRecLetterController {
           candidateQuestions: this.questionResponses
         };
 
-        const redirect = response => this.$location.path('/recletters/list');
-        const diplayError = error => { 
+        const onSuccess = response => {
+          if(response.data && response.data.letterId) {
+            const letterId = response.data.letterId;
+            console.log("Redirecting...")
+            this.$location.path(`/recletters/view/${letterId}`);
+          } else {
+            console.log("Response from posting rec letter: " + JSON.stringify(response));
+            this.errorText = "Could not get a letterId back from the service."
+          }
+        }
+
+        const onError = error => { 
           console.log(error); 
           this.errorText = "An error occurred: " + JSON.stringify(error.data.error);
         };
 
         this.$http.post('http://localhost:3000/api/RecommendationLetter', newRecLetter)
-          .then(redirect, diplayError);
+          .then(onSuccess, onError);
       };
   }
 

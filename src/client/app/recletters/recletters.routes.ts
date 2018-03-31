@@ -16,7 +16,7 @@ export default function routes($stateProvider) {
         controllerAs: 'vm'
       })
       .state('view', {
-        url: '/recletters/view',
+        url: '/recletters/view/:id',
         template: require('./view/viewrecletter.html'),
         controller: 'ViewRecLetterController',
         controllerAs: 'vm'
