@@ -35,13 +35,24 @@ export function getRecLetters (req, res) {
  */
 export function getRecLetter(req, res) {
   console.log('Entering getRecLetter()..');
-  let letterId = parseInt(req.params.id, 10);
+  const letterId = parseInt(req.params.id, 10);
   letterOwnershipContract.deployed().then(function(instance) {
     instance.getLetterIPFSLinksByLetterId(letterId)
       .then(function(ipfsbyte32) {
-        let pdfFileIPFSHash = bytes32ToIPFSHash(ipfsbyte32[0]);
-        let jsonFileIPFSHash = bytes32ToIPFSHash(ipfsbyte32[1]);
-        res.json('pdfFileIPFSHash: ' + pdfFileIPFSHash + ' jsonFileIPFSHash: ' + jsonFileIPFSHash);
+        const pdfFileIPFSHash = bytes32ToIPFSHash(ipfsbyte32[0]);
+        const jsonFileIPFSHash = bytes32ToIPFSHash(ipfsbyte32[1]);
+
+        ipfs.get(jsonFileIPFSHash, (err, files) => {
+          if(err) {
+            console.log("Retrieving hash failed: " + JSON.stringify(err));
+          } else {
+            console.log("Successfully retrieved questions from IPFS.")
+            const questions = JSON.parse(files[0].content.toString());
+            
+            return res.json('pdfFileIPFSHash: ' + pdfFileIPFSHash + ' questions: ' + JSON.stringify(questions));
+          }
+        });
+        
       });
   });
 }
@@ -77,7 +88,7 @@ export function createRecLetter(req, res) {
     let jsonFileHash = null;
 
     //Add JSON file in IPFS
-    let url1 = Buffer.from(letterjsonBuffer, 'utf8');
+    let url1 = Buffer.from(JSON.stringify(letterjsonBuffer));
     ipfs.add(url1, function(err, result) {
       if(err) {
         console.error('Content submission error:', err);
