@@ -23,7 +23,7 @@ export default class ViewRecLetterController {
     }
     else {
       this.$http.get(`http://localhost:3000/api/RecommendationLetter/${id}`)
-        .then(resp => this.text = JSON.stringify(resp))
+        .then(resp => this.text = JSON.stringify(resp.data))
     }
   }
 
