@@ -28,7 +28,7 @@ import * as auth from '../../auth/auth.service';
  * }
  *
  */
-router.get('/DegreePrograms', auth.isAuthenticated(), controller.getDegreePrograms);
+router.get('/DegreePrograms', controller.getDegreePrograms);
 
 /**
  * This REST service will create a new degree program, along with a list of candidate
