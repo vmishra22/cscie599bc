@@ -2,7 +2,7 @@
 
 import { RecLetter } from '../../classes/recletter';
 
-export default class RedDashController {
+export default class RecDashController {
   $http;
   $location;
   recLetters: RecLetter[];
