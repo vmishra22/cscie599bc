@@ -15,11 +15,37 @@ p {
   padding: 10px 80px 0;
   background: #F7F7F7;
   color: #73879C;
-  min-height: 1250px;
+  min-height: 725px;
 }
 
 .custom-title {
   border-bottom: 2px solid #E6E9ED;
   padding: 1px 5px 6px;
   margin-bottom: 10px;
+}
+
+.float-right{
+  float: right;
+}
+
+.small-panel {
+  position: relative;
+  margin: 0 auto;
+  width: 33%;
+  padding: 10px 17px;
+  background: #fff;
+  border: 1px solid #E6E9ED;
+  -webkit-column-break-inside: avoid;
+  -moz-column-break-inside: avoid;
+  column-break-inside: avoid;
+  opacity: 1;
+  transition: all .2s ease
+}
+
+.btn-default {
+  background-color: #f2f3f4 !important;
+}
+
+.x_content {
+  min-height: 200px;
 }
