@@ -14,9 +14,9 @@
         <li ng-repeat="item in $ctrl.menu" ui-sref-active="active">
             <a ui-sref="{{item.state}}">{{item.title}}</a>
         </li>
-        <li ng-show="$ctrl.isAdmin()" ui-sref-active="active"><a ui-sref="admin">Admin</a></li>
+        <!--<li ng-show="$ctrl.isAdmin()" ui-sref-active="active"><a ui-sref="admin">Admin</a></li>-->
 
-         <li class="nav-item" uib-dropdown>
+        <li class="nav-item" uib-dropdown>
           <a class="nav-link" uib-dropdown-toggle data-toggle="dropdown" href="#" >
             Student Links
           </a>
