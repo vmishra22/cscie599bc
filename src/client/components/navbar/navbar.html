@@ -14,7 +14,40 @@
         <li ng-repeat="item in $ctrl.menu" ui-sref-active="active">
             <a ui-sref="{{item.state}}">{{item.title}}</a>
         </li>
-        <li ng-show="$ctrl.isAdmin()" ui-sref-active="active"><a ui-sref="admin">Admin</a></li>
+        <!--<li ng-show="$ctrl.isAdmin()" ui-sref-active="active"><a ui-sref="admin">Admin</a></li>-->
+
+        <li class="nav-item" uib-dropdown>
+          <a class="nav-link" uib-dropdown-toggle data-toggle="dropdown" href="#" >
+            Student Links
+          </a>
+          <ul uib-dropdown-menu class="dropdown-menu">
+            <li><a class="dropdown-item" ui-sref="student-signup">Student Sign Up</a></li>
+            <li><a class="dropdown-item" ui-sref="student-dash">Student Dashboard</a></li>
+            <li><a class="dropdown-item" ui-sref="create-request">Request Recommendation</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item" uib-dropdown>
+          <a class="nav-link" uib-dropdown-toggle data-toggle="dropdown" href="#" >
+            Recommender Links
+          </a>
+          <ul uib-dropdown-menu class="dropdown-menu">
+            <li><a class="dropdown-item" ui-sref="recommender-signup">Recommender Sign Up</a>
+            <li><a class="dropdown-item" ui-sref="rec-dash">Recommender Dashboard</a>
+            <li><a class="dropdown-item" ui-sref="create">Submit Recommendation Letter</a>
+          </ul>
+        </li>
+
+        <li class="nav-item" uib-dropdown>
+          <a class="nav-link" uib-dropdown-toggle data-toggle="dropdown" href="#" >
+            School Links
+          </a>
+          <ul uib-dropdown-menu class="dropdown-menu">
+            <li><a class="dropdown-item" ui-sref="school-signup">School Sign Up</a>
+            <li><a class="dropdown-item" ui-sref="school-dash">School Dashboard</a>
+            <li><a class="dropdown-item" ui-sref="add-degree-program">Add Degree Program</a>
+          </ul>
+        </li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
