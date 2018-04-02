@@ -7,6 +7,8 @@ export default class SchoolDashController {
   currentUser;
   students;
   degreePrograms;
+  studentSearchName;
+  studentsWithRecLetters;
 
   /*@ngInject*/
   constructor(Auth, $http, $location) {
@@ -44,4 +46,13 @@ export default class SchoolDashController {
       });
   }
 
+  getStudentsWithRecLetters($scope) {
+    console.log("Entering getStudentsWithRecLetters()..");
+
+    this.$http.get('http://localhost:3000/api/StudentsWithRecommendationLetters?studentName='+this.studentSearchName)
+    .then(function(response) {
+      $scope.studentsWithRecLetters = response.data;
+    })
+  
+  }
 }

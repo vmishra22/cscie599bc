@@ -9,6 +9,43 @@ import RecLetterRequest from '../../model/recletterrequests';
 import RecLetter from '../../model/recletters';
 import { ipfs, letterOwnershipContract, ipfsHashToBytes32, bytes32ToIPFSHash } from '../web3helper';
 
+
+function handleError(res, statusCode) {
+  statusCode = statusCode || 500;
+  return function(err) {
+    return res.status(statusCode).send(err);
+  };
+}
+
+
+/**
+ * Get list of students who have recommendation letters
+ */
+export function getStudentsWithRecLetters(req, res) {
+  console.log('Entering getStudentsWithRecLetters()..');
+  console.log(req.query);
+
+  if(!req.user) {
+    res.status(403).render();
+  }
+
+  let loggedInUserId = req.user._id; //get the logged in user id
+  let loggedInUserRole = req.user.role; //get the logged in user role
+
+  if(loggedInUserRole === 'school') {
+    if(req.query.studentName) {
+      return RecLetter.find({schoolId: loggedInUserId, studentName: { $regex: '.*' + req.query.studentName + '.*' }}).distinct('studentName').exec()
+      .then(recletters => {
+        return res.status(200).json(recletters);
+      })
+      .catch(handleError(res));
+    }
+  }
+  else {
+    res.status(403).render();
+  }
+}
+
 /**
  * Returns a list of submitted recommendation letters where ‘student’ field is
  * the selected student’s ID and ‘school.ID’ field matches the currently logged in ID

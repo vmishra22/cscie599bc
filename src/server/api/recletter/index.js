@@ -7,6 +7,7 @@ let router = express.Router();
 
 import * as auth from '../../auth/auth.service';
 
+router.get('/StudentsWithRecommendationLetters', auth.isAuthenticated(), controller.getStudentsWithRecLetters);
 router.get('/RecommendationLetters', auth.isAuthenticated(), controller.getRecLetters);
 router.get('/RecommendationLetter/:id', auth.isAuthenticated(), controller.getRecLetter);
 router.post('/RecommendationLetter', auth.isAuthenticated(), controller.createRecLetter);
