@@ -65,7 +65,7 @@ export default class AddDegreeProgramController {
             }
           }
 
-          const redirect = response => this.$location.path('/');
+          const redirect = response => this.$location.path('/school-dashboard');
           const diplayError = error => { 
             console.log(error); 
             this.errorText = "An error occurred: " + JSON.stringify(error.data.error);

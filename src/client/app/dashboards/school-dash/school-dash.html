@@ -14,7 +14,9 @@
           <h2>Degree Programs</h2>
 
           <div class="float-right">
-            <button class="btn btn-success">Add</button>
+            <a ui-sref="add-degree-program">
+              <button class="btn btn-primary">Add</button>
+            </a>
             <button class="btn btn-primary">Edit</button>
           </div>
           <div class="clearfix"></div>
@@ -26,8 +28,8 @@
       <div class="col-md-12">
         <div class="x_content">
           <ul>
-            <li ng-repeat="degree in $scope.degrees">
-              {{degree.programName}}
+            <li ng-repeat="degreeProgram in vm.degreePrograms">
+              {{degreeProgram.programName}}
             </li>
           </ul>
         </div>
