@@ -27,28 +27,28 @@ export function index(req, res) {
   if(req.query.userRole && req.query.userName) {
     return User.find({role: req.query.userRole, name: { $regex: '.*' + req.query.userName + '.*' }}, '-salt -password').exec()
     .then(users => {
-      res.status(200).json(users);
+      return res.status(200).json(users);
     })
     .catch(handleError(res));
   }
   else if (req.query.userRole) {
     return User.find({role: req.query.userRole}, '-salt -password').exec()
     .then(users => {
-      res.status(200).json(users);
+      return res.status(200).json(users);
     })
     .catch(handleError(res));
   }
   else if(req.query.userName) {
     return User.find({name: { $regex: '.*' + req.query.userName + '.*' }}, '-salt -password').exec()
     .then(users => {
-      res.status(200).json(users);
+      return res.status(200).json(users);
     })
     .catch(handleError(res));
   }
   else {
     return User.find({}, '-salt -password').exec()
     .then(users => {
-      res.status(200).json(users);
+      return res.status(200).json(users);
     })
     .catch(handleError(res));
   }
@@ -65,7 +65,7 @@ export function create(req, res) {
       var token = jwt.sign({ _id: user._id }, config.secrets.session, {
         expiresIn: 60 * 60 * 5
       });
-      res.json({ token });
+      return res.json({ token });
     })
     .catch(validationError(res));
 }
@@ -81,7 +81,7 @@ export function show(req, res, next) {
       if(!user) {
         return res.status(404).end();
       }
-      res.json(user.profile);
+      return res.json(user.profile);
     })
     .catch(err => next(err));
 }
@@ -93,7 +93,7 @@ export function show(req, res, next) {
 export function destroy(req, res) {
   return User.findByIdAndRemove(req.params.id).exec()
     .then(function() {
-      res.status(204).end();
+      return res.status(204).end();
     })
     .catch(handleError(res));
 }
@@ -112,13 +112,14 @@ export function changePassword(req, res) {
         user.password = newPass;
         return user.save()
           .then(() => {
-            res.status(204).end();
+            return res.status(204).end();
           })
           .catch(validationError(res));
       } else {
         return res.status(403).end();
       }
-    });
+    })
+    .catch(err => handleError(err));
 }
 
 /**
@@ -132,7 +133,7 @@ export function me(req, res, next) {
       if(!user) {
         return res.status(401).end();
       }
-      res.json(user);
+      return res.json(user);
     })
     .catch(err => next(err));
 }

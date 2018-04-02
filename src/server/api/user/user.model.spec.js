@@ -1,5 +1,7 @@
 'use strict';
 
+/* globals describe, before, beforeEach, afterEach, it */
+
 import app from '../..';
 import User from './user.model';
 var user;
@@ -8,7 +10,8 @@ var genUser = function() {
     provider: 'local',
     name: 'Fake User',
     email: 'test@example.com',
-    password: 'password'
+    role: 'anything',
+    password: 'password',
   });
   return user;
 };

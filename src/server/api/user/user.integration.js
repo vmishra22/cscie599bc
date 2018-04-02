@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals describe, expect, it, before, after, beforeEach, afterEach */
+/* globals describe, it, before, after  */
 
 import app from '../..';
 import User from './user.model';
@@ -15,6 +15,7 @@ describe('User API:', function() {
       user = new User({
         name: 'Fake User',
         email: 'test@example.com',
+        role: 'anystring',
         password: 'password'
       });
 
@@ -40,6 +41,9 @@ describe('User API:', function() {
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
+          if(err) {
+            throw err;
+          }
           token = res.body.token;
           done();
         });
@@ -52,6 +56,9 @@ describe('User API:', function() {
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
+          if(err) {
+            throw err;
+          }
           res.body._id.toString().should.equal(user._id.toString());
           done();
         });

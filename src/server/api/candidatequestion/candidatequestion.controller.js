@@ -6,15 +6,22 @@
 'use strict';
 
 import CandidateQuestion from '../../model/candidatequestions';
-import * as auth from '../../auth/auth.service';
+//import * as auth from '../../auth/auth.service';
+//import User from "../user/user.model";
+
+function handleError(res, statusCode) {
+  statusCode = statusCode || 500;
+  return function (err) {
+    return res.status(statusCode).send(err);
+  };
+}
 
 export function getCandidateQuestions(req, res) {
-  console.log('Entering getCandidateQuestions()..');
-  console.log('user = '+req.user);
- 
-  CandidateQuestion.find(function(err, candidateQuestion){
-    res.json(candidateQuestion);
-  }); 
+  return CandidateQuestion.find({}).exec()
+    .then(questions => {
+      return res.status(200).json(questions);
+    })
+    .catch(handleError(res));
 }
 
 export function createCandidateQuestion(req, res) {
