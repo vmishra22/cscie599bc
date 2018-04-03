@@ -90,3 +90,17 @@ export function deleteDegreeProgram(req, res) {
     }
   });
 }
+
+export function getDegreeProgram(req, res) {
+  console.log("Entering getDegreeProgram()..id="+req.params.id);
+  DegreeProgram.findOne({_id: req.params.id}, function(err, result) {
+    if(err)
+    {
+      res.json(err);
+    }
+    else
+    {
+      res.json(result);
+    }
+  });
+}

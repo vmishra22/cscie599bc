@@ -1,0 +1,62 @@
+<div class="main-container">
+    <!-- page content -->
+    <div class="page-title">
+      <div class="title_left">
+        <h3>Degree Program</h3>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  
+    <div class="x_panel">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_title">
+            <h2>{{vm.degreeProgram.programName}}</h2>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="x_panel">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_title">
+            <h2>Candidate Questions</h2>
+              <div class="clearfix"></div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-md-12">
+          <div class="x_content">
+            <table class="table table-striped table-bordered">
+              <thead>
+              <tr>
+                <th>Question Text</th>
+                <th>Response Choices</th>
+              </tr>
+              </thead>
+  
+              <tbody>
+              <tr ng-repeat="candidateQuestion in vm.degreeProgram.candidateQuestions">
+                <td>{{candidateQuestion.questionText}}</td>
+                <td>
+                  <table>
+                      <tr><br></tr>
+                      <tr ng-repeat="responseChoice in candidateQuestion.responseChoices">
+                        <td>
+                          {{responseChoice}}<br>
+                        </td>  
+                      </tr>
+                    </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </div>

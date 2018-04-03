@@ -54,4 +54,10 @@ router.post('/DegreeProgram', auth.isAuthenticated(), controller.createDegreePro
  */
 router.delete('/DegreeProgram/:id', auth.isAuthenticated(), controller.deleteDegreeProgram);
 
+/**
+ * This REST service will return a degree program from the database
+ * The input is the database Id
+ */
+router.get('/DegreeProgram/:id', controller.getDegreeProgram);
+
 module.exports = router;

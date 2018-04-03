@@ -14,5 +14,11 @@ export default function routes($stateProvider) {
         template: require('./update/update-degree-program.html'),
         controller: 'UpdateDegreeProgramController',
         controllerAs: 'vm'
+      })
+      .state('view-degree-program/:programId', {
+        url: '/view-degree-program/:programId',
+        template: require('./view/view-degree-program.html'),
+        controller: 'ViewDegreeProgramController',
+        controllerAs: 'vm'
       });
 }
