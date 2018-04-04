@@ -72,7 +72,7 @@ export default function seedDatabaseIfNeeded() {
         .then(() => console.log('finished populating users'))
         .catch(err => console.log('error populating users', err));
       });
-      
+
     CandidateQuestion.find({}).remove()
     .then(() => {
       CandidateQuestion.create({

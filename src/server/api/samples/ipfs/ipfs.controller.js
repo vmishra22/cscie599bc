@@ -9,7 +9,7 @@
 'use strict';
 
 
-import ipfsAPI from 'ipfs-api'
+import ipfsAPI from 'ipfs-api';
 import fs from 'fs';
 
 
@@ -17,11 +17,11 @@ export function connectIpfs(req, res) {
   // or using options
   var ipfs = ipfsAPI({host: 'localhost', port: '5001', protocol: 'http'});
 
-  ipfs.swarm.peers(function (err, res) {
-    if (err) {
+  ipfs.swarm.peers(function(err, res) {
+    if(err) {
       console.error(err);
     } else {
-      console.log("IPFS - connected to "  + res.length + " peers");
+      console.log(`IPFS - connected to ${res.length} peers`);
     }
   });
 }

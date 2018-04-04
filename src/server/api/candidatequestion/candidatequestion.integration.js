@@ -8,12 +8,11 @@ import User from '../user/user.model';
 import request from 'supertest';
 
 describe('Candidate Question API:', function() {
-
   var user, q1, q2, q3;
 
   // Clear users before testing
-  before(function () {
-    return User.remove().then(function () {
+  before(function() {
+    return User.remove().then(function() {
       user = new User({
         name: 'Fake User',
         email: 'test@example.com',
@@ -25,28 +24,28 @@ describe('Candidate Question API:', function() {
   });
 
   // Clear users after testing
-  after(function () {
+  after(function() {
     return User.remove();
   });
 
   // Clear candidate questions before testing
-  before(function () {
+  before(function() {
     return CandidateQuestion.remove()
-      .then(function () {
+      .then(function() {
         q1 = new CandidateQuestion({
           questionText: 'What is the...?',
           responseChoices: ['yes', 'no', 'maybeso']
         });
         return q1.save();
       })
-      .then(function () {
+      .then(function() {
         q2 = new CandidateQuestion({
           questionText: 'How would you place...?',
           responseChoices: ['yes', 'no', 'maybeso']
         });
         return q2.save();
       })
-      .then(function () {
+      .then(function() {
         q3 = new CandidateQuestion({
           questionText: 'Do you think the candidate....?',
           responseChoices: ['yes', 'no', 'maybeso']
@@ -56,15 +55,14 @@ describe('Candidate Question API:', function() {
   });
 
   // Clear candidate questions and user after testing
-  after(function () {
+  after(function() {
     return CandidateQuestion.remove();
   });
 
-  describe('GET /api/CandidateQuestions', function () {
-
+  describe('GET /api/CandidateQuestions', function() {
     var token;
 
-    before(function (done) {
+    before(function(done) {
       request(app)
         .post('/auth/local')
         .send({
@@ -74,7 +72,7 @@ describe('Candidate Question API:', function() {
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
-          if (err) {
+          if(err) {
             throw err;
           }
           token = res.body.token;
@@ -82,20 +80,20 @@ describe('Candidate Question API:', function() {
         });
     });
 
-    it('should respond with the list of candidate questions when authenticated', function (done) {
+    it('should respond with the list of candidate questions when authenticated', function(done) {
       request(app)
         .get('/api/CandidateQuestions')
         .set('authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
-          if (err) throw err;
+          if(err) throw err;
           res.body.length.should.equal(3);
           done();
         });
     });
 
-    it('should respond with a 401 when not authenticated', function (done) {
+    it('should respond with a 401 when not authenticated', function(done) {
       request(app)
         .get('/api/CandidateQuestions')
         .expect(401)
@@ -104,7 +102,6 @@ describe('Candidate Question API:', function() {
   });
 
   describe('POST /api/CandidateQuestion', function() {
-
     var token;
 
     before(function(done) {
@@ -131,7 +128,7 @@ describe('Candidate Question API:', function() {
         .set('authorization', `Bearer ${token}`)
         .send({
           questionText: 'dgqerhqeDescribe blah blah blah...',
-          responseChoices: ['1','2']
+          responseChoices: ['1', '2']
         })
         .expect(200)
         .expect('Content-Type', /json/)
@@ -139,7 +136,7 @@ describe('Candidate Question API:', function() {
           if(err) throw err;
           res.body.questionText.should.equal('dgqerhqeDescribe blah blah blah...');
           res.body.responseChoices[0].should.equal('1');
-          res.body.responseChoices[1].should.equal('2')
+          res.body.responseChoices[1].should.equal('2');
           done();
         });
     });
@@ -153,7 +150,6 @@ describe('Candidate Question API:', function() {
   });
 
   describe('DELETE /api/CandidateQuestion/:id', function() {
-
     var token;
 
     before(function(done) {
@@ -177,7 +173,7 @@ describe('Candidate Question API:', function() {
     it('should delete the specified candidate question when authenticated', function(done) {
       console.log(q1);
       request(app)
-        .delete('/api/CandidateQuestion/' + q1._id)
+        .delete(`/api/CandidateQuestion/${q1._id}`)
         .set('authorization', `Bearer ${token}`)
         .expect(200)
         .expect('Content-Type', /json/)
@@ -190,7 +186,7 @@ describe('Candidate Question API:', function() {
 
     it('should respond with a 401 when not authenticated', function(done) {
       request(app)
-      .delete('/api/CandidateQuestion/' + q1._id)
+      .delete(`/api/CandidateQuestion/${q1._id}`)
       .expect(401)
       .end(done);
     });
