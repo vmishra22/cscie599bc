@@ -1,6 +1,6 @@
 // Import libraries we need.
-import { default as Web3 } from 'web3';
-import { default as contract } from 'truffle-contract';
+// import { default as Web3 } from 'web3';
+// import { default as contract } from 'truffle-contract';
 
 //Vinay: TODO when we have static contract address (it will avoid setting up the contracts in controllers every time)
 // import config from '../config';

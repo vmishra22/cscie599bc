@@ -2,8 +2,6 @@
 
 import { CandidateQuestion } from '../../classes/candidatequestion';
 import { QuestionResponse } from '../../classes/questionresponse';
-import { RecLetter } from '../../classes/recletter';
-
 
 export default class CreateRecLetterController {
 
@@ -26,44 +24,42 @@ export default class CreateRecLetterController {
     this.errorText = null;
    }
 
-  
    fileSelectionEvent(fileInput: any) {
-    console.log("Entering fileSelectionEvent()..");
+    console.log('Entering fileSelectionEvent()..');
     this.fileInput = fileInput;
-  } 
+  }
 
   radioButtonQuestionResponseEvent(radioButtonQuestionResponse: any) {
-    console.log("Entering radioButtonQuestionResponseEvent()..");
+    console.log('Entering radioButtonQuestionResponseEvent()..');
 
     var selectedQuestionText = radioButtonQuestionResponse.target.name;
     var selectedQuestionResponse = radioButtonQuestionResponse.target.value;
 
     var resopnseModified = false;
-    for(var i=0; i<this.questionResponses.length; i++){
-      if(this.questionResponses[i].questionText == selectedQuestionText){
+    for(var i=0; i<this.questionResponses.length; i++) {
+      if(this.questionResponses[i].questionText === selectedQuestionText) {
         this.questionResponses[i].questionResponse = selectedQuestionResponse;
         resopnseModified = true;
       }
     }
 
-    if(!resopnseModified)
-    {
+    if(!resopnseModified) {
       var questionResponse = {
         questionText: selectedQuestionText,
         questionResponse: selectedQuestionResponse
-      }
+      };
 
       this.questionResponses.push(questionResponse);
     }
   }
 
   submitRecLetter() {
-    console.log("Entering submitRecLetter()..");
+    console.log('Entering submitRecLetter()..');
 
     this.errorText = null;
 
     if(!this.fileInput) {
-      this.errorText = "No file selected."
+      this.errorText = 'No file selected.';
       return;
     }
 
@@ -80,17 +76,17 @@ export default class CreateRecLetterController {
         const onSuccess = response => {
           if(response.data && response.data.letterId) {
             const letterId = response.data.letterId;
-            console.log("Redirecting...")
+            console.log('Redirecting...');
             this.$location.path(`/recletters/view/${letterId}`);
           } else {
-            console.log("Response from posting rec letter: " + JSON.stringify(response));
-            this.errorText = "Could not get a letterId back from the service."
+            console.log('Response from posting rec letter: ' + JSON.stringify(response));
+            this.errorText = 'Could not get a letterId back from the service.';
           }
-        }
+        };
 
-        const onError = error => { 
-          console.log(error); 
-          this.errorText = "An error occurred: " + JSON.stringify(error.data.error);
+        const onError = error => {
+          console.log(error);
+          this.errorText = 'An error occurred: ' + JSON.stringify(error.data.error);
         };
 
         this.$http.post('http://localhost:3000/api/RecommendationLetter', newRecLetter)
@@ -99,7 +95,7 @@ export default class CreateRecLetterController {
   }
 
   getCandidateQuestions($scope) {
-    console.log("Entering getCandidateQuestions()..");
+    console.log('Entering getCandidateQuestions()..');
     this.$http.get('http://localhost:3000/api/CandidateQuestions')
       .then(function(response) {
         $scope.candidateQuestions = response.data;

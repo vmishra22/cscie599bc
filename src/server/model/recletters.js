@@ -11,4 +11,4 @@ var RecLetterSchema = mongoose.Schema({
     submissionDate: Date
 });
 
-var RecLetter = module.exports = mongoose.model('RecLetter', RecLetterSchema);
+module.exports = mongoose.model('RecLetter', RecLetterSchema);

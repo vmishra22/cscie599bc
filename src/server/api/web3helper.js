@@ -28,8 +28,8 @@ function ipfsHashToBytes32(ipfsHash) {
     console.log('invalid ipfs format', ipfsHash, h);
     return null;
   }
-  console.log('Exit ipfsHashToBytes32', '0x' + h);
-  return '0x' + h;
+  console.log('Exit ipfsHashToBytes32', `0x${h}`);
+  return `0x${h}`;
 }
 
 function bytes32ToIPFSHash(hashHex) {

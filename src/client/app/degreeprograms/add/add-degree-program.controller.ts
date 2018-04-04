@@ -1,6 +1,4 @@
 'use strict';
-// @flow
-const angular = require('angular');
 
 interface CandidateQuestion {
   questionText: string;
@@ -14,7 +12,7 @@ interface ProgramCandidateQuestion {
 interface DegreeProgram {
   schoolId: string;
   schoolName: string;
-  programName: string,
+  programName: string;
   programCandidateQuestions: ProgramCandidateQuestion[];
 }
 
@@ -66,18 +64,15 @@ export default class AddDegreeProgramController {
           }
 
           const redirect = response => this.$location.path('/school-dashboard');
-          const diplayError = error => { 
-            console.log(error); 
-            this.errorText = "An error occurred: " + JSON.stringify(error.data.error);
+          const diplayError = error => {
+            console.log(error);
+            this.errorText = 'An error occurred: ' + JSON.stringify(error.data.error);
           };
-  
+
           this.$http.post('http://localhost:3000/api/DegreeProgram', newDegreeProgram)
             .then(redirect, diplayError);
-
-
         }
       }
- 
     }
   }
 
@@ -107,7 +102,7 @@ export default class AddDegreeProgramController {
   }
 
   getCurrentUser($scope) {
-    console.log("Entering getCurrentUser()..");
+    console.log('Entering getCurrentUser()..');
     this.Auth.getCurrentUser()
     .then(function(currentUser) {
       $scope.currentUser = currentUser;
@@ -115,7 +110,7 @@ export default class AddDegreeProgramController {
   }
 
   getCandidateQuestions($scope) {
-    console.log("Entering getCandidateQuestions()..");
+    console.log('Entering getCandidateQuestions()..');
     this.$http.get('http://localhost:3000/api/CandidateQuestions')
       .then(function(response) {
         $scope.candidateQuestions = response.data;

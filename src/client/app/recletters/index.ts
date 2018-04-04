@@ -6,7 +6,7 @@ const uiRouter = require('angular-ui-router');
 import create from './create';
 import list from './list';
 import routing from './recletters.routes';
-import view from './view'
+import view from './view';
 
 export default angular.module('recLettersApp.recletters', [
   uiRouter,

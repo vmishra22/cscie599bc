@@ -1,4 +1,4 @@
-export class CandidateQuestion{
+export class CandidateQuestion {
     _id: string;
     questionText: string;
     responseChoices: Array<string>;
