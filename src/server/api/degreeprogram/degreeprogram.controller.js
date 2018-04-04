@@ -60,11 +60,11 @@ export function createDegreeProgram(req, res) {
     candidateQuestions: req.body.candidateQuestions
   });
 
-  newDegreeProgram.save(function(err, newDegreeProgram) {
+  newDegreeProgram.save(function(err, program) {
     if(err) {
       res.json(err);
     } else {
-      res.json(newDegreeProgram);
+      res.json(program);
     }
   });
 }

@@ -15,4 +15,4 @@ var RecLetterRequestSchema = mongoose.Schema({
     recLetterSubmissionDate: Date
 });
 
-var RecLetterRequest = module.exports = mongoose.model('RecLetterRequest', RecLetterRequestSchema);
+module.exports = mongoose.model('RecLetterRequest', RecLetterRequestSchema);

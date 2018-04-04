@@ -53,8 +53,8 @@ export function getStudentsWithRecLetters(req, res) {
 export function getRecLetters(req, res) {
   console.log('Entering getRecLetters()..');
 
-  let studentId = parseInt(req.body.studentId, 10);
-  let schoolId = parseInt(req.body.schoolId, 10);
+  // let studentId = parseInt(req.body.studentId, 10);
+  // let schoolId = parseInt(req.body.schoolId, 10);
   letterOwnershipContract.deployed().then(function(instance) {
     instance.getLettersByStudentAndSchoolId('10', '10') //TODO: Put studentId and schoolId here
       .then(function(lettersIdArray) {
@@ -114,9 +114,9 @@ export function createRecLetter(req, res) {
   console.log('Entering createRecLetter()..');
   let loggedInRecommenderId = ''; //get logged in user id
   //These Ids need to be passed to contract, currently they are undefined
-  let studentId = parseInt(req.body.studentId, 10);
-  let recommenderId = parseInt(loggedInRecommenderId, 10);
-  let schoolId = parseInt(req.body.schoolId, 10);
+  // let studentId = parseInt(req.body.studentId, 10);
+  // let recommenderId = parseInt(loggedInRecommenderId, 10);
+  // let schoolId = parseInt(req.body.schoolId, 10);
   console.log(`Student Id:${req.body.studentId}`);
   console.log(`loggedInRecommenderId:${loggedInRecommenderId}`);
   console.log(`schoolId:${req.body.schoolId}`);

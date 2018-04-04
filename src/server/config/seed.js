@@ -9,7 +9,7 @@ import User from '../api/user/user.model';
 import config from './environment/';
 
 import CandidateQuestion from '../model/candidatequestions';
-import DegreeProgram from '../model/degreeprograms';
+// import DegreeProgram from '../model/degreeprograms';
 
 export default function seedDatabaseIfNeeded() {
   if(config.seedDB) {

@@ -1,7 +1,5 @@
 var mongoose = require('mongoose');
 
-import { CandidateQuestion } from './candidatequestions';
-
 var DegreeProgramSchema = mongoose.Schema({
     schoolId: String,
     schoolName: String,
@@ -18,4 +16,4 @@ var DegreeProgramSchema = mongoose.Schema({
     }
 });
 
-var DegreeProgram = module.exports = mongoose.model('DegreeProgram', DegreeProgramSchema);
+module.exports = mongoose.model('DegreeProgram', DegreeProgramSchema);
