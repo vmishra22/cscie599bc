@@ -27,7 +27,7 @@ export default class CreateRecLetterController {
    fileSelectionEvent(fileInput: any) {
     console.log('Entering fileSelectionEvent()..');
     this.fileInput = fileInput;
-  };
+  }
 
   radioButtonQuestionResponseEvent(radioButtonQuestionResponse: any) {
     console.log('Entering radioButtonQuestionResponseEvent()..');

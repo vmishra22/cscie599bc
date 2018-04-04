@@ -1,4 +1,4 @@
-export class QuestionResponse{
+export class QuestionResponse {
     questionText: string;
     questionResponse: string;
 }

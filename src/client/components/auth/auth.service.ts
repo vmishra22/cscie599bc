@@ -4,18 +4,18 @@ import * as _ from 'lodash';
 
 // @flow
 class _User {
-  _id: string = '';
-  name: string = '';
-  email: string = '';
-  addressLine1: string = '';
-  addressLine2: string = '';
-  city: string = '';
-  state: string = '';
-  zip: string = '';
-  recommenderPositionTitle: string = '';
-  schoolContactName: string = '';
-  schoolContactNumber: string = '';
-  role: string = '';
+  _id = '';
+  name = '';
+  email = '';
+  addressLine1 = '';
+  addressLine2 = '';
+  city = '';
+  state = '';
+  zip = '';
+  recommenderPositionTitle = '';
+  schoolContactName = '';
+  schoolContactNumber = '';
+  role = '';
   $promise = undefined;
 }
 
