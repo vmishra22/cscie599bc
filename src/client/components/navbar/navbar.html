@@ -11,9 +11,11 @@
     </div>
     <div uib-collapse="$ctrl.isCollapsed" class="navbar-collapse collapse" id="navbar-main">
       <ul class="nav navbar-nav">
+        <!--
         <li ng-repeat="item in $ctrl.menu" ui-sref-active="active">
             <a ui-sref="{{item.state}}">{{item.title}}</a>
         </li>
+        -->
         <!--<li ng-show="$ctrl.isAdmin()" ui-sref-active="active"><a ui-sref="admin">Admin</a></li>-->
 
         <li class="nav-item" uib-dropdown>
@@ -21,9 +23,10 @@
             Student Links
           </a>
           <ul uib-dropdown-menu class="dropdown-menu">
-            <li><a class="dropdown-item" ui-sref="student-signup">Student Sign Up</a></li>
-            <li><a class="dropdown-item" ui-sref="student-dash">Student Dashboard</a></li>
-            <li><a class="dropdown-item" ui-sref="new-request">Request Recommendation</a></li>
+            <li ng-hide="$ctrl.isLoggedIn()"><a class="dropdown-item" ui-sref="student-signup">Student Sign Up</a></li>
+            <li ng-hide="!$ctrl.getUserRole('student')"><a class="dropdown-item" ui-sref="student-dash">Student Dashboard</a></li>
+            <li ng-hide="!$ctrl.getUserRole('student')"><a class="dropdown-item" ui-sref="new-request">Request Recommendation</a></li>
+            <li ng-hide="!$ctrl.getUserRole('student') || !$ctrl.isLoggedIn()"><a class="dropdown-item" ui-sref="logout">Logout</a> 
           </ul>
         </li>
 
@@ -31,10 +34,11 @@
           <a class="nav-link" uib-dropdown-toggle data-toggle="dropdown" href="#" >
             Recommender Links
           </a>
-          <ul uib-dropdown-menu class="dropdown-menu">
-            <li><a class="dropdown-item" ui-sref="recommender-signup">Recommender Sign Up</a>
-            <li><a class="dropdown-item" ui-sref="rec-dash">Recommender Dashboard</a>
-            <li><a class="dropdown-item" ui-sref="create">Submit Recommendation Letter</a>
+          <ul uib-dropdown-menu class="dropdown-menu" >
+            <li ng-hide="$ctrl.isLoggedIn()"><a class="dropdown-item" ui-sref="recommender-signup">Recommender Sign Up</a>
+            <li ng-hide="!$ctrl.getUserRole('recommender')"><a class="dropdown-item" ui-sref="rec-dash">Recommender Dashboard</a>
+            <li ng-hide="!$ctrl.getUserRole('recommender')"><a class="dropdown-item" ui-sref="create">Submit Recommendation Letter</a>
+            <li ng-hide="!$ctrl.getUserRole('recommender') || !$ctrl.isLoggedIn()"><a class="dropdown-item" ui-sref="logout">Logout</a> 
           </ul>
         </li>
 
@@ -43,9 +47,10 @@
             School Links
           </a>
           <ul uib-dropdown-menu class="dropdown-menu">
-            <li><a class="dropdown-item" ui-sref="school-signup">School Sign Up</a>
-            <li><a class="dropdown-item" ui-sref="school-dash">School Dashboard</a>
-            <li><a class="dropdown-item" ui-sref="add-degree-program">Add Degree Program</a>
+            <li ng-hide="$ctrl.isLoggedIn()"><a class="dropdown-item" ui-sref="school-signup">School Sign Up</a>
+            <li ng-hide="!$ctrl.getUserRole('school')"><a class="dropdown-item" ui-sref="school-dash">School Dashboard</a>
+            <li ng-hide="!$ctrl.getUserRole('school')"><a class="dropdown-item" ui-sref="add-degree-program">Add Degree Program</a>
+            <li ng-hide="!$ctrl.getUserRole('school') || !$ctrl.isLoggedIn()"><a class="dropdown-item" ui-sref="logout">Logout</a>  
           </ul>
         </li>
       </ul>

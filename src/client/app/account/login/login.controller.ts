@@ -31,9 +31,24 @@ export default class LoginController {
         email: this.user.email,
         password: this.user.password
       })
-      .then(() => {
-        // Logged in, redirect to home
-        this.$state.go('main');
+      .then((user) => {
+        if(user) {
+          if(user.role === 'student') {
+            this.$state.go('student-dash');
+          }
+          else if(user.role === 'recommender') {
+            this.$state.go('rec-dash');
+          }
+          else if(user.role === 'school') {
+            this.$state.go('school-dash');
+          }
+          else {
+            this.$state.go('main');
+          }
+        }
+        else {
+          this.$state.go('main');
+        }
       })
       .catch(err => {
         this.errors.login = err.message;

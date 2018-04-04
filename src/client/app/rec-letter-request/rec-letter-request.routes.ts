@@ -7,6 +7,7 @@ export default function routes($stateProvider) {
       url: '/recletters-request/new',
       template: require('./new/new.html'),
       controller: 'NewRecLetterRequestsController',
-      controllerAs: 'vm'
+      controllerAs: 'vm',
+      authenticate: true
     });
 }

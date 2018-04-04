@@ -19,7 +19,6 @@ export default class ViewDegreeProgramController {
 
 
   getDegreeProgram($scope) {
-    console.log("Entering getDegreeProgram()..");
     console.log("Entering getDegreeProgram().."+this.$stateParams.programId);
 
     this.$http.get('http://localhost:3000/api/DegreeProgram/'+this.$stateParams.programId)

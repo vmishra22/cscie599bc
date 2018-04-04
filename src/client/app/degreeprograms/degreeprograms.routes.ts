@@ -7,18 +7,21 @@ export default function routes($stateProvider) {
         url: '/add-degree-program',
         template: require('./add/add-degree-program.html'),
         controller: 'AddDegreeProgramController',
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        authenticate: true
       })
       .state('update-degree-program', {
         url: '/update-degree-program',
         template: require('./update/update-degree-program.html'),
         controller: 'UpdateDegreeProgramController',
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        authenticate: true
       })
       .state('view-degree-program/:programId', {
         url: '/view-degree-program/:programId',
         template: require('./view/view-degree-program.html'),
         controller: 'ViewDegreeProgramController',
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        authenticate: true
       });
 }
