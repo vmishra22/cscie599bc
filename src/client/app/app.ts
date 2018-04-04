@@ -11,8 +11,6 @@ const uiRouter = require('angular-ui-router');
 const uiBootstrap = require('angular-ui-bootstrap');
 import 'angular-validation-match';
 
-
-
 import {routeConfig} from './app.config';
 
 import _Auth from '../components/auth/auth.module';
@@ -29,7 +27,7 @@ import recletters from './recletters';
 import degreeprograms from './degreeprograms';
 import stylesheets from './stylesheets';
 import dashboards from './dashboards';
-
+import rec_letter_requests from './rec-letter-request';
 
 import './app.scss';
 
@@ -53,7 +51,8 @@ angular.module('recLettersApp', [
   recletters,
   degreeprograms,
   stylesheets,
-  dashboards
+  dashboards,
+  rec_letter_requests
 ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {

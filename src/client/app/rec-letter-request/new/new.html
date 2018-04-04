@@ -1,0 +1,64 @@
+<div class="main-container">
+   page content
+  <div class="page-title">
+    <div class="title_left">
+      <h3>Request Recommendation</h3>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+
+  <!--<rec-request></rec-request>-->
+  <div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="x_panel">
+        <div class="x_title">
+          <h2>Select Recommender</h2>
+          <div class="clearfix"></div>
+        </div>
+
+        <form class="form" name="form" ng-submit="vm.submit(form)" novalidate>
+          <div class="x_content">
+            <div class="col-mm-12">
+              <div class="form-group" ng-class="{ 'has-success': form.recommender.$valid && vm.submitted,
+                                                'has-error': form.recommender.$invalid && vm.submitted }">
+                <label>Name</label>
+
+                <select class="form-control" ng-options="recommender.name for recommender in vm.recommenders" ng-model="vm.recommender" required></select>
+
+                <p class="help-block" ng-show="form.recommender.$error.required && vm.submitted">
+                  A recommender is required
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="x_title">
+            <h2>Select Degree or School</h2>
+            <div class="clearfix"></div>
+          </div>
+
+          <div class="x_content">
+            <div class="col-mm-12">
+              <div class="form-group" ng-class="{ 'has-success': form.degreeProgram.$valid && vm.submitted,
+                                                'has-error': form.degreeProgram.$invalid && vm.submitted }">
+                <label>Name</label>
+                <!--"item.name for item in items"-->
+
+                <select class="form-control" ng-options="program.programName for program in vm.degreePrograms" ng-model="vm.degreeProgram" required>
+                </select>
+                <p class="help-block" ng-show="form.name.$error.required && vm.submitted">
+                  A recommender is required
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+          <button class="btn btn-primary" type="submit" value="submit">
+            Request Recommendation
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
