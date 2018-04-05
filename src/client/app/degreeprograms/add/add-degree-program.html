@@ -1,56 +1,70 @@
 <div class="main-container">
-    <div class="row">
-      <div class="col-sm-12">
-        <br><br><br>
-        <h1>Add a Degree Program for {{vm.currentUser.name}}</h1>
-      </div>
-      <div class="col-sm-12">
-          <form class="form" name="form" ng-submit="vm.addDegreeProgram(form)" novalidate>
-
-            <div class="form-group" ng-class="{ 'has-success': form.name.$valid && vm.submitted,
-                                                'has-error': form.name.$invalid && vm.submitted }">
-              <label>Program Name</label>
-    
-              <input type="text" name="name" class="form-control" ng-model="vm.degreeProgram.programName"
-                      required/>
-              <p class="help-block" ng-show="form.name.$error.required && vm.submitted">
-                A name is required
-              </p>
-            </div>
-              
-            <br>
-            <br>
-            Please select the candidate questions which need to be answered for by a recommender
-            <br>
-            <br>
-
-            <table>
-                <tr>
-                    <th>Question Text</th>
-                    <th>Response Choices</th> 
-                </tr>
-                <tr ng-repeat="candidateQuestion in vm.candidateQuestions">
-                  <td>
-                      <input type="checkbox" name="selectedQuestions[]" value="{{candidateQuestion.questionText}}" ng-model="candidateQuestion.selected"> {{candidateQuestion.questionText}}
-                  </td>
-                   <td>
-                    <table>
-                      <tr><br></tr>
-                      <tr ng-repeat="responseChoice in candidateQuestion.responseChoices">
-                        <td>
-                          {{responseChoice}}<br>
-                        </td>  
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-            </table>
-
-
-           <br>
-            <input type="submit" class="btn btn-success" value="Submit">
-        </form>
-        <div class="error-label" ng-if="vm.errorText">{{vm.errorText}}</div>
-      </div>
+  <div class="page-title">
+    <div class="title_left">
+      <h3>Add a Degree Program for {{vm.currentUser.name}}</h3>
+    </div>
   </div>
-  
+
+  <div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="x_panel">
+        <div class="x_title">
+          <h2>Create Program</h2>
+          <div class="clearfix"></div>
+        </div>
+
+        <div class="x_content">
+          <div class="col-md-12">
+            <form class="form" name="form" ng-submit="vm.addDegreeProgram(form)" novalidate>
+              <div class="form-group" ng-class="{ 'has-success': form.name.$valid && vm.submitted,
+                  'has-error': form.name.$invalid && vm.submitted }">
+                <label>Program Name</label>
+                <input type="text" name="name" class="form-control" ng-model="vm.degreeProgram.programName"
+                       required/>
+                <p class="help-block" ng-show="form.name.$error.required && vm.submitted">
+                  A name is required
+                </p>
+              </div>
+
+              <div class="form-group mtl">
+                <p class="font-13 m-b-30">Please select the candidate questions which need to be answered for by a recommender</p>
+
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Question Text</th>
+                      <th>Response Choices</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr ng-repeat="candidateQuestion in vm.candidateQuestions">
+                      <td>
+                        <input type="checkbox" name="selectedQuestions[]" value="{{candidateQuestion.questionText}}" ng-model="candidateQuestion.selected"> {{candidateQuestion.questionText}}
+                      </td>
+                      <td>
+                        <table class="table table-bordered">
+                          <tr ng-repeat="responseChoice in candidateQuestion.responseChoices">
+                            <td> {{responseChoice}} </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="form-group">
+                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-11">
+                  <input type="submit" class="btn btn-success" value="Submit">
+                  <div class="error-label" ng-if="vm.errorText">{{vm.errorText}}</div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

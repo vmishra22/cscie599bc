@@ -20,6 +20,9 @@ export class NavbarComponent {
     this.getCurrentUser = Auth.getCurrentUserSync;
   }
 
+  getUserRole(role) {
+    return (this.getCurrentUser().role === role);
+  }
 }
 
 export default angular.module('directives.navbar', [])
