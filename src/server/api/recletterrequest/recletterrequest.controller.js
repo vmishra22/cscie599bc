@@ -184,7 +184,7 @@ export function createRecLetterRequest(req, res) {
           requestDate: (new Date())
         });
 
-        console.log(newRecLetterRequest);
+        console.log('newRecLetterRequest data: ', newRecLetterRequest);
         newRecLetterRequest.save(function(err, recLetterRequest) {
           if(err) {
             res.json(err);

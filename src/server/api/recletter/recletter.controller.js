@@ -114,7 +114,6 @@ export function getRecLetter(req, res) {
  */
 export function createRecLetter(req, res) {
   console.log('Entering createRecLetter()..');
-  console.log("req.body", req.body);
   let loggedInRecommenderId = req.user._id; //get logged in user id
   //These Ids need to be passed to contract, currently they are undefined
   let studentId = req.body.studentId;

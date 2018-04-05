@@ -15,30 +15,26 @@ const IpfsAPI = require('ipfs-api');
 // ipfs config Addresses.API /ip4/127.0.0.1/tcp/5001
 // change 127.0.0.1 to ec2's private ip address
 
-const ipfsHost = '52.14.10.169'; //'127.0.0.1'
+const ipfsHost = '127.0.0.1'; //'52.14.10.169';
 
 const ipfsAPIPort = '5001';
 // IPFS connection setup
 const ipfs = IpfsAPI(ipfsHost, ipfsAPIPort);
 
 function ipfsHashToBytes32(ipfsHash) {
-  console.log('Entering ipfsHashToBytes32', ipfsHash);
   let h = bs58.decode(ipfsHash).toString('hex')
     .replace(/^1220/, '');
   if(h.length !== 64) {
     console.log('invalid ipfs format', ipfsHash, h);
     return null;
   }
-  console.log('Exit ipfsHashToBytes32', '0x' + h);
   return '0x' + h;
 }
 
 function bytes32ToIPFSHash(hashHex) {
-  console.log('Entering bytes32ToIPFSHash', hashHex);
   //console.log('bytes32ToIPFSHash starts with hash_buffer', hash_hex.replace(/^0x/, ''));
   let buf = new Buffer(hashHex.replace(/^0x/, '1220'), 'hex');
   let encodedBuffer = bs58.encode(buf);
-  console.log('Exit bytes32ToIPFSHash', encodedBuffer);
   return encodedBuffer;
 }
 
