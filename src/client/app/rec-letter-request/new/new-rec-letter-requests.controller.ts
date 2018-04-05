@@ -36,7 +36,7 @@ export default class NewRecLetterRequestsController {
         programName: this.degreeProgram.programName
       };
 
-      const redirect = response => this.$location.path('/');
+      const redirect = response => this.$location.path('/student-dashboard');
       const diplayError = error => {
         console.log(error);
         this.errorText = 'An error occurred: ' + JSON.stringify(error.data.error);
