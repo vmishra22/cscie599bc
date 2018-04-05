@@ -78,7 +78,7 @@ contract LetterHelper is LetterFactory, LetterRequest {
         }
     }
 
-    function getLetterRequestsByStudentId(uint _studentId) external view returns(uint[]){
+    function getLetterRequestsByStudentId(string _studentId) external view returns(uint[]){
         uint[] memory result = new uint[]( requests.length);
         uint counter = 0;
         for (uint i = 0; i < requests.length; i++) {
@@ -90,8 +90,7 @@ contract LetterHelper is LetterFactory, LetterRequest {
         return result;
     }
 
-    function getLetterRequestsByRecommenderId(uint _recommenderId) external view returns(uint[]){
-        require(_recommenderId >= 0);
+    function getLetterRequestsByRecommenderId(string _recommenderId) external view returns(uint[]){
         uint[] memory result = new uint[]( requests.length);
         uint counter = 0;
         for (uint i = 0; i < requests.length; i++) {

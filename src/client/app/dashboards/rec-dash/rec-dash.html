@@ -26,11 +26,11 @@
             </thead>
 
             <tbody>
-            <tr ng-repeat="recommendation in $scope.pendingRecs">
+            <tr ng-repeat="recommendation in vm.pendingRecs">
               <td>{{recommendation.requestDate}}</td>
               <td>{{recommendation.schoolName}}</td>
               <td>{{recommendation.programName}}</td>
-              <td><button class="btn btn-primary">Submit</button></td>
+              <td> <a ui-sref="create"> <button class="btn btn-primary">Submit</button> </a>
             </tr>
           </table>
         </div>
@@ -57,7 +57,7 @@
             </thead>
 
             <tbody>
-            <tr ng-repeat="recommendation in $scope.submittedRecs">
+            <tr ng-repeat="recommendation in vm.submittedRecs">
               <td>{{recommendation.studentName}}</td>
               <td>{{recommendation.submissionDate}}</td>
               <td>{{recommendation.programName}}</td>

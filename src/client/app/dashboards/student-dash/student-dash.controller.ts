@@ -18,7 +18,7 @@ export default class StudentDashController {
   }
 
   setRecommendations($scope) {
-    this.$http.get('http://localhost:3000/api/RecommendationLetters')
+    this.$http.get('http://localhost:3000/api/RecommendationLetterRequests')
       .then(function(response) {
         $scope.recommendations = response.data;
       });

@@ -13,7 +13,6 @@ function handleError(res, statusCode) {
 
 export function getDegreePrograms(req, res) {
   console.log('Entering getDegreePrograms()..');
-  console.log(req.query);
 
   if(req.query.schoolId && req.query.programName) {
     return DegreeProgram.find({schoolId: req.query.schoolId, programName: { $regex: '.*' + req.query.programName + '.*' }}).exec() 

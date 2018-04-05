@@ -5,63 +5,98 @@
 
 'use strict';
 
+var async = require('async');
 import RecLetterRequest from '../../model/recletterrequests';
 import { letterOwnershipContract } from '../web3helper';
 
 export function getRecLetterRequests(req, res) {
-  console.log('Entering getRecLetterRequests()..');
-  console.log(req.query);
+  console.log('Entering server getRecLetterRequests()..');
+  //console.log(req);
 
   if(!req.user) {
     res.status(403).render();
   }
 
+  console.log(req.user);
   let loggedInUserId = req.user._id; //get the logged in user name
   let loggedInUserRole = req.user.role; //get the logged in user role
 
+  console.log("loggedInUserId: ", loggedInUserId);
+  console.log("loggedInUserRole: ", loggedInUserRole);
   //hardcoding the ID just for testing
-  loggedInUserId = 10;
+ // loggedInUserId = 10;
   
   //if(loggedInUserRole === 'STUDENT' && loggedInUserName === req.query.studentId) {
-  if(loggedInUserRole === 'student') {
-    letterOwnershipContract.deployed().then(function(instance) {
-      instance.getLetterRequestsByStudentId(loggedInUserId)
+    if(loggedInUserRole === 'student') {
+   letterOwnershipContract.deployed().then(function(instance) {
+      instance.getLetterRequestsByStudentId(String(loggedInUserId))
         .then(function(requestsIdArray) {
-          requestsIdArray.forEach(element => {
-            let value = element.c[0];
-            RecLetterRequest.find({requestId: value}, function(err, recLetterRequests) {
-              if(err) {
-                res.json(err);
-              } else {
-                res.json(recLetterRequests);
-              }
+          console.log("requestsIdArray: ", requestsIdArray);
+          var requestResults = [];
+
+          async.eachSeries(requestsIdArray, function(item, callback) {
+            let value = item.c[0];
+            RecLetterRequest.find({requestId: value}, function(err, x) {
+              let result1 = {
+                requestDate: x[0].requestDate,
+                letterStatus: x[0].letterStatus,
+                schoolName: x[0].schoolName,
+                programName: x[0].programName,
+                recommenderName: x[0].recommenderName
+              };
+              requestResults.push(result1);
+              callback(err);
             });
-          });
+          }, function(err) {
+            if (err) throw err;
+            console.log("done");
+            return res.json(requestResults);
+          }); 
         });
     });
  // } else if(loggedInUserRole === 'RECOMMENDER' && loggedInUserName === req.query.recommenderId) {
-} else if(loggedInUserRole === 'recommender') {
-    letterOwnershipContract.deployed().then(function(instance) {
-      instance.getLetterRequestsByRecommenderId(loggedInUserId)
+} else if(loggedInUserRole === 'recommender' ) {
+     letterOwnershipContract.deployed().then(function(instance) {
+      instance.getLetterRequestsByRecommenderId(String(loggedInUserId))
         .then(function(requestsIdArray) {
-          requestsIdArray.forEach(element => {
-            let value = element.c[0];
-            RecLetterRequest.find({requestId: value}, function(err, recLetterRequests) {
-              if(err) {
-                res.json(err);
-              } else {
-                console.log('recLetterRequests', recLetterRequests);
-                res.json(recLetterRequests);
+          console.log("requestsIdArray: ", requestsIdArray);
+          var pendingRequestResults = [];
+          var submittedRequestResults = [];
+          var accumulatedResults = {};
+          async.eachSeries(requestsIdArray, function(item, callback) {
+            
+            let value = item.c[0];
+            RecLetterRequest.find({requestId: value, recommenderId:loggedInUserId}, function(err, x) {
+              console.log(x);
+              if(x.length > 0){
+                let result1 = {
+                  requestDate: x[0].requestDate,
+                  letterStatus: x[0].letterStatus,
+                  schoolName: x[0].schoolName,
+                  programName: x[0].programName,
+                  recommenderName: x[0].recommenderName
+                };
+                if(x[0].letterStatus === "Pending"){
+                  pendingRequestResults.push(result1);
+                } else if(x[0].letterStatus === "Created"){
+                  submittedRequestResults.push(result1);
+                }
               }
+              
+              callback(err);
             });
-          });
+          }, function(err) {
+            if (err) throw err;
+            console.log("done");
+            accumulatedResults.created = submittedRequestResults;
+            accumulatedResults.pending = pendingRequestResults;
+            return res.json(accumulatedResults);
+          }); 
         });
     });
-  }
-  else {
+  } else {
     res.status(403).render();
   }
-
 }
 
 export function getRecLetterRequest(req, res) {
@@ -107,6 +142,13 @@ export function createRecLetterRequest(req, res) {
   let loggedInUserId = req.user._id; //get the logged in user name
   let loggedInUserRole = req.user.role; //get the logged in user role
 
+  let recommenderId = req.body.recommenderId;
+  let schoolId = req.body.schoolId;
+
+  console.log("studentId: ", loggedInUserId);
+  console.log("recommenderId: ", recommenderId);
+  console.log("schoolId: ", schoolId);
+
   if(loggedInUserRole != 'student' || loggedInUserId != req.body.studentId) {
     res.status(403).render();
   }
@@ -118,7 +160,7 @@ export function createRecLetterRequest(req, res) {
       let accounts = web3.eth.accounts;
       //TODO: call creatRequest() like this later,
       // instance.createRequest(loggedInUserId, req.body.recommenderId, req.body.schoolId, 0,
-      instance.createRequest('10', '10', '10', 0, {
+      instance.createRequest(String(loggedInUserId), String(recommenderId), String(schoolId), 0, {
         from: accounts[1],
         gas: 3000000
       }).then(function(createRequestResult) {
@@ -152,6 +194,9 @@ export function createRecLetterRequest(req, res) {
           }
         });
       });
+    })
+    .catch(function(error) {
+      console.log('Error in createRequest call:', error);
     });
 }
 

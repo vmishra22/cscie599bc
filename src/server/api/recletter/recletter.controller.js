@@ -53,7 +53,7 @@ export function getStudentsWithRecLetters(req, res) {
  * @param res
  */
 export function getRecLetters (req, res) {
-  console.log('Entering getRecLetters()..');
+  console.log('Entering server getRecLetters()..');
 
   let studentId = parseInt(req.body.studentId, 10);
   let schoolId = parseInt(req.body.schoolId, 10);
@@ -114,11 +114,12 @@ export function getRecLetter(req, res) {
  */
 export function createRecLetter(req, res) {
   console.log('Entering createRecLetter()..');
-  let loggedInRecommenderId = ''; //get logged in user id
+  console.log("req.body", req.body);
+  let loggedInRecommenderId = req.user._id; //get logged in user id
   //These Ids need to be passed to contract, currently they are undefined
-  let studentId = parseInt(req.body.studentId, 10);
-  let recommenderId = parseInt(loggedInRecommenderId, 10);
-  let schoolId = parseInt(req.body.schoolId, 10);
+  let studentId = req.body.studentId;
+  let recommenderId = req.user._id;
+  let schoolId = req.body.schoolId;
   console.log('Student Id:' + req.body.studentId);
   console.log('loggedInRecommenderId:' + loggedInRecommenderId);
   console.log('schoolId:' + req.body.schoolId);
@@ -129,7 +130,7 @@ export function createRecLetter(req, res) {
   letterOwnershipContract.deployed().then(function(instance) {
     let web3 = req.app.get('web3');
     let accounts = web3.eth.accounts;
-    let letterName = 'Sample Reco Letter';
+    let letterName = 'Reco Letter for Student:' + studentId;
     let letterPdfBuffer = req.body.recLetterContents;
     let letterjsonBuffer = req.body.candidateQuestions;
 
@@ -155,7 +156,7 @@ export function createRecLetter(req, res) {
             console.log('PDF content successfully stored. IPFS address:', res1[0].hash);
             pdfFileHash = ipfsHashToBytes32(res1[0].hash);
 
-            instance.createLetter(letterName, '10', '10', '10', pdfFileHash, jsonFileHash, {
+            instance.createLetter(letterName, String(studentId), String(recommenderId), String(schoolId), pdfFileHash, jsonFileHash, {
               from: accounts[1],
               gas: 3000000
             }).then(function(createLetterResult) {
@@ -186,11 +187,13 @@ export function createRecLetter(req, res) {
                     gas: 3000000
                   }).then(function(reqStatusResult) {
                     console.log('reqStatusResult', reqStatusResult);
-                    RecLetterRequest.find({requestId: newLetterId}, function(err, recLetterRequests) {
+                    RecLetterRequest.find({studentId: req.body.studentId, schoolId: req.body.schoolId, recommenderId: loggedInRecommenderId}, 
+                    function(err, recLetterRequests) {
                       if(err) {
                         console.log('Error', err);
                         //res.json(err);
                       } else {
+                        console.log(recLetterRequests);
                         recLetterRequests.forEach(element => {
                           element.letterStatus = 'Created';
                         });
