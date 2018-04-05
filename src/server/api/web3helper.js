@@ -16,6 +16,7 @@ const IpfsAPI = require('ipfs-api');
 // change 127.0.0.1 to ec2's private ip address
 
 const ipfsHost = '52.14.10.169'; //'127.0.0.1'
+
 const ipfsAPIPort = '5001';
 // IPFS connection setup
 const ipfs = IpfsAPI(ipfsHost, ipfsAPIPort);
