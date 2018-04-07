@@ -45,6 +45,13 @@ export function index(req, res) {
     })
     .catch(handleError(res));
   }
+  else if(req.query.userId) {
+    return User.find({_id: req.query.userId}, '-salt -password').exec()
+    .then(users => {
+      return res.status(200).json(users);
+    })
+    .catch(handleError(res));
+  }
   else {
     return User.find({}, '-salt -password').exec()
     .then(users => {

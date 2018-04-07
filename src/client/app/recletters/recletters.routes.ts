@@ -4,7 +4,7 @@ export default function routes($stateProvider) {
     'ngInject';
     $stateProvider
       .state('create', {
-        url: '/recletters/create',
+        url: '/recletters/create/:schoolId/:programName/:studentId/:studentName',
         template: require('./create/createrecletter.html'),
         controller: 'CreateRecLetterController',
         controllerAs: 'vm',

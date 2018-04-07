@@ -85,45 +85,45 @@ export default function seedDatabaseIfNeeded() {
           'Other'
         ]
       },
-      // {
-      //   questionText: 'How well do you know the applicant?',
-      //   responseChoices: [
-      //     'See on a regular basis',
-      //     'At one time',
-      //     'Knew him/her only through in-class contact',
-      //     'Only through records'
-      //   ]
-      // },
-      // {
-      //   questionText: 'What is your overall ranking of this student compared to other students?',
-      //   responseChoices: [
-      //     'Upper 50%',
-      //     'Lower 50%',
-      //     'Upper 25%',
-      //     'Upper 10%',
-      //     'No basis for judgment'
-      //   ]
-      // },
-      // {
-      //   questionText: 'Analytical ability',
-      //   responseChoices: [
-      //     'Upper 50%',
-      //     'Lower 50%',
-      //     'Upper 25%',
-      //     'Upper 10%',
-      //     'No basis for judgment'
-      //   ]
-      // },
-      // {
-      //   questionText: 'Quantitative ability',
-      //   responseChoices: [
-      //     'Upper 50%',
-      //     'Lower 50%',
-      //     'Upper 25%',
-      //     'Upper 10%',
-      //     'No basis for judgment'
-      //   ]
-      // },
+      {
+        questionText: 'How well do you know the applicant?',
+        responseChoices: [
+          'See on a regular basis',
+          'At one time',
+          'Knew him/her only through in-class contact',
+          'Only through records'
+        ]
+      },
+      {
+        questionText: 'What is your overall ranking of this student compared to other students?',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
+      },
+      {
+        questionText: 'Analytical ability',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
+      },
+      {
+        questionText: 'Quantitative ability',
+        responseChoices: [
+          'Upper 50%',
+          'Lower 50%',
+          'Upper 25%',
+          'Upper 10%',
+          'No basis for judgment'
+        ]
+      },
       // {
       //   questionText: 'Ability in oral expression',
       //   responseChoices: [

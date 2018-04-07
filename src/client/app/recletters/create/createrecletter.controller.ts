@@ -9,6 +9,7 @@ export default class CreateRecLetterController {
 
   $http;
   $location;
+  $stateParams;
   filesToUpload: Array<File>;
   candidateQuestions: CandidateQuestion[];
   questionResponses: QuestionResponse[] = [];
@@ -16,13 +17,14 @@ export default class CreateRecLetterController {
   errorText: string;
 
   /*@ngInject*/
-  constructor($http, $location) {
+  constructor($http, $location, $stateParams) {
     this.$http = $http;
     this.$location = $location;
+    this.$stateParams = $stateParams;
   }
 
   $onInit() {
-    this.getCandidateQuestions(this);
+   this.getCandidateQuestions(this);
     this.errorText = null;
    }
 
@@ -73,6 +75,10 @@ export default class CreateRecLetterController {
       reader.onload = () => {
 
         let newRecLetter = {
+          schoolId: this.$stateParams.shoolId,
+          programName: this.$stateParams.programName,
+          studentId: this.$stateParams.studentId,
+          studentName: this.$stateParams.studentName,
           recLetterContents: reader.result,
           candidateQuestions: this.questionResponses
         };
@@ -98,12 +104,19 @@ export default class CreateRecLetterController {
       };
   }
 
-  getCandidateQuestions($scope) {
-    console.log("Entering getCandidateQuestions()..");
-    this.$http.get('http://localhost:3000/api/CandidateQuestions')
-      .then(function(response) {
-        $scope.candidateQuestions = response.data;
-      });
-  }
+  // getCandidateQuestions($scope) {
+  //   console.log("Entering getCandidateQuestions()..");
+  //   this.$http.get('http://localhost:3000/api/CandidateQuestions')
+  //     .then(function(response) {
+  //       $scope.candidateQuestions = response.data;
+  //     });
+  // }
 
+  getCandidateQuestions($scope) {
+    console.log("Entering getCandidateQuestions()..schoolId="+$scope.$stateParams.schoolId+"&programName="+$scope.$stateParams.programName);
+    this.$http.get('http://localhost:3000/api/DegreePrograms?schoolId='+$scope.$stateParams.schoolId+'&programName='+$scope.$stateParams.programName)
+      .then(function(response) {
+        $scope.candidateQuestions = response.data[0].candidateQuestions;
+     });
+  } 
 }

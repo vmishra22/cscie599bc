@@ -40,6 +40,9 @@ export function getRecLetterRequests(req, res) {
               let result1 = {
                 requestDate: x[0].requestDate,
                 letterStatus: x[0].letterStatus,
+                studentId: x[0].studentId,
+                studentName: x[0].studentName,
+                schoolId: x[0].schoolId,
                 schoolName: x[0].schoolName,
                 programName: x[0].programName,
                 recommenderName: x[0].recommenderName
@@ -72,6 +75,9 @@ export function getRecLetterRequests(req, res) {
                 let result1 = {
                   requestDate: x[0].requestDate,
                   letterStatus: x[0].letterStatus,
+                  studentId: x[0].studentId,
+                  studentName: x[0].studentName,
+                  schoolId: x[0].schoolId,
                   schoolName: x[0].schoolName,
                   programName: x[0].programName,
                   recommenderName: x[0].recommenderName

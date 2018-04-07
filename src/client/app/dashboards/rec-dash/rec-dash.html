@@ -19,18 +19,20 @@
             <thead>
             <tr>
               <th>Request Date</th>
+              <td>Student</th>
               <th>School</th>
               <th>Degree Program</th>
-              <th>View</th>
+              <th>Submit</th>
             </tr>
             </thead>
 
             <tbody>
             <tr ng-repeat="recommendation in vm.pendingRecs">
               <td>{{recommendation.requestDate}}</td>
+              <td>{{recommendation.studentName}}</td>
               <td>{{recommendation.schoolName}}</td>
               <td>{{recommendation.programName}}</td>
-              <td> <a ui-sref="create"> <button class="btn btn-primary">Submit</button> </a>
+              <td> <a href="/create/{{recommendation.schoolId}}/{{recommendation.programName}}/{{recommendation.studentId}}"> <button class="btn btn-primary">Submit</button> </a>
             </tr>
           </table>
         </div>
