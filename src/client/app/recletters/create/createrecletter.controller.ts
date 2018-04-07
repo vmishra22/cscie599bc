@@ -75,7 +75,7 @@ export default class CreateRecLetterController {
       reader.onload = () => {
 
         let newRecLetter = {
-          schoolId: this.$stateParams.shoolId,
+          schoolId: this.$stateParams.schoolId,
           programName: this.$stateParams.programName,
           studentId: this.$stateParams.studentId,
           studentName: this.$stateParams.studentName,

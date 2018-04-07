@@ -195,6 +195,13 @@ export function createRecLetter(req, res) {
                         console.log(recLetterRequests);
                         recLetterRequests.forEach(element => {
                           element.letterStatus = 'Created';
+                          element.save(function(err, changedLetterRequest) {
+                            if(err) {
+                              console.log(err);
+                            } else {
+                              console.log('Changed Request saved in mongoDB', changedLetterRequest);
+                            }
+                          });
                         });
                       }
                     });

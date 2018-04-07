@@ -54,7 +54,7 @@ export function getRecLetterRequests(req, res) {
             if (err) throw err;
             console.log("done");
             return res.json(requestResults);
-          }); 
+          });
         });
     });
  // } else if(loggedInUserRole === 'RECOMMENDER' && loggedInUserName === req.query.recommenderId) {
@@ -69,7 +69,7 @@ export function getRecLetterRequests(req, res) {
           async.eachSeries(requestsIdArray, function(item, callback) {
             
             let value = item.c[0];
-            RecLetterRequest.find({requestId: value, recommenderId:loggedInUserId}, function(err, x) {
+            RecLetterRequest.find({requestId: value, recommenderId: loggedInUserId}, function(err, x) {
               console.log(x);
               if(x.length > 0){
                 let result1 = {
