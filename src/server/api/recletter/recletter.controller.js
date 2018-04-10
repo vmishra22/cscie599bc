@@ -34,7 +34,7 @@ export function getStudentsWithRecLetters(req, res) {
 
   if(loggedInUserRole === 'school') {
     if(req.query.studentName) {
-      return RecLetter.find({schoolId: loggedInUserId, studentName: { $regex: '.*' + req.query.studentName + '.*' }}).distinct('studentName').exec()
+      return RecLetter.find({schoolId: loggedInUserId, studentName: { $regex: '.*' + req.query.studentName + '.*' }}).exec()
       .then(recletters => {
         return res.status(200).json(recletters);
       })
@@ -115,12 +115,14 @@ export function getRecLetter(req, res) {
 export function createRecLetter(req, res) {
   console.log('Entering createRecLetter()..');
   let loggedInRecommenderId = req.user._id; //get logged in user id
+  let loggedInRecommenderName = req.user.name;
   //These Ids need to be passed to contract, currently they are undefined
   let studentId = req.body.studentId;
   let recommenderId = req.user._id;
   let schoolId = req.body.schoolId;
   console.log('Student Id:' + req.body.studentId);
   console.log('loggedInRecommenderId:' + loggedInRecommenderId);
+  console.log('loggedInRecommenderName:' + loggedInRecommenderName);
   console.log('schoolId:' + req.body.schoolId);
 
   //This is the new letter Id that's created in the blockchain. MongoDB needs to hold this ID to make the subsequent operation
@@ -168,7 +170,7 @@ export function createRecLetter(req, res) {
                 recommenderId: loggedInRecommenderId,
                 schoolId: req.body.schoolId,
                 studentName: req.body.studentName,
-                recommenderName: req.body.recommenderName,
+                recommenderName: loggedInRecommenderName,
                 programName: req.body.programName,
                 submissionDate: new Date()
               });

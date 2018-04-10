@@ -77,15 +77,18 @@
             <thead>
             <tr>
               <th>Student</th>
-              <th>View All Recs</th>
+              <th>Recommender</th>
+              <th>Degree Program</th>
+              <th>View</th>
             </tr>
             </thead>
 
             <tbody>
-            <tr ng-repeat="student in $scope.studentsWithRecLetters">
+            <tr ng-repeat="student in vm.studentsWithRecLetters">
               <td>{{student.studentName}}</td>
-              <td><a>View</a></td>
-              <td><i class="fa fa-eye"></i></td>
+              <td>{{student.recommenderName}}</td>
+              <td>{{student.programName}}</td>
+              <td><a href="/recletters/view/{{student.letterId}}"><i class="fa fa-eye"></i></a></td>
             </tr>
           </table>
         </div>
