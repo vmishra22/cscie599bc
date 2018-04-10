@@ -1,4 +1,7 @@
 import letterOwnershipArtifact from '../../LetterContract/build/contracts/LetterOwnership.json';
+import letterRequestArtifact from '../../LetterContract/build/contracts/LetterRequest.json';
+import letterHelperArtifact from '../../LetterContract/build/contracts/LetterHelper.json';
+import letterFactoryArtifact from '../../LetterContract/build/contracts/LetterFactory.json';
 
 import { Connect, SimpleSigner } from 'uport-connect';
 
@@ -7,7 +10,13 @@ const contract = require('truffle-contract');
 const Web3 = require('web3');
 const provider = new Web3.providers.HttpProvider('http://localhost:7545');
 const letterOwnershipContract = contract(letterOwnershipArtifact);
+const letterRequestContract = contract(letterRequestArtifact);
+const letterHelperContract = contract(letterHelperArtifact);
+const letterFactoryContract = contract(letterFactoryArtifact);
 letterOwnershipContract.setProvider(provider);
+letterRequestContract.setProvider(provider);
+letterHelperContract.setProvider(provider);
+letterFactoryContract.setProvider(provider);
 
 const IpfsAPI = require('ipfs-api');
 // Ying, You can setup a EC@ instance to run the ipfs node, this is the public ip of the ec2
@@ -47,4 +56,6 @@ const uport = new Connect('uPort Demo', {
 const uportWeb3 = uport.getWeb3();
 
 
-export { bs58, IpfsAPI, ipfs, contract, Web3, provider, letterOwnershipContract, ipfsHashToBytes32, bytes32ToIPFSHash, uportWeb3, uport};
+export { bs58, IpfsAPI, ipfs, contract, Web3, provider, letterOwnershipContract, ipfsHashToBytes32, 
+  bytes32ToIPFSHash, uportWeb3, uport, letterRequestContract, letterHelperContract, letterFactoryContract};
+

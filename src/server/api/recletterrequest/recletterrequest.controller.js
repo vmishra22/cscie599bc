@@ -7,7 +7,7 @@
 
 var async = require('async');
 import RecLetterRequest from '../../model/recletterrequests';
-import { letterOwnershipContract } from '../web3helper';
+import { letterOwnershipContract, letterRequestContract, letterHelperContract } from '../web3helper';
 
 export function getRecLetterRequests(req, res) {
   console.log('Entering server getRecLetterRequests()..');
@@ -28,7 +28,7 @@ export function getRecLetterRequests(req, res) {
   
   //if(loggedInUserRole === 'STUDENT' && loggedInUserName === req.query.studentId) {
     if(loggedInUserRole === 'student') {
-   letterOwnershipContract.deployed().then(function(instance) {
+    letterHelperContract.deployed().then(function(instance) {
       instance.getLetterRequestsByStudentId(String(loggedInUserId))
         .then(function(requestsIdArray) {
           console.log("requestsIdArray: ", requestsIdArray);
@@ -60,7 +60,7 @@ export function getRecLetterRequests(req, res) {
     });
  // } else if(loggedInUserRole === 'RECOMMENDER' && loggedInUserName === req.query.recommenderId) {
 } else if(loggedInUserRole === 'recommender' ) {
-     letterOwnershipContract.deployed().then(function(instance) {
+     letterHelperContract.deployed().then(function(instance) {
       instance.getLetterRequestsByRecommenderId(String(loggedInUserId))
         .then(function(requestsIdArray) {
           console.log("requestsIdArray: ", requestsIdArray);
@@ -162,7 +162,7 @@ export function createRecLetterRequest(req, res) {
   }
   
   let newLetterRequestId = null;
-  letterOwnershipContract.deployed()
+  letterRequestContract.deployed()
     .then(function(instance) {
       let web3 = req.app.get('web3');
       let accounts = web3.eth.accounts;
