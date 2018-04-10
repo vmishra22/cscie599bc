@@ -87,7 +87,7 @@ export default class CreateRecLetterController {
           if(response.data && response.data.letterId) {
             const letterId = response.data.letterId;
             console.log("Redirecting...")
-            this.$location.path(`/recletters/view/${letterId}`);
+            this.$location.path(`/recommender-dashboard`);
           } else {
             console.log("Response from posting rec letter: " + JSON.stringify(response));
             this.errorText = "Could not get a letterId back from the service."

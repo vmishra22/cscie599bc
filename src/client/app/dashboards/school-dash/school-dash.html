@@ -28,10 +28,19 @@
         <div class="x_content">
 
           <table class="table table-striped table-bordered">
-              <tr ng-repeat="degreeProgram in vm.degreePrograms">
-                <td>{{degreeProgram.programName}}</td>
-                <td><a href="/view-degree-program/{{degreeProgram._id}}">View<i class="fa fa-eye"></i></a></td>
-              </tr>
+              <thead>
+                <tr>
+                  <th>Program Name</th>
+                  <th>View</th>
+                </tr>
+              </thead>
+              
+              <tbody>
+                <tr ng-repeat="degreeProgram in vm.degreePrograms">
+                  <td>{{degreeProgram.programName}}</td>
+                  <td ><a href="/view-degree-program/{{degreeProgram._id}}"><i class="fa fa-eye"></i></a></td>
+                </tr>
+              </tbody>
             </table>
        </div>
       </div>

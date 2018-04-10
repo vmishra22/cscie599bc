@@ -34,7 +34,8 @@
               <td>{{recommendation.programName}}</td>
               <td>{{recommendation.recommenderName}}</td>
               <td>{{recommendation.letterStatus}}</td>
-              <td><i class="fa fa-eye"></i></td>
+              <td ng-if="recommendation.letterStatus === 'Created'" ><a href="/recletters/view/{{recommendation.letterId}}"><i class="fa fa-eye"></i></a></td>
+              <td ng-if="recommendation.letterStatus === 'Pending'" ><i class="fa fa-eye"></i></td>
             </tr>
           </table>
         </div>

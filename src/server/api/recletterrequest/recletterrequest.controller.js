@@ -38,6 +38,7 @@ export function getRecLetterRequests(req, res) {
             let value = item.c[0];
             RecLetterRequest.find({requestId: value}, function(err, x) {
               let result1 = {
+                letterId: x[0].requestId,
                 requestDate: x[0].requestDate,
                 letterStatus: x[0].letterStatus,
                 studentId: x[0].studentId,
@@ -73,6 +74,7 @@ export function getRecLetterRequests(req, res) {
               console.log(x);
               if(x.length > 0){
                 let result1 = {
+                  letterId: x[0].requestId,
                   requestDate: x[0].requestDate,
                   letterStatus: x[0].letterStatus,
                   studentId: x[0].studentId,
