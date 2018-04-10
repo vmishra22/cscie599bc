@@ -10,6 +10,6 @@ truffle migrate;
 #ipfs daemon &
 # start mongod
 mongod &
-mongo recletters-dev --eval "db.recletterrequests; db.recletterrequests.deleteMany({}); db.recletters.deleteMany({}); db.degreeprograms.deleteMany({}); db.candidatequestions.deleteMany({}); quit();"
+# mongo recletters-dev --eval "db.recletterrequests; db.recletterrequests.deleteMany({}); db.recletters.deleteMany({}); db.degreeprograms.deleteMany({}); db.candidatequestions.deleteMany({}); quit();"
 # start web server
 gulp serve
