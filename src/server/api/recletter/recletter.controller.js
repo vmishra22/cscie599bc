@@ -7,7 +7,8 @@
 
 import RecLetterRequest from '../../model/recletterrequests';
 import RecLetter from '../../model/recletters';
-import { ipfs, letterOwnershipContract, ipfsHashToBytes32, bytes32ToIPFSHash } from '../web3helper';
+import { ipfs, letterOwnershipContract, ipfsHashToBytes32, bytes32ToIPFSHash, 
+  letterHelperContract, letterFactoryContract } from '../web3helper';
 
 
 function handleError(res, statusCode) {
@@ -57,7 +58,7 @@ export function getRecLetters (req, res) {
 
   let studentId = parseInt(req.body.studentId, 10);
   let schoolId = parseInt(req.body.schoolId, 10);
-  letterOwnershipContract.deployed().then(function(instance) {
+  letterHelperContract.deployed().then(function(instance) {
     instance.getLettersByStudentAndSchoolId('10', '10') //TODO: Put studentId and schoolId here
       .then(function(lettersIdArray) {
         res.json(lettersIdArray);
@@ -73,7 +74,7 @@ export function getRecLetters (req, res) {
 export function getRecLetter(req, res) {
   console.log('Entering getRecLetter()..');
   const letterId = parseInt(req.params.id, 10);
-  letterOwnershipContract.deployed().then(function(instance) {
+  letterHelperContract.deployed().then(function(instance) {
     instance.getLetterIPFSLinksByLetterId(letterId)
       .then(function(ipfsbyte32) {
         const pdfFileIPFSHash = bytes32ToIPFSHash(ipfsbyte32[0]);
@@ -128,7 +129,7 @@ export function createRecLetter(req, res) {
   //This is the new letter Id that's created in the blockchain. MongoDB needs to hold this ID to make the subsequent operation
   //on this letter for viewing, deleting etc.
   let newLetterId = null;
-  letterOwnershipContract.deployed().then(function(instance) {
+  letterFactoryContract.deployed().then(function(instance) {
     let web3 = req.app.get('web3');
     let accounts = web3.eth.accounts;
     let letterName = 'Reco Letter for Student:' + studentId;
@@ -183,33 +184,36 @@ export function createRecLetter(req, res) {
 
                   //Change the corresponding letter request as completed:
                   // console.log(instance);
-                  instance.changeRequestStatus(newLetterId, 1, {
-                    from: accounts[0],
-                    gas: 3000000
-                  }).then(function(reqStatusResult) {
-                    console.log('reqStatusResult', reqStatusResult);
-                    RecLetterRequest.find({studentId: req.body.studentId, schoolId: req.body.schoolId, recommenderId: loggedInRecommenderId}, 
-                    function(err, recLetterRequests) {
-                      if(err) {
-                        console.log('Error', err);
-                        //res.json(err);
-                      } else {
-                        console.log(recLetterRequests);
-                        recLetterRequests.forEach(element => {
-                          element.letterStatus = 'Created';
-                          element.save(function(err, changedLetterRequest) {
-                            if(err) {
-                              console.log(err);
-                            } else {
-                              console.log('Changed Request saved in mongoDB', changedLetterRequest);
-                            }
+
+                  letterHelperContract.deployed().then(function(instance2) {
+                    instance2.changeRequestStatus(newLetterId, 1, {
+                      from: accounts[0],
+                      gas: 3000000
+                    }).then(function(reqStatusResult) {
+                      console.log('reqStatusResult', reqStatusResult);
+                      RecLetterRequest.find({studentId: req.body.studentId, schoolId: req.body.schoolId, recommenderId: loggedInRecommenderId}, 
+                      function(err, recLetterRequests) {
+                        if(err) {
+                          console.log('Error', err);
+                          //res.json(err);
+                        } else {
+                          console.log(recLetterRequests);
+                          recLetterRequests.forEach(element => {
+                            element.letterStatus = 'Created';
+                            element.save(function(err, changedLetterRequest) {
+                              if(err) {
+                                console.log(err);
+                              } else {
+                                console.log('Changed Request saved in mongoDB', changedLetterRequest);
+                              }
+                            });
                           });
-                        });
-                      }
+                        }
+                      });
+                    })
+                    .catch(function(error) {
+                      console.log('Error in call:', error);
                     });
-                  })
-                  .catch(function(error) {
-                    console.log('Error in call:', error);
                   });
                 }
               });
