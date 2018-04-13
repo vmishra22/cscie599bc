@@ -20,6 +20,7 @@ export default class RecDashController {
   setRecommendations($scope) {
     this.$http.get('http://localhost:3000/api/RecommendationLetterRequests')
       .then(function(response) {
+        console.log('Recommender dashboard setRecommendations');
         console.log(response.data);
         $scope.pendingRecs = response.data.pending;
         $scope.submittedRecs = response.data.created;

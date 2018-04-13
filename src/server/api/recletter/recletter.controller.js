@@ -128,7 +128,8 @@ export function createRecLetter(req, res) {
   //This is the new letter Id that's created in the blockchain. MongoDB needs to hold this ID to make the subsequent operation
   //on this letter for viewing, deleting etc.
   let newLetterId = null;
-  letterOwnershipContract.deployed().then(function(instance) {
+  letterOwnershipContract.deployed()
+  .then(function(instance) {
     let web3 = req.app.get('web3');
     let accounts = web3.eth.accounts;
     let letterName = 'Reco Letter for Student:' + studentId;
