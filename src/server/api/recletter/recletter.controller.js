@@ -189,7 +189,7 @@ export function createRecLetter(req, res) {
                     gas: 3000000
                   }).then(function(reqStatusResult) {
                     console.log('reqStatusResult', reqStatusResult);
-                    RecLetterRequest.find({studentId: req.body.studentId, schoolId: req.body.schoolId, recommenderId: loggedInRecommenderId}, 
+                    RecLetterRequest.find({studentId: req.body.studentId, schoolId: req.body.schoolId, recommenderId: loggedInRecommenderId},
                     function(err, recLetterRequests) {
                       if(err) {
                         console.log('Error', err);

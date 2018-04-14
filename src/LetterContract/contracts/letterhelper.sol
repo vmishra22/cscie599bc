@@ -74,8 +74,17 @@ contract LetterHelper is LetterFactory, LetterRequest {
             (keccak256(requests[i].schoolProgramId) == keccak256(letterProgramId))) {
                 if(_status == 0) requests[i].status = State.Pending;
                 else requests[i].status = State.Created;
+                break;
             }
         }
+    }
+
+    function getRequestStatus(uint _requestId) external view returns(uint) {
+        require(_requestId >= 0);
+        uint status = 0;
+        if(requests[_requestId].status == State.Created)
+            status = 1;
+        return status;
     }
 
     function getLetterRequestsByStudentId(string _studentId) external view returns(uint[]){
