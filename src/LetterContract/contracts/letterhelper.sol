@@ -10,11 +10,6 @@ contract LetterHelper is LetterFactory, LetterRequest {
         _;
     }
 
-    function withdraw() external onlyOwner {
-        address contractAddress = this;
-        owner.transfer(contractAddress.balance);
-    }
-
     function changeName(uint _letterId, string _newName) 
                         external onlyOwnerOf(_letterId) {
         require(_letterId >= 0 && _letterId < letters.length);
@@ -72,8 +67,7 @@ contract LetterHelper is LetterFactory, LetterRequest {
             if ( (keccak256(requests[i].studentId) == keccak256(letterStudentId)) && 
             (keccak256(requests[i].recommenderId) == keccak256(letterRecommenderId)) &&
             (keccak256(requests[i].schoolProgramId) == keccak256(letterProgramId))) {
-                if(_status == 0) requests[i].status = State.Pending;
-                else requests[i].status = State.Created;
+                if(_status == 1) requests[i].status = State.Created;
                 break;
             }
         }

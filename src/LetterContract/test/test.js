@@ -50,6 +50,12 @@ contract('Letter', function(accounts) {
       });
     })
     .then(function() {
+      return contractInstance.getLettersByOwner(accounts[2]);
+    })
+    .then(function(lettersOwnedBy) {
+      assert.equal(lettersOwnedBy.length, 1, "One letter owned by this account");
+    })
+    .then(function() {
       return contractInstance.changeName(0, "Recommendation Letter1", {
         from: accounts[2]
       });
@@ -71,6 +77,10 @@ contract('Letter', function(accounts) {
       assert.equal(lettersOwnedBy.length, 0, "No letter owned by this account[2]");
     })
     .then(function() {
+      return contractInstance.balanceOf(accounts[2]);
+    })
+    .then(function(accountBalance) {
+      assert.equal(accountBalance, 0, "No balance of the account: account[2]");
       return contractInstance.transfer(accounts[2], 0, {
         from: accounts[1]
       });
@@ -116,12 +126,11 @@ contract('Letter', function(accounts) {
       assert.equal(questionsJsonHash, "QmU441mdGL3f2EpG9VqKVqYf3GzjzKwSTiN5ifdJGpz1sF", "IPFS hash is incorrect");
     })
     .then(function() {
-      return contractInstance.getLettersByOwner(accounts[2]);
+      contractInstance.transferOwnership(accounts[2]);
     })
-    .then(function(lettersOwnedBy) {
-      assert.equal(lettersOwnedBy.length, 1, "One letter owned by this account");
+    .then(function(eventResult){
+      //console.log('eventResult ', eventResult);
     })
-    
     ;
   });
 });
