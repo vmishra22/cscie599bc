@@ -41,10 +41,10 @@
                 <label>Name</label>
                 <!--"item.name for item in items"-->
 
-                <select class="form-control" ng-options="program.programName for program in vm.degreePrograms" ng-model="vm.degreeProgram" required>
+                <select class="form-control" ng-options="program.schoolName+' : '+program.programName for program in vm.degreePrograms" ng-model="vm.degreeProgram" required>
                 </select>
                 <p class="help-block" ng-show="form.name.$error.required && vm.submitted">
-                  A recommender is required
+                  A degree program is required
                 </p>
               </div>
 
