@@ -8,6 +8,7 @@
 var async = require('async');
 import RecLetterRequest from '../../model/recletterrequests';
 import { letterOwnershipContract } from '../web3helper';
+import { resolve } from 'path';
 
 export function getRecLetterRequests(req, res) {
   console.log('Entering server getRecLetterRequests()..');
@@ -25,54 +26,28 @@ export function getRecLetterRequests(req, res) {
   console.log("loggedInUserRole: ", loggedInUserRole);
   //hardcoding the ID just for testing
  // loggedInUserId = 10;
+ let requestsIdArray; let lengthResult;
   
   //if(loggedInUserRole === 'STUDENT' && loggedInUserName === req.query.studentId) {
     if(loggedInUserRole === 'student') {
    letterOwnershipContract.deployed().then(function(instance) {
       instance.getLetterRequestsByStudentId(String(loggedInUserId))
-        .then(function(requestsIdArray) {
-          console.log("requestsIdArray: ", requestsIdArray);
+        .then(function(resultsIdArray) {
+
+          if(resultsIdArray.length) {
+            requestsIdArray = resultsIdArray[0];
+            lengthResult = resultsIdArray[1].c[0];
+          }
+          let counter = 0;
+          console.log("resultsIdArray: ", resultsIdArray);
           var requestResults = [];
 
           async.eachSeries(requestsIdArray, function(item, callback) {
-            let value = item.c[0];
-            RecLetterRequest.find({requestId: value}, function(err, x) {
-              let result1 = {
-                letterId: x[0].requestId,
-                requestDate: x[0].requestDate,
-                letterStatus: x[0].letterStatus,
-                studentId: x[0].studentId,
-                studentName: x[0].studentName,
-                schoolId: x[0].schoolId,
-                schoolName: x[0].schoolName,
-                programName: x[0].programName,
-                recommenderName: x[0].recommenderName
-              };
-              requestResults.push(result1);
-              callback(err);
-            });
-          }, function(err) {
-            if (err) throw err;
-            console.log("done");
-            return res.json(requestResults);
-          });
-        });
-    });
- // } else if(loggedInUserRole === 'RECOMMENDER' && loggedInUserName === req.query.recommenderId) {
-} else if(loggedInUserRole === 'recommender' ) {
-     letterOwnershipContract.deployed().then(function(instance) {
-      instance.getLetterRequestsByRecommenderId(String(loggedInUserId))
-        .then(function(requestsIdArray) {
-          console.log("requestsIdArray: ", requestsIdArray);
-          var pendingRequestResults = [];
-          var submittedRequestResults = [];
-          var accumulatedResults = {};
-          async.eachSeries(requestsIdArray, function(item, callback) {
-            
-            let value = item.c[0];
-            RecLetterRequest.find({requestId: value, recommenderId: loggedInUserId}, function(err, x) {
-              console.log(x);
-              if(x.length > 0){
+            if(counter !== lengthResult) {
+              counter++;
+              console.log("counter: ", counter);
+              let value = item.c[0];
+              RecLetterRequest.find({requestId: value, studentId: loggedInUserId}, function(err, x) {
                 let result1 = {
                   letterId: x[0].requestId,
                   requestDate: x[0].requestDate,
@@ -84,17 +59,70 @@ export function getRecLetterRequests(req, res) {
                   programName: x[0].programName,
                   recommenderName: x[0].recommenderName
                 };
-                if(x[0].letterStatus === "Pending"){
-                  pendingRequestResults.push(result1);
-                } else if(x[0].letterStatus === "Created"){
-                  submittedRequestResults.push(result1);
-                }
-              }
-              
-              callback(err);
-            });
+                requestResults.push(result1);
+                callback(err);
+              });
+            } else {
+              return callback();
+            }
           }, function(err) {
-            if (err) throw err;
+            if(err) throw err;
+            console.log('done');
+            return res.json(requestResults);
+          });
+        });
+    });
+ // } else if(loggedInUserRole === 'RECOMMENDER' && loggedInUserName === req.query.recommenderId) {
+} else if(loggedInUserRole === 'recommender' ) {
+     letterOwnershipContract.deployed().then(function(instance) {
+      instance.getLetterRequestsByRecommenderId(String(loggedInUserId))
+        .then(function(resultsIdArray) {
+          console.log("requestsIdArray: ", resultsIdArray);
+          var pendingRequestResults = [];
+          var submittedRequestResults = [];
+          var accumulatedResults = {};
+``    
+          
+          if(resultsIdArray.length) {
+            requestsIdArray = resultsIdArray[0];
+            lengthResult = resultsIdArray[1].c[0];
+          }
+          let counter = 0;
+          async.eachSeries(requestsIdArray, function(item, callback) {
+            console.log("item: ", item);
+            
+            if(counter !== lengthResult) {
+              counter++;
+              console.log("counter: ", counter);
+             let value = item.c[0];
+              RecLetterRequest.find({requestId: value, recommenderId: loggedInUserId}, function(err, x) {
+                console.log(x);
+                if(x.length > 0){
+                  let result1 = {
+                    letterId: x[0].requestId,
+                    requestDate: x[0].requestDate,
+                    letterStatus: x[0].letterStatus,
+                    studentId: x[0].studentId,
+                    studentName: x[0].studentName,
+                    schoolId: x[0].schoolId,
+                    schoolName: x[0].schoolName,
+                    programName: x[0].programName,
+                    recommenderName: x[0].recommenderName
+                  };
+                  if(x[0].letterStatus === "Pending"){
+                    pendingRequestResults.push(result1);
+                  } else if(x[0].letterStatus === "Created"){
+                    submittedRequestResults.push(result1);
+                  }
+                }
+                
+                callback(err);
+              });
+            } else {
+              return callback();
+            }
+          }, function(err) {
+            if(err) throw err;
             console.log("done");
             accumulatedResults.created = submittedRequestResults;
             accumulatedResults.pending = pendingRequestResults;

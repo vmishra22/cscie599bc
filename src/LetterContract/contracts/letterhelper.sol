@@ -2,6 +2,7 @@ pragma solidity ^0.4.21;
 
 import "./letterfactory.sol";
 import "./letterrequest.sol";
+import "./StringUtils.sol";
 
 contract LetterHelper is LetterFactory, LetterRequest {
 
@@ -81,28 +82,28 @@ contract LetterHelper is LetterFactory, LetterRequest {
         return status;
     }
 
-    function getLetterRequestsByStudentId(string _studentId) external view returns(uint[]){
+    function getLetterRequestsByStudentId(string _studentId) public view returns(uint[], uint){
         uint[] memory result = new uint[]( requests.length);
         uint counter = 0;
         for (uint i = 0; i < requests.length; i++) {
-            if (keccak256(requests[i].studentId) == keccak256(_studentId)) {
+            if(StringUtils.equal(requests[i].studentId, _studentId)) {
                 result[counter] = i;
                 counter++;
             }
         }
-        return result;
+        return (result, counter);
     }
 
-    function getLetterRequestsByRecommenderId(string _recommenderId) external view returns(uint[]){
-        uint[] memory result = new uint[]( requests.length);
+    function getLetterRequestsByRecommenderId(string _recommenderId) public view returns(uint[], uint){
+        uint256[] memory result1 = new uint[]( requests.length);
         uint counter = 0;
-        for (uint i = 0; i < requests.length; i++) {
-            if (keccak256(requests[i].recommenderId) == keccak256(_recommenderId)) {
-                result[counter] = i;
+        for (uint icntr = 0; icntr < requests.length; icntr++) {
+            if (StringUtils.equal(_recommenderId,requests[icntr].recommenderId)){
+                result1[counter] = icntr;
                 counter++;
-            }
+           }
         }
-        return result;
+        return (result1, counter);
     }
 
 }
