@@ -128,10 +128,52 @@ export default function seedDatabaseIfNeeded() {
   const questions = completeQuestions.concat(percentileQuestions)
 
   //Sample Degree Programs
+  const degreePrograms = [
+    { 
+      programName: 'Computer Science',
+      candidateQuestions: [questions[0], questions[1]]
+    },
+    { 
+      programName: 'Biology',
+      candidateQuestions: [questions[0], questions[1], questions[2]]
+    },
+    { 
+      programName: 'English',
+      candidateQuestions: [questions[4], questions[5], questions[6]]
+    },
+    { 
+      programName: 'Psychology',
+      candidateQuestions: [questions[0], questions[1], questions[3], questions[5] ]
+    },
+    { 
+      programName: 'History',
+      candidateQuestions: [questions[0], questions[1], questions[2], questions[3], questions[4], questions[5], questions[6]]
+    }
+  ];
+
   if(config.seedDB) {
     const schoolEmails = schools.map(s => s.email );
     User.remove({email: {$in: schoolEmails}})
       .then(() => User.create(schools))
+      .then(createdSchools => {
+        const promises = [];
+
+        for(const school of createdSchools) {
+          const mappedDegreePrograms = degreePrograms.map(d => {
+            return {
+              programName: d.programName,
+              candidateQuestions: d.candidateQuestions,
+              schoolId: school._id,
+              schoolName: school.name
+            }
+          })
+
+          //Todo: are there orphan deg programs that should be cleared?
+          promises.push(DegreeProgram.create(mappedDegreePrograms));
+        }
+
+        return Promise.all(promises);
+      })
       .catch(err => console.log('Error creating schools: ', err));
 
     CandidateQuestion.find({}).remove()
