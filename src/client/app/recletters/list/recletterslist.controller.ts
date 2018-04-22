@@ -21,7 +21,7 @@ export default class RecLettersListController {
    }
 
   getRecLetters($scope) {
-    console.log("Entering client getRecLetters()..");
+    console.log('Entering client getRecLetters()..');
     this.$http.get('http://localhost:3000/api/RecommendationLetters')
       .then(function(response) {
         $scope.recLetters = response.data;

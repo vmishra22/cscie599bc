@@ -35,18 +35,14 @@ export default class LoginController {
         if(user) {
           if(user.role === 'student') {
             this.$state.go('student-dash');
-          }
-          else if(user.role === 'recommender') {
+          } else if(user.role === 'recommender') {
             this.$state.go('rec-dash');
-          }
-          else if(user.role === 'school') {
+          } else if(user.role === 'school') {
             this.$state.go('school-dash');
-          }
-          else {
+          } else {
             this.$state.go('main');
           }
-        }
-        else {
+        } else {
           this.$state.go('main');
         }
       })

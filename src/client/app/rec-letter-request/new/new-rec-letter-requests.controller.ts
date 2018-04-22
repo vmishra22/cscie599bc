@@ -49,7 +49,7 @@ export default class NewRecLetterRequestsController {
 
   setCurrentUser($scope) {
     this.Auth.getCurrentUser()
-      .then(function(user){
+      .then(function(user) {
         $scope.currentUser = user;
       });
   }
@@ -59,12 +59,12 @@ export default class NewRecLetterRequestsController {
       .then(function(response) {
         $scope.degreePrograms = response.data;
       });
-  };
+  }
 
   getRecommenders($scope) {
     this.$http.get('http://localhost:3000/api/users', {params: {'userRole': 'recommender'}})
       .then(function(response) {
         $scope.recommenders = response.data;
       });
-  };
+  }
 }

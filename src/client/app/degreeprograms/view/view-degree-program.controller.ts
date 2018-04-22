@@ -5,7 +5,7 @@ export default class ViewDegreeProgramController {
   $location;
   $stateParams;
   degreeProgram;
-  
+
   /*@ngInject*/
   constructor($http, $location, $stateParams) {
     this.$http = $http;
@@ -19,14 +19,14 @@ export default class ViewDegreeProgramController {
 
 
   getDegreeProgram($scope) {
-    console.log("Entering getDegreeProgram().."+this.$stateParams.programId);
+    console.log('Entering getDegreeProgram()..'+this.$stateParams.programId);
 
     this.$http.get('http://localhost:3000/api/DegreeProgram/'+this.$stateParams.programId)
     .then(function(response) {
       $scope.degreeProgram = response.data;
 
       console.log($scope.degreeProgram.programName);
-    })
-  
+    });
+
   }
 }

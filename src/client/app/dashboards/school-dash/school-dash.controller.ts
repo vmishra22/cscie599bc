@@ -24,21 +24,21 @@ export default class SchoolDashController {
 
 
   getCurrentUser($scope) {
-    console.log("Entering getCurrentUser()..");
+    console.log('Entering getCurrentUser()..');
     this.Auth.getCurrentUser()
     .then(function(currentUser) {
       $scope.currentUser = currentUser;
- 
+
       if(currentUser) {
         $scope.$http.get('http://localhost:3000/api/degreeprograms?schoolId='+currentUser._id)
         .then(function(response) {
           $scope.degreePrograms = response.data;
-        })
+        });
       }
 
     });
   }
-  
+
   setStudents($scope) {
     this.$http.get('http://localhost:3000/api/users')
       .then(function(response) {
@@ -47,12 +47,12 @@ export default class SchoolDashController {
   }
 
   getStudentsWithRecLetters($scope) {
-    console.log("Entering getStudentsWithRecLetters()..");
+    console.log('Entering getStudentsWithRecLetters()..');
 
     this.$http.get('http://localhost:3000/api/StudentsWithRecommendationLetters?studentName='+this.studentSearchName)
     .then(function(response) {
       $scope.studentsWithRecLetters = response.data;
-    })
-  
+    });
+
   }
 }

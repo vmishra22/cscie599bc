@@ -32,4 +32,4 @@ export function routerDecorator($rootScope, $state, Auth) {
       });
     }
   });
-};
+}
