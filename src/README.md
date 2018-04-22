@@ -1,5 +1,7 @@
 # rec-letters
 
+[![Build Status](https://travis-ci.org/vmishra22/cscie599bc.svg?branch=master)](https://travis-ci.org/vmishra22/cscie599bc)
+
 This project was generated with the [Angular Full-Stack Generator](https://github.com/DaftMonk/generator-angular-fullstack) version 4.2.3.
 
 ## Getting Started
