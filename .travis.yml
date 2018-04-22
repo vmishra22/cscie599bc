@@ -10,6 +10,10 @@ before_install:
 before_script:
   - npm install -g gulp-cli node-gyp
   - gem install sass
+  - cd LetterContract
+  - rm -rf build
+  - truffle compile
+  - cd ..
 services: mongodb
 cache:
   directories:
