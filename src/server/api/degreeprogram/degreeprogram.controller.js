@@ -15,44 +15,29 @@ export function getDegreePrograms(req, res) {
   console.log('Entering getDegreePrograms()..');
 
   if(req.query.schoolId && req.query.programName) {
-    return DegreeProgram.find({schoolId: req.query.schoolId, programName: { $regex: '.*' + req.query.programName + '.*' }}).exec() 
-    .then(degreePrograms => {
-      return res.status(200).json(degreePrograms);
-    })
+    return DegreeProgram.find({schoolId: req.query.schoolId, programName: { $regex: `.*${req.query.programName}.*` }}).exec()
+    .then(degreePrograms => res.status(200).json(degreePrograms))
     .catch(handleError(res));
-  }
-  else if(req.query.schoolId) {
-    return DegreeProgram.find({schoolId: req.query.schoolId}).exec() 
-    .then(degreePrograms => {
-      return res.status(200).json(degreePrograms);
-    })
+  } else if(req.query.schoolId) {
+    return DegreeProgram.find({schoolId: req.query.schoolId}).exec()
+    .then(degreePrograms => res.status(200).json(degreePrograms))
     .catch(handleError(res));
-  }
-  else if(req.query.programName) {
-    DegreeProgram.find({programName: { $regex: '.*' + req.query.programName + '.*' }}).exec() 
-    .then(degreePrograms => {
-      return res.status(200).json(degreePrograms);
-    })
+  } else if(req.query.programName) {
+    DegreeProgram.find({programName: { $regex: `.*${req.query.programName}.*` }}).exec()
+    .then(degreePrograms => res.status(200).json(degreePrograms))
     .catch(handleError(res));
-  }
-  else if(req.query.schoolName) {
-    DegreeProgram.find({schoolName: { $regex: '.*' + req.query.schoolName + '.*' }}).exec() 
-    .then(degreePrograms => {
-      return res.status(200).json(degreePrograms);
-    })
+  } else if(req.query.schoolName) {
+    DegreeProgram.find({schoolName: { $regex: `.*${req.query.schoolName}.*` }}).exec()
+    .then(degreePrograms => res.status(200).json(degreePrograms))
     .catch(handleError(res));
-  }
-  else {
+  } else {
     DegreeProgram.find().exec()
-    .then(degreePrograms => {
-      return res.status(200).json(degreePrograms);
-    })
+    .then(degreePrograms => res.status(200).json(degreePrograms))
     .catch(handleError(res));
   }
 }
 
 
- 
 export function createDegreeProgram(req, res) {
   console.log('Entering createDegreeProgram()..');
   console.log(req.body);
@@ -64,41 +49,32 @@ export function createDegreeProgram(req, res) {
     candidateQuestions: req.body.candidateQuestions
   });
 
-  newDegreeProgram.save(function(err, newDegreeProgram){
-    if(err)
-    {
+  newDegreeProgram.save(function(err, newDegreeProgram) {
+    if(err) {
       res.json(err);
-    }
-    else
-    {
+    } else {
       res.json(newDegreeProgram);
     }
   });
 }
 
 export function deleteDegreeProgram(req, res) {
-  console.log("Entering deleteDegreeProgram()..id="+req.params.id);
+  console.log(`Entering deleteDegreeProgram()..id=${req.params.id}`);
   DegreeProgram.remove({_id: req.params.id}, function(err, result) {
-    if(err)
-    {
+    if(err) {
       res.json(err);
-    }
-    else
-    {
+    } else {
       res.json(result);
     }
   });
 }
 
 export function getDegreeProgram(req, res) {
-  console.log("Entering getDegreeProgram()..id="+req.params.id);
+  console.log(`Entering getDegreeProgram()..id=${req.params.id}`);
   DegreeProgram.findOne({_id: req.params.id}, function(err, result) {
-    if(err)
-    {
+    if(err) {
       res.json(err);
-    }
-    else
-    {
+    } else {
       res.json(result);
     }
   });

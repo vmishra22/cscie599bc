@@ -33,31 +33,31 @@ export function runSample(req, res) {
 
   //From here: https://www.ethereum.org/greeter
   //Will move this to a file or unit test or something...
-  var contractString ="contract mortal {" + "\n" +
-    "  /* Define variable owner of the type address */" + "\n" +
-    "  address owner;" + "\n" +
-    "" + "\n" +
-    "  /* This function is executed at initialization and sets the owner of the contract */" + "\n" +
-    "  function mortal() { owner = msg.sender; }" + "\n" +
-    "" + "\n" +
-    "  /* Function to recover the funds on the contract */" + "\n" +
-    "  function kill() { if (msg.sender == owner) selfdestruct(owner); }" + "\n" +
-    "}" + "\n" +
-    "" + "\n" +
-    "contract greeter is mortal {" + "\n" +
-    "  /* Define variable greeting of the type string */" + "\n" +
-    "  string greeting;" + "\n" +
-    "" + "\n" +
-    "  /* This runs when the contract is executed */" + "\n" +
-    "  function greeter(string _greeting) public {" + "\n" +
-    "      greeting = _greeting;" + "\n" +
-    "  }" + "\n" +
-    "" + "\n" +
-    "  /* Main function */" + "\n" +
-    "  function greet() constant returns (string) {" + "\n" +
-    "      return greeting;" + "\n" +
-    "  }" + "\n" +
-    "}";
+  var contractString = 'contract mortal {' + '\n'
+    + '  /* Define variable owner of the type address */' + '\n'
+    + '  address owner;' + '\n'
+    + '' + '\n'
+    + '  /* This function is executed at initialization and sets the owner of the contract */' + '\n'
+    + '  function mortal() { owner = msg.sender; }' + '\n'
+    + '' + '\n'
+    + '  /* Function to recover the funds on the contract */' + '\n'
+    + '  function kill() { if (msg.sender == owner) selfdestruct(owner); }' + '\n'
+    + '}' + '\n'
+    + '' + '\n'
+    + 'contract greeter is mortal {' + '\n'
+    + '  /* Define variable greeting of the type string */' + '\n'
+    + '  string greeting;' + '\n'
+    + '' + '\n'
+    + '  /* This runs when the contract is executed */' + '\n'
+    + '  function greeter(string _greeting) public {' + '\n'
+    + '      greeting = _greeting;' + '\n'
+    + '  }' + '\n'
+    + '' + '\n'
+    + '  /* Main function */' + '\n'
+    + '  function greet() constant returns (string) {' + '\n'
+    + '      return greeting;' + '\n'
+    + '  }' + '\n'
+    + '}';
 
   const output = solc.compile(contractString, 1);
   const bytecode = output.contracts[':greeter'].bytecode;
@@ -67,10 +67,9 @@ export function runSample(req, res) {
   let contract = new web3.eth.Contract(abi);
 
   return web3.eth.getAccounts().then(accounts => {
-
     const deployContract = contract.deploy({
-      data: '0x' + bytecode,
-      arguments: ["Hello World"]
+      data: `0x${bytecode}`,
+      arguments: ['Hello World']
     })
     .send({
         from: accounts[0],
@@ -79,14 +78,14 @@ export function runSample(req, res) {
 
     const transactionReceipt = deployContract
     .on('transactionHash', function(transactionHash) {
-      console.log('successfully got the transaction hash: ' + transactionHash)
+      console.log(`successfully got the transaction hash: ${transactionHash}`);
 
       // Retrying every second to get the contract receipt,
       // workaround for bug in the API
       const retry = () => web3.eth.getTransactionReceipt(transactionHash)
         .then(r => r)
         .catch(e => {
-          console.log("Couldn't get contract receipt, trying again...");
+          console.log('Couldn\'t get contract receipt, trying again...');
           sleep.sleep(30);
           return retry();
         });
@@ -95,11 +94,11 @@ export function runSample(req, res) {
     });
 
     return transactionReceipt.then(receipt => {
-      console.log("The contract's address is: " + receipt._address);
+      console.log(`The contract's address is: ${receipt._address}`);
 
       var contractInstance = new web3.eth.Contract(abi, receipt._address);
       if(contractInstance) {
-        console.log("Successfully got the contract instance.")
+        console.log('Successfully got the contract instance.');
       }
 
       return res.status(200).json(contractInstance);
@@ -108,7 +107,7 @@ export function runSample(req, res) {
         // Swallowing this error: Error: Failed to check for transaction receipt: {}
         // Seems to be a web3 or geth bug:
         // https://ethereum.stackexchange.com/questions/42245/web3js-contract-deploy-never-get-receipt
-        if(!err.toString().includes("Failed to check for transaction receipt")) {
+        if(!err.toString().includes('Failed to check for transaction receipt')) {
           console.log(err);
         }
       });
@@ -136,10 +135,10 @@ export function runAnotherSample(req, res) {
 
   // Contract object
   let contract = new web3.eth.Contract(abi);
-  return web3.eth.getAccounts().then(accounts => {
+  return web3.eth.getAccounts().then(accounts =>
     // Deploy contract instance
-    return contract.deploy({
-       data: '0x' + bytecode,
+     contract.deploy({
+       data: `0x${bytecode}`,
       // arguments: ["Hello World"]
     })
       .send({
@@ -147,7 +146,7 @@ export function runAnotherSample(req, res) {
         gas: 500000, // Must be below gas limit of 3141592 and above instrinsic gas usage
       })
       .on('transactionHash', function(transactionHash) {
-        console.log('successfully got the transaction hash: ' + transactionHash)
+        console.log(`successfully got the transaction hash: ${transactionHash}`);
 
         // Retrying every second to get the contract receipt,
         // workaround for bug in the API
@@ -161,18 +160,19 @@ export function runAnotherSample(req, res) {
           });
 
         return retry();
-      }).on('receipt',  (receipt) => {
+      })
+.on('receipt', receipt => {
         console.log(receipt.contractAddress);
       })
       .catch(err => {
         // Swallowing this error: Error: Failed to check for transaction receipt: {}
         // Seems to be a web3 or geth bug:
         // https://ethereum.stackexchange.com/questions/42245/web3js-contract-deploy-never-get-receipt
-        if(!err.toString().includes("Failed to check for transaction receipt")) {
+        if(!err.toString().includes('Failed to check for transaction receipt')) {
           console.log(err);
         }
-      });
-  });
+      })
+  );
 }
 
 export function runContract(req, res) {
@@ -207,7 +207,7 @@ function ipfsHashToBytes32(ipfsHash) {
     console.log('invalid ipfs format', ipfsHash, h);
     return null;
   }
-  return '0x' + h;
+  return `0x${h}`;
 }
 
 function bytes32ToIPFSHash(hashHex) {
@@ -254,7 +254,7 @@ export function createAndDeployLetterContract(req, res) {
     //Create the new contract using first account and based upon gasEstimate
     contract.new(1, {
       from: accounts[0],
-      data: '0x' + bytecode,
+      data: `0x${bytecode}`,
       gas: gasEstimate
     }, function(err, contractInstance) {
       if(!err) {
@@ -273,12 +273,12 @@ export function createAndDeployLetterContract(req, res) {
             var ipfsAPIPort = '5001';
             // IPFS connection setup
             var ipfs = IpfsAPI(ipfsHost, ipfsAPIPort);
-            ipfs.swarm.peers(function (err, response) {
+            ipfs.swarm.peers(function(err, response) {
               if(err) {
                 console.error(err);
                 reject('could nott establish IPFS connection');
               } else {
-                console.log('IPFS - connected to ' + response.length + ' peers');
+                console.log(`IPFS - connected to ${response.length} peers`);
               }
             });
 
@@ -312,7 +312,7 @@ export function createAndDeployLetterContract(req, res) {
                     var event = contractInstance.NewLetter({}, { fromBlock: 0, toBlock: 'latest' });
                     event.watch(function(error, res2) {
                       if(error) {
-                        console.log('Error=' + error);
+                        console.log(`Error=${error}`);
                         reject('Event has some error');
                       }
                       if(res2) {
@@ -346,15 +346,12 @@ export function createAndDeployLetterContract(req, res) {
             });
 
 
-
             //Create the letter using the contract method createLetter().
             //TODO: To figure out how to get student, recommender and school id to this point.
-
           }
         }
       }
     });
-
   });
 }
 
@@ -386,5 +383,5 @@ export function callStorageContract(req, res) {
 
 export function index(req, res) {
   var web3 = req.app.get('web3');
-  return web3.eth.getAccounts().then(result => res.status(200).json(result))
+  return web3.eth.getAccounts().then(result => res.status(200).json(result));
 }

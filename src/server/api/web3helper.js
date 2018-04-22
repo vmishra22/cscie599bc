@@ -28,7 +28,7 @@ function ipfsHashToBytes32(ipfsHash) {
     console.log('invalid ipfs format', ipfsHash, h);
     return null;
   }
-  return '0x' + h;
+  return `0x${h}`;
 }
 
 function bytes32ToIPFSHash(hashHex) {

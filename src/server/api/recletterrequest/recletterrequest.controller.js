@@ -22,30 +22,29 @@ export function getRecLetterRequests(req, res) {
   let loggedInUserId = req.user._id; //get the logged in user name
   let loggedInUserRole = req.user.role; //get the logged in user role
 
-  console.log("loggedInUserId: ", loggedInUserId);
-  console.log("loggedInUserRole: ", loggedInUserRole);
+  console.log('loggedInUserId: ', loggedInUserId);
+  console.log('loggedInUserRole: ', loggedInUserRole);
   //hardcoding the ID just for testing
  // loggedInUserId = 10;
  let requestsIdArray; let lengthResult;
-  
+
   //if(loggedInUserRole === 'STUDENT' && loggedInUserName === req.query.studentId) {
     if(loggedInUserRole === 'student') {
    letterOwnershipContract.deployed().then(function(instance) {
       instance.getLetterRequestsByStudentId(String(loggedInUserId))
         .then(function(resultsIdArray) {
-
           if(resultsIdArray.length) {
             requestsIdArray = resultsIdArray[0];
             lengthResult = resultsIdArray[1].c[0];
           }
           let counter = 0;
-          console.log("resultsIdArray: ", resultsIdArray);
+          console.log('resultsIdArray: ', resultsIdArray);
           var requestResults = [];
 
           async.eachSeries(requestsIdArray, function(item, callback) {
             if(counter !== lengthResult) {
               counter++;
-              console.log("counter: ", counter);
+              console.log('counter: ', counter);
               let value = item.c[0];
               RecLetterRequest.find({requestId: value, studentId: loggedInUserId}, function(err, x) {
                 let result1 = {
@@ -73,31 +72,31 @@ export function getRecLetterRequests(req, res) {
         });
     });
  // } else if(loggedInUserRole === 'RECOMMENDER' && loggedInUserName === req.query.recommenderId) {
-} else if(loggedInUserRole === 'recommender' ) {
+} else if(loggedInUserRole === 'recommender') {
      letterOwnershipContract.deployed().then(function(instance) {
       instance.getLetterRequestsByRecommenderId(String(loggedInUserId))
         .then(function(resultsIdArray) {
-          console.log("requestsIdArray: ", resultsIdArray);
+          console.log('requestsIdArray: ', resultsIdArray);
           var pendingRequestResults = [];
           var submittedRequestResults = [];
           var accumulatedResults = {};
-``    
-          
+'';
+
           if(resultsIdArray.length) {
             requestsIdArray = resultsIdArray[0];
             lengthResult = resultsIdArray[1].c[0];
           }
           let counter = 0;
           async.eachSeries(requestsIdArray, function(item, callback) {
-            console.log("item: ", item);
-            
+            console.log('item: ', item);
+
             if(counter !== lengthResult) {
               counter++;
-              console.log("counter: ", counter);
+              console.log('counter: ', counter);
              let value = item.c[0];
               RecLetterRequest.find({requestId: value, recommenderId: loggedInUserId}, function(err, x) {
                 console.log(x);
-                if(x.length > 0){
+                if(x.length > 0) {
                   let result1 = {
                     letterId: x[0].requestId,
                     requestDate: x[0].requestDate,
@@ -109,13 +108,13 @@ export function getRecLetterRequests(req, res) {
                     programName: x[0].programName,
                     recommenderName: x[0].recommenderName
                   };
-                  if(x[0].letterStatus === "Pending"){
+                  if(x[0].letterStatus === 'Pending') {
                     pendingRequestResults.push(result1);
-                  } else if(x[0].letterStatus === "Created"){
+                  } else if(x[0].letterStatus === 'Created') {
                     submittedRequestResults.push(result1);
                   }
                 }
-                
+
                 callback(err);
               });
             } else {
@@ -123,11 +122,11 @@ export function getRecLetterRequests(req, res) {
             }
           }, function(err) {
             if(err) throw err;
-            console.log("done");
+            console.log('done');
             accumulatedResults.created = submittedRequestResults;
             accumulatedResults.pending = pendingRequestResults;
             return res.json(accumulatedResults);
-          }); 
+          });
         });
     });
   } else {
@@ -145,21 +144,16 @@ export function getRecLetterRequest(req, res) {
   let loggedInUserId = req.user._id; //get the logged in user name
   let loggedInUserRole = req.user.role; //get the logged in user role
 
-  RecLetterRequest.find({_id: req.params.id}, function (err, result) {
-    if (err) {
+  RecLetterRequest.find({_id: req.params.id}, function(err, result) {
+    if(err) {
       res.json(err);
-    }
-    else {
-      if(loggedInUserRole === 'student' && loggedInUserId != result.studentId) {
+    } else if(loggedInUserRole === 'student' && loggedInUserId != result.studentId) {
         res.status(403).render();
-      }
-      else if (loggedInUserRole === 'recommender' && loggedInUserId != result.recommenderId) {
+      } else if(loggedInUserRole === 'recommender' && loggedInUserId != result.recommenderId) {
         res.status(403).render();
-      }
-      else {
+      } else {
         res.json(result);
       }
-    }
   });
 }
 
@@ -181,14 +175,14 @@ export function createRecLetterRequest(req, res) {
   let recommenderId = req.body.recommenderId;
   let schoolId = req.body.schoolId;
 
-  console.log("studentId: ", loggedInUserId);
-  console.log("recommenderId: ", recommenderId);
-  console.log("schoolId: ", schoolId);
+  console.log('studentId: ', loggedInUserId);
+  console.log('recommenderId: ', recommenderId);
+  console.log('schoolId: ', schoolId);
 
   if(loggedInUserRole != 'student' || loggedInUserId != req.body.studentId) {
     res.status(403).render();
   }
-  
+
   let newLetterRequestId = null;
   letterOwnershipContract.deployed()
     .then(function(instance) {
@@ -202,8 +196,8 @@ export function createRecLetterRequest(req, res) {
       }).then(function(createRequestResult) {
         //Get the requestId
         console.log(createRequestResult.logs[0].args);
-        newLetterRequestId = createRequestResult.logs[0].args['requestId']['c'][0];
-        let newLetterRequestStatus = createRequestResult.logs[0].args['status']['c'][0];
+        newLetterRequestId = createRequestResult.logs[0].args.requestId.c[0];
+        let newLetterRequestStatus = createRequestResult.logs[0].args.status.c[0];
         //Use this newLetterRequestId to save with new Request in MongoDB
 
         let newLetterStatus = newLetterRequestStatus == '0' ? 'Pending' : 'Created';
@@ -217,7 +211,7 @@ export function createRecLetterRequest(req, res) {
           schoolId: req.body.schoolId,
           schoolName: req.body.schoolName,
           programName: req.body.programName,
-          requestDate: (new Date())
+          requestDate: new Date()
         });
 
         console.log('newRecLetterRequest data: ', newRecLetterRequest);
@@ -237,8 +231,8 @@ export function createRecLetterRequest(req, res) {
 }
 
 
-export function deleteRecLetterRequest (req, res) {
-  console.log('Entering deleteRecLetterRequest...id=' + req.param.id);
+export function deleteRecLetterRequest(req, res) {
+  console.log(`Entering deleteRecLetterRequest...id=${req.param.id}`);
 
   if(!req.user) {
     res.status(403).render();
@@ -250,11 +244,10 @@ export function deleteRecLetterRequest (req, res) {
     res.status(403).render();
   }
 
-  RecLetterRequest.remove({_id: req.params.id}, function (err, result) {
-    if (err) {
+  RecLetterRequest.remove({_id: req.params.id}, function(err, result) {
+    if(err) {
       res.json(err);
-    }
-    else {
+    } else {
       res.json(result);
     }
   });

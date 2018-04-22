@@ -34,14 +34,11 @@ export function getStudentsWithRecLetters(req, res) {
 
   if(loggedInUserRole === 'school') {
     if(req.query.studentName) {
-      return RecLetter.find({schoolId: loggedInUserId, studentName: { $regex: '.*' + req.query.studentName + '.*' }}).exec()
-      .then(recletters => {
-        return res.status(200).json(recletters);
-      })
+      return RecLetter.find({schoolId: loggedInUserId, studentName: { $regex: `.*${req.query.studentName}.*` }}).exec()
+      .then(recletters => res.status(200).json(recletters))
       .catch(handleError(res));
     }
-  }
-  else {
+  } else {
     res.status(403).render();
   }
 }
@@ -52,7 +49,7 @@ export function getStudentsWithRecLetters(req, res) {
  * @param req
  * @param res
  */
-export function getRecLetters (req, res) {
+export function getRecLetters(req, res) {
   console.log('Entering server getRecLetters()..');
 
   let studentId = parseInt(req.body.studentId, 10);
@@ -83,24 +80,24 @@ export function getRecLetter(req, res) {
         let questionsData;
 
         ipfs.get(pdfFileIPFSHash)
-        .then((files) => {
-            console.log("Successfully retrieved pdf from IPFS.")
+        .then(files => {
+            console.log('Successfully retrieved pdf from IPFS.');
             pdfDataAsStr = files[0].content.toString('utf8');
             return ipfs.get(questionsJsonHash);
         })
-        .then((files) => {
-            console.log("Successfully retrieved questions from IPFS.")
+        .then(files => {
+            console.log('Successfully retrieved questions from IPFS.');
             questionsData = JSON.parse(files[0].content.toString());
 
             if(pdfDataAsStr && questionsData) {
               const result = {
-                'questionsData' : questionsData,
-                'pdfDataAsStr' : pdfDataAsStr
+                questionsData,
+                pdfDataAsStr
               };
 
               return res.json(result);
             } else {
-              console.log("An error occurred. Either pdf data or questions data had issues.")
+              console.log('An error occurred. Either pdf data or questions data had issues.');
             }
         });
       });
@@ -120,10 +117,10 @@ export function createRecLetter(req, res) {
   let studentId = req.body.studentId;
   let recommenderId = req.user._id;
   let schoolId = req.body.schoolId;
-  console.log('Student Id:' + req.body.studentId);
-  console.log('loggedInRecommenderId:' + loggedInRecommenderId);
-  console.log('loggedInRecommenderName:' + loggedInRecommenderName);
-  console.log('schoolId:' + req.body.schoolId);
+  console.log(`Student Id:${req.body.studentId}`);
+  console.log(`loggedInRecommenderId:${loggedInRecommenderId}`);
+  console.log(`loggedInRecommenderName:${loggedInRecommenderName}`);
+  console.log(`schoolId:${req.body.schoolId}`);
 
   //This is the new letter Id that's created in the blockchain. MongoDB needs to hold this ID to make the subsequent operation
   //on this letter for viewing, deleting etc.
@@ -132,7 +129,7 @@ export function createRecLetter(req, res) {
   .then(function(instance) {
     let web3 = req.app.get('web3');
     let accounts = web3.eth.accounts;
-    let letterName = 'Reco Letter for Student:' + studentId;
+    let letterName = `Reco Letter for Student:${studentId}`;
     let letterPdfBuffer = req.body.recLetterContents;
     let letterjsonBuffer = req.body.candidateQuestions;
 
@@ -163,7 +160,7 @@ export function createRecLetter(req, res) {
               gas: 3000000
             }).then(function(createLetterResult) {
               //Get the letterId
-              newLetterId = createLetterResult.logs[0].args['letterId']['c'][0];
+              newLetterId = createLetterResult.logs[0].args.letterId.c[0];
 
               let newRecLetter = new RecLetter({
                 letterId: newLetterId,
@@ -227,18 +224,15 @@ export function createRecLetter(req, res) {
   });
 }
 
-export function deleteRecLetter (req, res) {
-  console.log('Entering deleteRecLetter...id=' + req.param.id);
-  RecLetter.remove({_id: req.params.id}, function (err, result) {
-    if (err) {
+export function deleteRecLetter(req, res) {
+  console.log(`Entering deleteRecLetter...id=${req.param.id}`);
+  RecLetter.remove({_id: req.params.id}, function(err, result) {
+    if(err) {
       res.json(err);
-    }
-    else {
+    } else {
       res.json(result);
     }
   });
 }
-
-
 
 

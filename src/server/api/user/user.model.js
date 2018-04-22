@@ -104,46 +104,45 @@ UserSchema
   .validate(function(name) {
     return name.length;
   }, 'Name cannot be blank');
- 
+
 // Validate Address Line 1
 UserSchema
   .path('addressLine1')
   .validate(function(addressLine1) {
     return addressLine1.length;
   }, 'Address Line 1 cannot be blank');
- 
+
 // Validate City
 UserSchema
   .path('city')
   .validate(function(city) {
     return city.length;
   }, 'City cannot be blank');
- 
+
 // Validate State
 UserSchema
   .path('state')
   .validate(function(state) {
     return state.length;
-  }, 'State cannot be blank'); 
- 
+  }, 'State cannot be blank');
+
 // Validate Zip
 UserSchema
   .path('zip')
   .validate(function(zip) {
     return zip.length;
-  },  'Zip cannot be blank'); 
- 
+  }, 'Zip cannot be blank');
+
 // Validate School Contact Name
 UserSchema
   .path('schoolContactName')
   .validate(function(schoolContactName) {
     if(this.role == 'SCHOOL') {
       return schoolContactName.length;
-    }
-    else {
+    } else {
       return true;
    }
-  },  'School Contact Name cannot be blank'); 
+  }, 'School Contact Name cannot be blank');
 
 /**
  * Pre-save hook

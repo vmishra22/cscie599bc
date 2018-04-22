@@ -25,38 +25,24 @@ export function index(req, res) {
   console.log(req.query);
 
   if(req.query.userRole && req.query.userName) {
-    return User.find({role: req.query.userRole, name: { $regex: '.*' + req.query.userName + '.*' }}, '-salt -password').exec()
-    .then(users => {
-      return res.status(200).json(users);
-    })
+    return User.find({role: req.query.userRole, name: { $regex: `.*${req.query.userName}.*` }}, '-salt -password').exec()
+    .then(users => res.status(200).json(users))
     .catch(handleError(res));
-  }
-  else if (req.query.userRole) {
+  } else if(req.query.userRole) {
     return User.find({role: req.query.userRole}, '-salt -password').exec()
-    .then(users => {
-      return res.status(200).json(users);
-    })
+    .then(users => res.status(200).json(users))
     .catch(handleError(res));
-  }
-  else if(req.query.userName) {
-    return User.find({name: { $regex: '.*' + req.query.userName + '.*' }}, '-salt -password').exec()
-    .then(users => {
-      return res.status(200).json(users);
-    })
+  } else if(req.query.userName) {
+    return User.find({name: { $regex: `.*${req.query.userName}.*` }}, '-salt -password').exec()
+    .then(users => res.status(200).json(users))
     .catch(handleError(res));
-  }
-  else if(req.query.userId) {
+  } else if(req.query.userId) {
     return User.find({_id: req.query.userId}, '-salt -password').exec()
-    .then(users => {
-      return res.status(200).json(users);
-    })
+    .then(users => res.status(200).json(users))
     .catch(handleError(res));
-  }
-  else {
+  } else {
     return User.find({}, '-salt -password').exec()
-    .then(users => {
-      return res.status(200).json(users);
-    })
+    .then(users => res.status(200).json(users))
     .catch(handleError(res));
   }
 }
@@ -118,9 +104,7 @@ export function changePassword(req, res) {
       if(user.authenticate(oldPass)) {
         user.password = newPass;
         return user.save()
-          .then(() => {
-            return res.status(204).end();
-          })
+          .then(() => res.status(204).end())
           .catch(validationError(res));
       } else {
         return res.status(403).end();
