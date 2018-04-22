@@ -3,6 +3,30 @@
  * to disable, edit config/environment/index.js, and set `seedDB: false`
  */
 
+ /*
+ Set up the following users, all the passwords are 'test':
+
+Students:
+  anurag@gmail.com
+  kevin@gmail.com
+  muhammad@gmail.com
+  vinay@gmail.com
+  ying@gmail.com
+
+Recommenders:
+  peter@harvard.edu
+  jay@pfizer.com
+  bill@microsoft.com
+  mark@facebook.com
+  elon@tesla.com
+
+Schools:
+  harvard@harvard.edu
+  standford@stanford.edu
+  mit@mit.edu
+  waterloo@waterloo.edu
+*/
+
 'use strict';
 import User from '../api/user/user.model';
 import config from './environment/';
@@ -81,6 +105,89 @@ export default function seedDatabaseIfNeeded() {
       schoolContactNumber: '(123) 456-7890',
       role: 'school',
       password: 'test'
+    },
+  ];
+
+  //Sample students
+  const students = [
+    {
+      name: 'Anurag Joshi',
+      email: 'anurag@gmail.com',
+      role: 'student',
+      password: 'test',
+      provider: 'local'
+    },
+    {
+      name: 'Kevin Sun',
+      email: 'kevin@gmail.com',
+      role: 'student',
+      password: 'test',
+      provider: 'local'
+    },
+    {
+      name: 'Muhammad Abdullah',
+      email: 'muhammad@gmail.com',
+      role: 'student',
+      password: 'test',
+      provider: 'local'
+    },
+    {
+      name: 'Vinay Mishra',
+      email: 'vinay@gmail.com',
+      role: 'student',
+      password: 'test',
+      provider: 'local'
+    },
+    {
+      name: 'Yingtian Wang',
+      email: 'ying@gmail.com',
+      role: 'student',
+      password: 'test',
+      provider: 'local'
+    },
+  ];
+
+  //Sample recommenders
+  const recommenders = [
+    {
+      name: 'Peter Henstock',
+      email: 'peter@harvard.edu',
+      role: 'recommender',
+      password: 'test',
+      provider: 'local',
+      recommenderPositionTitle: 'adviser'
+    },
+    {
+      name: 'Jay Bergeron',
+      email: 'jay@pfizer.com',
+      role: 'recommender',
+      password: 'test',
+      provider: 'local',
+      recommenderPositionTitle: 'adviser'
+    },
+    {
+      name: 'Bill Gates',
+      email: 'bill@microsoft.com',
+      role: 'recommender',
+      password: 'test',
+      provider: 'local',
+      recommenderPositionTitle: 'adviser'
+    },
+    {
+      name: 'Mark Zuckerberg',
+      email: 'mark@facebook.com',
+      role: 'recommender',
+      password: 'test',
+      provider: 'local',
+      recommenderPositionTitle: 'adviser'
+    },
+    {
+      name: 'Elon Musk',
+      email: 'elon@tesla.com',
+      role: 'recommender',
+      password: 'test',
+      provider: 'local',
+      recommenderPositionTitle: 'adviser'
     },
   ];
 
@@ -171,6 +278,16 @@ export default function seedDatabaseIfNeeded() {
         return Promise.all(promises);
       })
       .catch(err => console.log('Error creating schools: ', err));
+
+    const studentEmails = students.map(s => s.email);
+    User.remove({email: {$in: studentEmails}})
+      .then(() => User.create(students))
+      .catch(err => console.log('Error creating students: ', err));
+
+    const recEmails = recommenders.map(r => r.email);
+    User.remove({email: {$in: recEmails}})
+      .then(() => User.create(recommenders))
+      .catch(err => console.log('Error creating recommenders: ', err));
 
     CandidateQuestion.find({}).remove()
       .then(() => CandidateQuestion.create(questions));
