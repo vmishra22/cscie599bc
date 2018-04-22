@@ -9,6 +9,7 @@ before_install:
   - cd src
 before_script:
   - npm install -g gulp-cli node-gyp
+  - npm install -g truffle
   - gem install sass
   - cd LetterContract
   - rm -rf build
