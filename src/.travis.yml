@@ -11,9 +11,12 @@ before_script:
 services: mongodb
 cache:
   directories:
-    - node_modules
+  - node_modules
 env:
+  matrix:
   - CXX=g++-4.8
+  global:
+    secure: XymePILWlN7xhSuNAgxqKu7brpxOrYQguUYLLNleWSgJ5nmb3OtS20+ZD62w5oTgXvvgFZmxefdFb5UCjm0WD0iQBPSAAFHSjDuB2n2w5FEIfblos9Tnit03GTXTYdNKYWdhG7p407H4PSFipoZ++Q+heWpK/TteN0nY8fnNRp7GMQ2d4Etwtf4+Zq4Jf2dR8t4AVOCCChIhvMGnFSaZfpqafecokHvhnQTCDzbDghoOTozOsG2zabMQPysPxKYxvjMoczIXXy4WiPonPEOUsUYPA/zThu+0CTCklC26SwWvLslBrohg+1aDP1F7Z3tTmH7D2Ymy88vatgs1AZCV26LIb0hVy54lkk5leLggx1Jh8wdu6LsQ5pqeoRgVgFFMS1jQjdiA7gPw3TDjHCgRO1K6H3jv/dpPkJMq2wgi7Kfjl7ecwvDvH7nPnSEW0XMuxsKFeHSGH48XXzrs+qH/K2dNek8jbwcQnTVKAx+kWPhVAed1jY3OpdhUaBKWQXL4uhx/+cIHgIM0prtZMNyAB16XhBawYssXLpNl24M7ZY///OvvKAxQaTxX/k7wr5W4T45CjaLOmMwnem6LfHgdXDOGusEmSyGvvKtdakucCjteecw7brIKjiSVmRuVePcKTGIQUZ5L9Ly/FqOyAC2Zv7AjaIHxXE8elYwGt+5u5sM=
 addons:
   apt:
     sources:
