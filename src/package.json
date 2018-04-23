@@ -151,7 +151,7 @@
     "npm": "^3.9.5"
   },
   "scripts": {
-    "test": "truffle test",
+    "test": "gulp test",
     "coverage": "./node_modules/.bin/solidity-coverage",
     "postinstall": "./node_modules/.bin/typings install",
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update",

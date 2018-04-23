@@ -15,19 +15,16 @@ before_script:
   - cd LetterContract
   - rm -rf build
   - truffle compile
-  - testrpc > /dev/null &
-  - sleep 5
   - cd ..
 script:
-  - npm truffleTest
-after_script:
-  - npm run coverage && cat coverage/lcov.info | coveralls
+  - npm test
 services: mongodb
 cache:
   directories:
   - node_modules
 env:
   - CXX=g++-4.8
+  - SOLIDITY_COVERAGE=true
 addons:
   apt:
     sources:
@@ -37,3 +34,6 @@ addons:
 notifications:
   slack:
     secure: hVsz2CR2YYLH5ULFymSRWviphQXnLmdWC06aQ+ZEGueGXt8B8wrDr73c34DmgYh059cfiZ31HVxA2wnILBj6KY1eiB23v5cxZ/hwC9B0586YPC1p7q5m8rpldwoW76A8eTR2ENatsky3/DU0kk5Mo0s1w+WOdKGClXQosyhLyCfl+UAbL5hPjNKYrdIAuaF2muf+yJWJC68y7PL/5YBQ+Ct8wFRwptwpOstEz/piLGtMeIuX0zuCgj6fpbISbymqCKPLF3si3m+Ru6F5hC/rVTYRSy1wKx3yb30rpC8GvkwS80X8brWolkJSr51YMOqbth7gzRc+n+EI9F2MtRCDiB0RxUmnB0XynTgbPvkkT8F0vIMrFi8YlKzZBLKkt8DYnSfrKdkaVBb6MmFAH97sKdi4h9rS2G1KQwfrujJi6Qo0O3NGE0bX21aogkp/K1S2Hwjn+c8WR9tFqJGD0wPBw0hb7mnAI3YML9Imdg2l/7yrPgRGE+EVz3GwuuluFs2ISKuqRI2hOfegBV7CSGOrQ/LS+5hml+H55eVs60wLnfNsMEuxbe9e+aJ8M87gOTa71LanuFcdCsv4LEU6CUhW10mSYWnRSSR0vol0aO/MBlAOvn+dQImTngzMUPHVniR8BRDLE6fJopbh+zI+9kPoo6YySZpi7MQ9iJlk4aqs/HM=
+    on_success: change
+    on_failure: always
+    on_pull_requests: false
