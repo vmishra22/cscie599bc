@@ -24,7 +24,6 @@ cache:
   - node_modules
 env:
   - CXX=g++-4.8
-  - SOLIDITY_COVERAGE=true
 addons:
   apt:
     sources:
