@@ -2,7 +2,7 @@ pragma solidity ^0.4.21;
 
 import "./letterfactory.sol";
 import "./letterrequest.sol";
-import "./StringUtils.sol";
+import "./stringutils.sol";
 
 contract LetterHelper is LetterFactory, LetterRequest {
 
