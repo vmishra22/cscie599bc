@@ -152,6 +152,8 @@
   },
   "scripts": {
     "test": "gulp test",
+    "truffleTest": "truffle test",
+    "coverage": "./node_modules/.bin/solidity-coverage",
     "postinstall": "./node_modules/.bin/typings install",
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update",
     "start": "node server"

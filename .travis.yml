@@ -10,11 +10,18 @@ before_install:
 before_script:
   - npm install -g gulp-cli node-gyp
   - npm install -g truffle
+  - npm install -g ganache-cli
   - gem install sass
   - cd LetterContract
   - rm -rf build
   - truffle compile
+  - testrpc > /dev/null &
+  - sleep 5
   - cd ..
+script:
+  - npm truffleTest
+after_script:
+  - npm run coverage && cat coverage/lcov.info | coveralls
 services: mongodb
 cache:
   directories:
