@@ -105,11 +105,23 @@ contract('Letter', function(accounts) {
       return contractInstance.getLetterRequestsByStudentId('10');
     })
     .then(function(studentRequests) {
-      assert.equal(studentRequests.length, 1, "Only one request from the student so far.");
+      let requestsIdArray; let lengthResult;
+      if(studentRequests.length) {
+        requestsIdArray = studentRequests[0];
+        lengthResult = studentRequests[1].c[0];
+      }
+      assert.equal(requestsIdArray.length, 1, "Only one request from the student so far.");
+      assert.equal(lengthResult, 1, "Only one request from the student so far.");
       return contractInstance.getLetterRequestsByRecommenderId('10');
     })
     .then(function(recommenderRequests) {
-      assert.equal(recommenderRequests.length, 1, "Only one request for the recommender so far.");
+      let requestsIdArray; let lengthResult;
+      if(recommenderRequests.length) {
+        requestsIdArray = recommenderRequests[0];
+        lengthResult = recommenderRequests[1].c[0];
+      }
+      assert.equal(requestsIdArray.length, 1, "Only one request for the recommender so far.");
+      assert.equal(lengthResult, 1, "Only one request for the recommender so far.");
       return contractInstance.getLettersByStudentAndSchoolId('10', '10');
     })
     .then(function(letters) {

@@ -1,5 +1,8 @@
 module.exports = {
-    port: 8545,
+    port: 8555,
     norpc: true,
-    dir: './LetterContract'
+    testrpcOptions: '-a 10 -p 8555 -g 1 -l 0xfffffffffff',
+    dir: './/LetterContract',
+    testCommand: ' truffle.cmd test --network coverage',
+    skipFiles: ['erc721.sol','safemath.sol', 'stringutils.sol','ownable.sol']
 };

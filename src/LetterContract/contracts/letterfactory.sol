@@ -11,11 +11,11 @@ contract LetterFactory is Ownable {
 
     struct Letter {
         string name;
-        string studentId;   //maybe a uportId or mongodbId?
-        string recommenderId;   //maybe a uportId or mongodbId?
-        string schoolProgramId;   //maybe a uportId or mongodbId?
-        bytes32 pdfFileHash;   //Pdf file ipfs hash
-        bytes32 jsonFileHash;  //File of the mandatory questions ipfs hash
+        string studentId;   
+        string recommenderId;  
+        string schoolProgramId;   
+        bytes32 pdfFileHash;   
+        bytes32 jsonFileHash;  
     }
 
     Letter[] public letters;
