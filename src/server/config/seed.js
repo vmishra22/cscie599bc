@@ -271,8 +271,26 @@ export default function seedDatabaseIfNeeded() {
               schoolName: school.name
             }));
 
-          //Todo: are there orphan deg programs that should be cleared?
           promises.push(DegreeProgram.create(mappedDegreePrograms));
+        }
+
+        return Promise.all(promises);
+      })
+      .then(() => DegreeProgram.find({}))
+      .then(degProgs => {
+        const promises = [];
+
+        for(const d of degProgs) {
+          const removeDegProgs = User.find({_id: d.schoolId})
+            .then(matchingSchools => {
+              if(matchingSchools.length === 0) {
+                return DegreeProgram.remove({schoolId: d.schoolId, programName: d.programName})
+              } else {
+                return Promise.resolve();
+              }
+          });
+
+          promises.push(removeDegProgs);
         }
 
         return Promise.all(promises);
