@@ -9,6 +9,7 @@
   <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
       <div class="x_panel">
+
         <div class="x_title">
           <h2>Select Recommender</h2>
           <div class="clearfix"></div>
@@ -26,9 +27,13 @@
                 <p class="help-block" ng-show="form.recommender.$error.required && vm.submitted">
                   A recommender is required
                 </p>
+                <P><h2>Don't see a recommender? </h2><button ng-click="vm.openEmailModalPopup()" class="btn btn-primary">Invite Recommender</button></P>
               </div>
             </div>
           </div>
+
+          
+
           <div class="x_title">
             <h2>Select Degree or School</h2>
             <div class="clearfix"></div>
@@ -59,4 +64,6 @@
     </div>
   </div>
 
+  
+    
 </div>

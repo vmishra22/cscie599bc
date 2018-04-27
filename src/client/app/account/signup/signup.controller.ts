@@ -34,11 +34,17 @@ export default class SignupController {
   submitted = false;
   Auth;
   $state;
+  $http;
+  $uibModal;
+  $uibModalStack;
 
   /*@ngInject*/
-  constructor(Auth, $state) {
+  constructor(Auth, $state, $http, $uibModal, $uibModalStack) {
     this.Auth = Auth;
     this.$state = $state;
+    this.$http = $http;
+    this.$uibModal = $uibModal;
+    this.$uibModalStack = $uibModalStack;
   }
 
   register(form, userRole) {
@@ -60,8 +66,12 @@ export default class SignupController {
         password: this.user.password
       })
       .then(() => {
+        console.log('user created1');
+        this.emailRegistrationConfirmation();  
+        console.log('user created2');
         // Account created, redirect to home
-                this.$state.go('main');      })
+        //this.$state.go('main');
+      })
       .catch(err => {
         err = err.data;
         this.errors = {};
@@ -73,5 +83,41 @@ export default class SignupController {
 
       });
     }
+  }
+
+  openEmailModalPopup() {
+    console.log('Entering openEmailModalPopup()..');
+    var $modalInstance = this.$uibModal.open({
+    template: require('./emailRegistrationConfirmation.html'),
+    controller: 'SignupController',
+    controllerAs: 'vm',
+    });
+  }
+
+  closeEmailModalPopup() {
+    console.log("Entering closeEmailModalPopup()..");
+    this.$uibModalStack.dismissAll();
+    this.$state.go('main');
+  }
+
+  emailRegistrationConfirmation() {
+    console.log("Entering emailRegistrationConfirmation()..");
+
+    let registrationConfirmationEmailRequest = {
+      name: this.user.name,
+      email: this.user.email
+    };
+
+    const success = response => {
+      this.openEmailModalPopup();
+    };
+    const diplayError = error => {
+      console.log(error);
+      this.$state.go('main');
+    };
+
+    this.$http.post('http://localhost:3000/api/emailRegistrationConfirmation', registrationConfirmationEmailRequest)
+      .then(success, diplayError);
+
   }
 }
