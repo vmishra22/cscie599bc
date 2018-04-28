@@ -34,9 +34,9 @@
               <td>{{recommendation.programName}}</td>
               <td>{{recommendation.recommenderName}}</td>
               <td>{{recommendation.letterStatus}}</td>
-              <td ng-if="recommendation.letterStatus === 'Created' && recommendation.studentsCanView" ><a href="/recletters/view/{{recommendation.letterId}}"><i class="fa fa-eye"></i></a></td>
-              <td ng-if="recommendation.letterStatus === 'Created' && !recommendation.studentsCanView" ><i class="fa fa-eye"></i></td>
-              <td ng-if="recommendation.letterStatus === 'Pending'" ><i class="fa fa-eye"></i></td>
+              <td ng-if="recommendation.letterStatus === 'Created' && recommendation.studentsCanView" ><a href="/recletters/view/{{recommendation.letterId}}"><i class="fa fa-eye" title="View recommendation."></i></a></td>
+              <td ng-if="recommendation.letterStatus === 'Created' && !recommendation.studentsCanView" ><i class="fa fa-eye" title="You do not have permission to view this."></i></td>
+              <td ng-if="recommendation.letterStatus === 'Pending'" ><i class="fa fa-eye" title="The recommendation is not yet submitted."></i></td>
             </tr>
           </table>
         </div>
