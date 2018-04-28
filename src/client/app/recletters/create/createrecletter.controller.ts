@@ -79,7 +79,8 @@ export default class CreateRecLetterController {
           studentId: this.$stateParams.studentId,
           studentName: this.$stateParams.studentName,
           recLetterContents: reader.result,
-          candidateQuestions: this.questionResponses
+          candidateQuestions: this.questionResponses,
+          letterId: this.$stateParams.letterId
         };
 
         const onSuccess = response => {
@@ -102,14 +103,6 @@ export default class CreateRecLetterController {
           .then(onSuccess, onError);
       };
   }
-
-  // getCandidateQuestions($scope) {
-  //   console.log("Entering getCandidateQuestions()..");
-  //   this.$http.get('http://localhost:3000/api/CandidateQuestions')
-  //     .then(function(response) {
-  //       $scope.candidateQuestions = response.data;
-  //     });
-  // }
 
   getCandidateQuestions($scope) {
     console.log('Entering getCandidateQuestions()..schoolId='+$scope.$stateParams.schoolId+'&programName='+$scope.$stateParams.programName);

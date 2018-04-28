@@ -79,7 +79,6 @@ export function getRecLetterRequests(req, res) {
           var pendingRequestResults = [];
           var submittedRequestResults = [];
           var accumulatedResults = {};
-'';
 
           if(resultsIdArray.length) {
             requestsIdArray = resultsIdArray[0];

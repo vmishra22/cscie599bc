@@ -217,13 +217,12 @@ export function createRecLetter(req, res) {
                     gas: 3000000
                   }).then(function(reqStatusResult) {
                     console.log('reqStatusResult', reqStatusResult);
-                    RecLetterRequest.find({studentId: req.body.studentId, schoolId: req.body.schoolId, recommenderId: loggedInRecommenderId},
+                    RecLetterRequest.find({studentId: req.body.studentId, schoolId: req.body.schoolId, recommenderId: loggedInRecommenderId, requestId:req.body.letterId},
                     function(err, recLetterRequests) {
                       if(err) {
                         console.log('Error', err);
                         //res.json(err);
                       } else {
-                        console.log(recLetterRequests);
                         recLetterRequests.forEach(element => {
                           element.letterStatus = 'Created';
                           element.save(function(err, changedLetterRequest) {
