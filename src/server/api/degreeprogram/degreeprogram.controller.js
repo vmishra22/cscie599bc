@@ -46,6 +46,7 @@ export function createDegreeProgram(req, res) {
     schoolId: req.body.schoolId,
     schoolName: req.body.schoolName,
     programName: req.body.programName,
+    studentsCanView: req.body.studentsCanView,
     candidateQuestions: req.body.candidateQuestions
   });
 

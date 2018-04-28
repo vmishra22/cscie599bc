@@ -15,6 +15,7 @@ interface DegreeProgram {
   schoolId: string;
   schoolName: string;
   programName: string;
+  studentsCanView: boolean;
   programCandidateQuestions: ProgramCandidateQuestion[];
 }
 
@@ -23,6 +24,7 @@ export default class AddDegreeProgramController {
     schoolId: '',
     schoolName: '',
     programName: '',
+    studentsCanView: false,
     programCandidateQuestions: []
   };
   errors = {};
@@ -56,6 +58,7 @@ export default class AddDegreeProgramController {
             schoolId: this.currentUser._id,
             schoolName: this.currentUser.name,
             programName: this.degreeProgram.programName,
+            studentsCanView: this.degreeProgram.studentsCanView,
             candidateQuestions: []
           };
 
@@ -97,6 +100,7 @@ export default class AddDegreeProgramController {
             schoolId: currentUser._id,
             schoolName: currentUser.name,
             programName: $scope.degreeProgram.programName,
+            studentsCanView: $scope.degreeProgram.studentsCanView,
             candidateQuestions: []
           };
           console.log('old program = '+$scope.degreeProgram);

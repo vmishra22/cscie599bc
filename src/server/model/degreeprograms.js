@@ -6,6 +6,7 @@ var DegreeProgramSchema = mongoose.Schema({
     schoolId: String,
     schoolName: String,
     programName: String,
+    studentsCanView: Boolean,
     candidateQuestions: { type: [{
         questionText: {
             type: String
