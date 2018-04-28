@@ -41,7 +41,8 @@ export default class NewRecLetterRequestsController {
         recommenderName: this.recommender.name,
         schoolId: this.degreeProgram.schoolId,
         schoolName: this.degreeProgram.schoolName,
-        programName: this.degreeProgram.programName
+        programName: this.degreeProgram.programName,
+        studentsCanView: this.degreeProgram.studentsCanView
       };
 
       const redirect = response => this.$location.path('/student-dashboard');

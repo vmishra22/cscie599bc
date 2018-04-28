@@ -10,6 +10,7 @@ var RecLetterRequestSchema = mongoose.Schema({
     schoolId: String,
     schoolName: String,
     programName: String,
+    studentsCanView: Boolean,
     requestDate: Date,
     recLetterId: String,
     recLetterSubmissionDate: Date
