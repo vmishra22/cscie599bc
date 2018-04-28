@@ -28,8 +28,7 @@ export function getRecLetterRequests(req, res) {
  // loggedInUserId = 10;
  let requestsIdArray; let lengthResult;
 
-  //if(loggedInUserRole === 'STUDENT' && loggedInUserName === req.query.studentId) {
-    if(loggedInUserRole === 'student') {
+  if(loggedInUserRole === 'student') {
    letterOwnershipContract.deployed().then(function(instance) {
       instance.getLetterRequestsByStudentId(String(loggedInUserId))
         .then(function(resultsIdArray) {
@@ -56,7 +55,8 @@ export function getRecLetterRequests(req, res) {
                   schoolId: x[0].schoolId,
                   schoolName: x[0].schoolName,
                   programName: x[0].programName,
-                  recommenderName: x[0].recommenderName
+                  recommenderName: x[0].recommenderName,
+                  studentsCanView: x[0].studentsCanView
                 };
                 requestResults.push(result1);
                 callback(err);
@@ -71,7 +71,6 @@ export function getRecLetterRequests(req, res) {
           });
         });
     });
- // } else if(loggedInUserRole === 'RECOMMENDER' && loggedInUserName === req.query.recommenderId) {
 } else if(loggedInUserRole === 'recommender') {
      letterOwnershipContract.deployed().then(function(instance) {
       instance.getLetterRequestsByRecommenderId(String(loggedInUserId))
@@ -106,7 +105,8 @@ export function getRecLetterRequests(req, res) {
                     schoolId: x[0].schoolId,
                     schoolName: x[0].schoolName,
                     programName: x[0].programName,
-                    recommenderName: x[0].recommenderName
+                    recommenderName: x[0].recommenderName,
+                    studentsCanView: x[0].studentsCanView
                   };
                   if(x[0].letterStatus === 'Pending') {
                     pendingRequestResults.push(result1);
@@ -211,6 +211,7 @@ export function createRecLetterRequest(req, res) {
           schoolId: req.body.schoolId,
           schoolName: req.body.schoolName,
           programName: req.body.programName,
+          studentsCanView: req.body.studentsCanView,
           requestDate: new Date()
         });
 
@@ -229,7 +230,6 @@ export function createRecLetterRequest(req, res) {
       console.log('Error in createRequest call:', error);
     });
 }
-
 
 export function deleteRecLetterRequest(req, res) {
   console.log(`Entering deleteRecLetterRequest...id=${req.param.id}`);

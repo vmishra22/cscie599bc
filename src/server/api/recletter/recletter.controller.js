@@ -17,7 +17,6 @@ function handleError(res, statusCode) {
   };
 }
 
-
 /**
  * Get list of students who have recommendation letters
  */
@@ -70,37 +69,69 @@ export function getRecLetters(req, res) {
 export function getRecLetter(req, res) {
   console.log('Entering getRecLetter()..');
   const letterId = parseInt(req.params.id, 10);
-  letterOwnershipContract.deployed().then(function(instance) {
-    instance.getLetterIPFSLinksByLetterId(letterId)
-      .then(function(ipfsbyte32) {
-        const pdfFileIPFSHash = bytes32ToIPFSHash(ipfsbyte32[0]);
-        const questionsJsonHash = bytes32ToIPFSHash(ipfsbyte32[1]);
 
-        let pdfDataAsStr;
-        let questionsData;
-
-        ipfs.get(pdfFileIPFSHash)
-        .then(files => {
-            console.log('Successfully retrieved pdf from IPFS.');
-            pdfDataAsStr = files[0].content.toString('utf8');
-            return ipfs.get(questionsJsonHash);
-        })
-        .then(files => {
-            console.log('Successfully retrieved questions from IPFS.');
-            questionsData = JSON.parse(files[0].content.toString());
-
-            if(pdfDataAsStr && questionsData) {
-              const result = {
-                questionsData,
-                pdfDataAsStr
-              };
-
-              return res.json(result);
-            } else {
-              console.log('An error occurred. Either pdf data or questions data had issues.');
-            }
-        });
+  return canViewReqLetter(req.user, letterId).then(canView => {
+    if(!canView) {
+      return res.status(403).send('Forbidden');
+    } else {
+      return letterOwnershipContract.deployed().then(function(instance) {
+        instance.getLetterIPFSLinksByLetterId(letterId)
+          .then(function(ipfsbyte32) {
+            const pdfFileIPFSHash = bytes32ToIPFSHash(ipfsbyte32[0]);
+            const questionsJsonHash = bytes32ToIPFSHash(ipfsbyte32[1]);
+    
+            let pdfDataAsStr;
+            let questionsData;
+    
+            ipfs.get(pdfFileIPFSHash)
+            .then(files => {
+                console.log('Successfully retrieved pdf from IPFS.');
+                pdfDataAsStr = files[0].content.toString('utf8');
+                return ipfs.get(questionsJsonHash);
+            })
+            .then(files => {
+                console.log('Successfully retrieved questions from IPFS.');
+                questionsData = JSON.parse(files[0].content.toString());
+    
+                if(pdfDataAsStr && questionsData) {
+                  const result = {
+                    questionsData,
+                    pdfDataAsStr
+                  };
+    
+                  return res.json(result);
+                } else {
+                  console.log('An error occurred. Either pdf data or questions data had issues.');
+                }
+            });
+          });
       });
+    }
+  });
+}
+
+function canViewReqLetter(user, letterId) {
+  return RecLetterRequest.findOne({requestId: letterId}).then(result => {
+    if(!result){
+      console.log("The given rec letter id didn't exist.")
+      return false;
+    }
+
+    if(!user) {
+      console.log('Tried to view rec letter without a user.');
+      return false;
+    }
+
+    switch(user.role) {
+      case 'student':
+        return result.studentId === user._id.toString() && result.studentsCanView;
+      case 'recommender':
+        return result.recommenderId === user._id.toString();
+      case 'school':
+        return result.schoolId === user._id.toString();
+    }
+
+    return false;
   });
 }
 
