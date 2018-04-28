@@ -236,22 +236,27 @@ export default function seedDatabaseIfNeeded() {
   const degreePrograms = [
     {
       programName: 'Computer Science',
+      studentsCanView: true,
       candidateQuestions: [questions[0], questions[1]]
     },
     {
       programName: 'Biology',
+      studentsCanView: true,
       candidateQuestions: [questions[0], questions[1], questions[2]]
     },
     {
       programName: 'English',
+      studentsCanView: false,
       candidateQuestions: [questions[4], questions[5], questions[6]]
     },
     {
       programName: 'Psychology',
+      studentsCanView: true,
       candidateQuestions: [questions[0], questions[1], questions[3], questions[5]]
     },
     {
       programName: 'History',
+      studentsCanView: false,
       candidateQuestions: [questions[0], questions[1], questions[2], questions[3], questions[4], questions[5], questions[6]]
     }
   ];
@@ -266,6 +271,7 @@ export default function seedDatabaseIfNeeded() {
         for(const school of createdSchools) {
           const mappedDegreePrograms = degreePrograms.map(d => ({
               programName: d.programName,
+              studentsCanView: d.studentsCanView,
               candidateQuestions: d.candidateQuestions,
               schoolId: school._id,
               schoolName: school.name
