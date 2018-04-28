@@ -71,10 +71,7 @@ export function getRecLetter(req, res) {
   const letterId = parseInt(req.params.id, 10);
 
   return canViewReqLetter(req.user, letterId).then(canView => {
-    console.log("Enter...!!!")
     if(!canView) {
-      console.log("HERE!!!")
-      console.log(canView);
       return res.status(403).send('Forbidden');
     } else {
       return letterOwnershipContract.deployed().then(function(instance) {
@@ -125,19 +122,15 @@ function canViewReqLetter(user, letterId) {
       return false;
     }
 
-    console.log(result);
-    console.log(user);
-
     switch(user.role) {
       case 'student':
-        return result.studentId === user._id && result.studentsCanView;
+        return result.studentId === user._id.toString() && result.studentsCanView;
       case 'recommender':
-        return result.recommenderId === user._id;
+        return result.recommenderId === user._id.toString();
       case 'school':
-        return result.schoolId === user._id;
+        return result.schoolId === user._id.toString();
     }
 
-    //Should never get here...
     return false;
   });
 }

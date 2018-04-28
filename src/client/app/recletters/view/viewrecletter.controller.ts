@@ -5,6 +5,7 @@ export default class ViewRecLetterController {
   $stateParams;
   questionResponses;
   pdfDataAsStr;
+  letterRetrievedSuccessfully;
 
   /*@ngInject*/
   constructor($http, $stateParams) {
@@ -24,8 +25,11 @@ export default class ViewRecLetterController {
     } else {
       this.$http.get(`http://localhost:3000/api/RecommendationLetter/${id}`)
         .then(resp => {
-          this.questionResponses = resp.data.questionsData;
-          this.pdfDataAsStr = resp.data.pdfDataAsStr;
+          if(resp.status === 200) {
+            this.letterRetrievedSuccessfully = true;
+            this.questionResponses = resp.data.questionsData;
+            this.pdfDataAsStr = resp.data.pdfDataAsStr;
+          }
         });
     }
   }

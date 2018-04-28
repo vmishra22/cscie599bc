@@ -1,11 +1,16 @@
 <div class="main-container">
     <h1>View Recommendation Letter</h1><br/>
-    <div ng-repeat="qr in vm.questionResponses">
-        <p>
-            <div class="questionText">{{qr.questionText}}<br/></div>
-            {{qr.questionResponse}}
-        </p>
+    <div ng-if="vm.letterRetrievedSuccessfully">
+        <div ng-repeat="qr in vm.questionResponses">
+            <p>
+                <div class="questionText">{{qr.questionText}}<br/></div>
+                {{qr.questionResponse}}
+            </p>
+        </div>
+        <br/>
+        <iframe src="{{vm.pdfDataAsStr}}"></iframe>
     </div>
-    <br/>
-    <iframe src="{{vm.pdfDataAsStr}}"></iframe>
+    <div ng-if="!vm.letterRetrievedSuccessfully" class="error">
+        The recommendation does not exist or you are not allowed to view it.
+    </div>
 </div>
