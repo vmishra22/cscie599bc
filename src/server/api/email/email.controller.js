@@ -64,7 +64,7 @@ export function emailRegistrationConfirmation(req, res) {
     from: 'reclettersystem@gmail.com',
     to: email,
     subject: 'Please confirm your registration for Rec-Letters',
-    html: '<p>Hi '+name+'</p><p>You recently registered at Rec-Letters. Please <a href="https://www.recletters.org/registrationConfirmation">click here</a> to write confirm your registration!</p><p>Thank you!<p>'
+    html: '<p>Hi '+name+'</p><p>You recently registered at Rec-Letters. Please <a href="https://www.recletters.org/registrationConfirmation">click here</a> to confirm your registration!</p><p>Thank you!<p>'
   };
   
   emailTransport.sendMail(mailOptions, function(error, info){
