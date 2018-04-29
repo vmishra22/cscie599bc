@@ -154,8 +154,6 @@
     "npm": "^3.9.5"
   },
   "scripts": {
-    "test": "nyc mocha",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "postinstall": "./node_modules/.bin/typings install",
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update",
     "start": "node server"
