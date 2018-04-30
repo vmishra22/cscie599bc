@@ -14,16 +14,12 @@ export default function(app) {
 
   app.use('/auth', require('./auth').default);
 
-  app.use('/api/samples/eth', require('./api/samples/eth'));
-  app.use('/api/samples/ipfs', require('./api/samples/ipfs'));
-
-
   app.use('/api', require('./api/recletter'));
   app.use('/api', require('./api/candidatequestion'));
   app.use('/api', require('./api/recletterrequest'));
   app.use('/api', require('./api/degreeprogram'));
   app.use('/api', require('./api/email'));
-  
+
 
   // All undefined asset or api routes should return a 404
   app.route('/:url(api|auth|components|app|bower_components|assets)/*')

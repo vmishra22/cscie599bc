@@ -16,7 +16,6 @@ import {routeConfig} from './app.config';
 import _Auth from '../components/auth/auth.module';
 import account from './account';
 import admin from './admin';
-import samples from './samples';
 import navbar from '../components/navbar/navbar.component';
 import footer from '../components/footer/footer.component';
 import main from './main/main.component';
@@ -40,7 +39,6 @@ angular.module('recLettersApp', [
   _Auth,
   account,
   admin,
-  samples,
   'validation.match',
   navbar,
   footer,
