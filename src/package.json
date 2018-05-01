@@ -158,5 +158,13 @@
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update",
     "start": "node server"
   },
-  "private": true
+  "private": true,
+  "nyc": {
+    "exclude": [
+      "webpack.make.js",
+      "server/config/seed.js",
+      "gulpfile.babel.js",
+      "server/config/express.js"
+    ]
+  }
 }
