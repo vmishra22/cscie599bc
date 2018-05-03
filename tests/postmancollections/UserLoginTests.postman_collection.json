@@ -1,0 +1,373 @@
+{
+	"info": {
+		"_postman_id": "92629007-bbc1-4edd-8bc3-26011f9611cc",
+		"name": "UserLoginTests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7d255404-570d-447f-a1fb-86a95f897679",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Contains Auth Token\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"token\");",
+							"});",
+							"",
+							"var responseJSON = JSON.parse(responseBody);",
+							"pm.environment.set(\"token\", responseJSON.token);"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a1ae77f5-c2e6-4023-9817-3cd63febd006",
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"email\", \"kaleem75@hotmail.com\");",
+							"pm.environment.set(\"password\", \"test\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"{{email}}\",\"password\":\"{{password}}\"}\n"
+				},
+				"url": {
+					"raw": "http://localhost:3000/auth/local",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth",
+						"local"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Logged-In User Details Without Auth Cookie",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b718673b-0aa2-4642-bb26-35688fb2c4cf",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "fd8d0686-4584-4e6d-a47a-4521cc462558",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(401);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"questionText\": \"In what capacity have you known the applicant?\",\n\t\"responseChoices\": [\n\t\t\"Large Class / Lecture\",\n\t\t\"Small Class / Seminar/ Lab\",\n\t\t\"Independent Study Student\",\n\t\t\"Advisee\",\n\t\t\"Other\"\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/users/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Logged-In User Details",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b718673b-0aa2-4642-bb26-35688fb2c4cf",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "55f676be-f21e-4248-b4de-c6589726a503",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Email Matches\", function () {",
+							"    var responseJSON = pm.response.json();",
+							"    pm.expect(responseJSON.email).to.eql(pm.environment.get(\"email\"));",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "token={{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"questionText\": \"In what capacity have you known the applicant?\",\n\t\"responseChoices\": [\n\t\t\"Large Class / Lecture\",\n\t\t\"Small Class / Seminar/ Lab\",\n\t\t\"Independent Study Student\",\n\t\t\"Advisee\",\n\t\t\"Other\"\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/users/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Login Missing User ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5efe9c43-4714-4f65-8417-7feb82717cef",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(401);",
+							"});",
+							"",
+							"pm.test(\"Valid Response Message\", function () {",
+							"   var responseJSON = pm.response.json();",
+							"    pm.expect(responseJSON.message).to.eql(\"Missing credentials\");",
+							"});",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d0a11582-24c1-4123-a21a-97b71060af77",
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"email\", \"\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"{{email}}\",\"password\":\"test\"}\n"
+				},
+				"url": {
+					"raw": "http://localhost:3000/auth/local",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth",
+						"local"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Login Missing Password",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9c041ace-9595-4856-bab2-7b40e807c771",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(401);",
+							"});",
+							"",
+							"pm.test(\"Valid Response Message\", function () {",
+							"   var responseJSON = pm.response.json();",
+							"    pm.expect(responseJSON.message).to.eql(\"Missing credentials\");",
+							"});",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "2761ba81-ceda-4fdd-99b2-01fd170551ef",
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"password\", \"\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"kaleem75@hotmail.com\",\"password\":\"{{password}}\"}\n"
+				},
+				"url": {
+					"raw": "http://localhost:3000/auth/local",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth",
+						"local"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Login Incorrect Credentials",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "58066a8e-5a7d-48a1-9231-4ddef2af4755",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(401);",
+							"});",
+							"",
+							"pm.test(\"Valid Response Message\", function () {",
+							"   var responseJSON = pm.response.json();",
+							"    pm.expect(responseJSON.message).to.eql(\"The user ID and password combination is not correct.\");",
+							"});",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0a1a7132-8562-4b85-8acd-01e3944cd74d",
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"email\", \"wrong\");",
+							"pm.environment.set(\"password\", \"wrong\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"{{email}}\",\"password\":\"{{password}}\"}\n"
+				},
+				"url": {
+					"raw": "http://localhost:3000/auth/local",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth",
+						"local"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

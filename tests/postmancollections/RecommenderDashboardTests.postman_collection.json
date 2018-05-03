@@ -1,0 +1,331 @@
+{
+	"info": {
+		"_postman_id": "22fd37b8-3d82-4240-b176-47f936808932",
+		"name": "RecommenderDashboardTests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Recommender Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ff32c3b0-1504-47fb-ba10-5582e0baf9e4",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Contains Auth Token\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"token\");",
+							"});",
+							"",
+							"var responseJSON = JSON.parse(responseBody);",
+							"pm.environment.set(\"token\", responseJSON.token);"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b997fcb7-7c44-44a7-aa68-105fef0bba02",
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"email\", \"peter@harvard.edu\");",
+							"pm.environment.set(\"password\", \"test\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"{{email}}\",\"password\":\"{{password}}\"}\n"
+				},
+				"url": {
+					"raw": "http://localhost:3000/auth/local",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth",
+						"local"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Recommender Details Without Auth Cookie",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5e7a153e-0fe6-4f2e-bffa-dd92572e6caa",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "e2af5145-0879-4a4b-9a16-597210fb823a",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(401);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"questionText\": \"In what capacity have you known the applicant?\",\n\t\"responseChoices\": [\n\t\t\"Large Class / Lecture\",\n\t\t\"Small Class / Seminar/ Lab\",\n\t\t\"Independent Study Student\",\n\t\t\"Advisee\",\n\t\t\"Other\"\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/users/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Recommender Details",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5e7a153e-0fe6-4f2e-bffa-dd92572e6caa",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "0fde41b2-b58c-4f6b-8816-02de33c4550f",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(200);",
+							"});",
+							"",
+							"var responseJSON = pm.response.json();",
+							"",
+							"pm.test(\"Email Matches\", function () {",
+							"    pm.expect(responseJSON.email).to.eql(pm.environment.get(\"email\"));",
+							"});",
+							"",
+							"pm.test(\"Role Matches\", function () {",
+							"    pm.expect(responseJSON.role).to.eql(\"recommender\");",
+							"});",
+							"",
+							"pm.environment.set(\"recommenderId\", responseJSON._id);",
+							"pm.environment.set(\"recommenderName\", responseJSON.name);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "token={{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"questionText\": \"In what capacity have you known the applicant?\",\n\t\"responseChoices\": [\n\t\t\"Large Class / Lecture\",\n\t\t\"Small Class / Seminar/ Lab\",\n\t\t\"Independent Study Student\",\n\t\t\"Advisee\",\n\t\t\"Other\"\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/users/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Rec Letter Requets Without Auth Cookie",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5e7a153e-0fe6-4f2e-bffa-dd92572e6caa",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "f44b237e-0169-4eec-9c5c-8781c9deede6",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(401);",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"questionText\": \"In what capacity have you known the applicant?\",\n\t\"responseChoices\": [\n\t\t\"Large Class / Lecture\",\n\t\t\"Small Class / Seminar/ Lab\",\n\t\t\"Independent Study Student\",\n\t\t\"Advisee\",\n\t\t\"Other\"\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/RecommendationLetterRequests",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"RecommendationLetterRequests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Rec Letter Requests",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5e7a153e-0fe6-4f2e-bffa-dd92572e6caa",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "d59446d9-7af0-49f5-a053-3be9bf1f913f",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(200);",
+							"});",
+							"",
+							"var responseJSON = pm.response.json();",
+							"",
+							"responseJSON.forEach(function(programJSON) {",
+							"     pm.test(\"Recommender Id Matches\", function () {",
+							"         pm.expect(programJSON.recommenderId).to.eql(pm.environment.get(\"recommenderId\"));",
+							"     });",
+							"     ",
+							"     pm.test(\"Recommender Name Matches\", function () {",
+							"         pm.expect(programJSON.recommenderName).to.eql(pm.environment.get(\"recommenderName\"));",
+							"     });     ",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "token={{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"questionText\": \"In what capacity have you known the applicant?\",\n\t\"responseChoices\": [\n\t\t\"Large Class / Lecture\",\n\t\t\"Small Class / Seminar/ Lab\",\n\t\t\"Independent Study Student\",\n\t\t\"Advisee\",\n\t\t\"Other\"\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/RecommendationLetterRequests",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"RecommendationLetterRequests"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

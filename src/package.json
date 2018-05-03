@@ -126,6 +126,7 @@
     "node-sass": "^3.8.0",
     "nodemon": "^1.3.7",
     "null-loader": "^0.1.1",
+    "nyc": "^11.7.1",
     "open": "~0.0.4",
     "phantomjs-prebuilt": "^2.1.4",
     "postcss-loader": "^0.11.1",
@@ -153,10 +154,17 @@
   },
   "scripts": {
     "test": "gulp test",
-    "coverage": "./node_modules/.bin/solidity-coverage",
     "postinstall": "./node_modules/.bin/typings install",
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update",
     "start": "node server"
   },
-  "private": true
+  "private": true,
+  "nyc": {
+    "exclude": [
+      "webpack.make.js",
+      "server/config/seed.js",
+      "gulpfile.babel.js",
+      "server/config/express.js"
+    ]
+  }
 }
