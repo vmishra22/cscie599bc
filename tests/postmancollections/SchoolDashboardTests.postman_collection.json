@@ -1,0 +1,486 @@
+{
+	"info": {
+		"_postman_id": "b2d09b03-c56e-4fed-9bb5-f8881c701344",
+		"name": "SchoolDashboardTests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "School Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ff32c3b0-1504-47fb-ba10-5582e0baf9e4",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(200);",
+							"});",
+							"",
+							"pm.test(\"Contains Auth Token\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"token\");",
+							"});",
+							"",
+							"var responseJSON = JSON.parse(responseBody);",
+							"pm.environment.set(\"token\", responseJSON.token);"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "cdb4ac94-258c-48c9-b774-3c36be5d76e5",
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"email\", \"test@harvard.edu\");",
+							"pm.environment.set(\"password\", \"test\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"{{email}}\",\"password\":\"{{password}}\"}\n"
+				},
+				"url": {
+					"raw": "http://localhost:3000/auth/local",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"auth",
+						"local"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get School Details Without Auth Cookie",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5e7a153e-0fe6-4f2e-bffa-dd92572e6caa",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "e2af5145-0879-4a4b-9a16-597210fb823a",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(401);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"questionText\": \"In what capacity have you known the applicant?\",\n\t\"responseChoices\": [\n\t\t\"Large Class / Lecture\",\n\t\t\"Small Class / Seminar/ Lab\",\n\t\t\"Independent Study Student\",\n\t\t\"Advisee\",\n\t\t\"Other\"\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/users/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get School Details",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5e7a153e-0fe6-4f2e-bffa-dd92572e6caa",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "65a2244d-9dc4-4d6d-8b18-e56d0e0dbe2c",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(200);",
+							"});",
+							"",
+							"var responseJSON = pm.response.json();",
+							"",
+							"console.log(\"21:\"+responseJSON);",
+							"",
+							"pm.test(\"Email Matches\", function () {",
+							"    pm.expect(responseJSON.email).to.eql(pm.environment.get(\"email\"));",
+							"});",
+							"",
+							"pm.test(\"Role Matches\", function () {",
+							"    pm.expect(responseJSON.role).to.eql(\"school\");",
+							"});",
+							"",
+							"pm.environment.set(\"schoolId\", responseJSON._id);",
+							"pm.environment.set(\"schoolName\", responseJSON.name);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "token={{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"questionText\": \"In what capacity have you known the applicant?\",\n\t\"responseChoices\": [\n\t\t\"Large Class / Lecture\",\n\t\t\"Small Class / Seminar/ Lab\",\n\t\t\"Independent Study Student\",\n\t\t\"Advisee\",\n\t\t\"Other\"\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/users/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get School Programs Without Auth Cookie",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5e7a153e-0fe6-4f2e-bffa-dd92572e6caa",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "f44b237e-0169-4eec-9c5c-8781c9deede6",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(401);",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"questionText\": \"In what capacity have you known the applicant?\",\n\t\"responseChoices\": [\n\t\t\"Large Class / Lecture\",\n\t\t\"Small Class / Seminar/ Lab\",\n\t\t\"Independent Study Student\",\n\t\t\"Advisee\",\n\t\t\"Other\"\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/degreeprograms?schoolId={{schoolId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"degreeprograms"
+					],
+					"query": [
+						{
+							"key": "schoolId",
+							"value": "{{schoolId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get School Programs",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5e7a153e-0fe6-4f2e-bffa-dd92572e6caa",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a3436597-8a6c-498a-8b72-88ed06eb56d2",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(200);",
+							"});",
+							"",
+							"var responseJSON = pm.response.json();",
+							"",
+							"responseJSON.forEach(function(programJSON) {",
+							"     pm.test(\"School Id Matches\", function () {",
+							"         pm.expect(programJSON.schoolId).to.eql(pm.environment.get(\"schoolId\"));",
+							"     });",
+							"     ",
+							"     pm.test(\"School Name Matches\", function () {",
+							"         pm.expect(programJSON.schoolName).to.eql(pm.environment.get(\"schoolName\"));",
+							"     });     ",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "token={{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"questionText\": \"In what capacity have you known the applicant?\",\n\t\"responseChoices\": [\n\t\t\"Large Class / Lecture\",\n\t\t\"Small Class / Seminar/ Lab\",\n\t\t\"Independent Study Student\",\n\t\t\"Advisee\",\n\t\t\"Other\"\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/degreeprograms?schoolId={{schoolId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"degreeprograms"
+					],
+					"query": [
+						{
+							"key": "schoolId",
+							"value": "{{schoolId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Students With Rec Letters Without Auth Cookie",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "409adb31-d706-4b32-aa31-18f18763cb5e",
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"studentName\", \"Vinay\");"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "ae6d1154-d0e1-4524-91d7-100cc6a0a5a5",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(401);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"questionText\": \"In what capacity have you known the applicant?\",\n\t\"responseChoices\": [\n\t\t\"Large Class / Lecture\",\n\t\t\"Small Class / Seminar/ Lab\",\n\t\t\"Independent Study Student\",\n\t\t\"Advisee\",\n\t\t\"Other\"\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/StudentsWithRecommendationLetters?studentName={{studentName}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"StudentsWithRecommendationLetters"
+					],
+					"query": [
+						{
+							"key": "studentName",
+							"value": "{{studentName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Students With Rec Letters",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "409adb31-d706-4b32-aa31-18f18763cb5e",
+						"type": "text/javascript",
+						"exec": [
+							"pm.environment.set(\"studentName\", \"Vinay\");"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "f976e6f9-728e-4b43-8496-03712e82c249",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Valid HTTP Code\", function () {",
+							"    pm.expect(pm.response.code).to.be.eql(200);",
+							"});",
+							"",
+							"var responseJSON = pm.response.json();",
+							"",
+							"responseJSON.forEach(function(programJSON) {",
+							"     pm.test(\"Student Name\", function () {",
+							"         pm.expect(programJSON.studentName).to.include(pm.environment.get(\"studentName\"));",
+							"     });",
+							"     ",
+							"     pm.test(\"School Id Matches\", function () {",
+							"         pm.expect(programJSON.schoolId).to.eql(pm.environment.get(\"schoolId\"));",
+							"     });     ",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Cookie",
+						"value": "token={{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"questionText\": \"In what capacity have you known the applicant?\",\n\t\"responseChoices\": [\n\t\t\"Large Class / Lecture\",\n\t\t\"Small Class / Seminar/ Lab\",\n\t\t\"Independent Study Student\",\n\t\t\"Advisee\",\n\t\t\"Other\"\n\t]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/StudentsWithRecommendationLetters?studentName={{studentName}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"StudentsWithRecommendationLetters"
+					],
+					"query": [
+						{
+							"key": "studentName",
+							"value": "{{studentName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
